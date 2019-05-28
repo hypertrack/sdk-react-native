@@ -1,0 +1,53 @@
+apply plugin: 'com.android.library'
+
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.4.1'
+    }
+}
+
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.3"
+
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        ndk {
+            abiFilters "armeabi-v7a", "x86"
+        }
+    }
+    lintOptions {
+       warning 'InvalidPackage'
+    }
+}
+
+repositories {
+    maven {
+        name 'hypertrack'
+        url 'http://m2.hypertrack.com'
+    }
+    maven {
+        url 'https://maven.google.com/'
+        name 'Google'
+    }
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    implementation('com.facebook.react:react-native:0.44.0')
+    implementation('com.hypertrack:hypertrack:3.1.2@aar') {
+        transitive = true;
+    }
+}

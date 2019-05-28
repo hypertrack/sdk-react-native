@@ -1,0 +1,21 @@
+{
+  "name": "hypertrack-sdk-react-native",
+  "version": "0.1.0",
+  "description": "React Native module for a HyperTrack SDK",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hypertrack/sdk-react-native.git"
+  },
+  "keywords": [
+      "react-native"
+  ],
+  "author": "HyperTrack <help@hypertrack.com> (https://hypertrack.com)",
+  "license": "MIT",
+  "peerDependencies": {
+      "react-native": "^0.41.2"
+  },
+  "bugs": {
+    "url": "https://github.com/hypertrack/sdk-react-native/issues"
+  }
+}
