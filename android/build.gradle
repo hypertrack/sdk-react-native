@@ -15,8 +15,7 @@ buildscript {
 
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.3"
+    compileSdkVersion 28
 
     defaultConfig {
         minSdkVersion 19
@@ -46,7 +45,7 @@ repositories {
 }
 
 dependencies {
-    implementation('com.facebook.react:react-native:0.44.0')
+    implementation('com.facebook.react:react-native:0.59.8')
     implementation('com.hypertrack:hypertrack:3.1.2@aar') {
         transitive = true;
     }
