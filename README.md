@@ -33,8 +33,9 @@ If you want to quickly try the module in a test app, you can use the [React Nati
 3. [Import the module](#step-3-import-the-module)
 4. [Configure the Publishable Key](#step-4-configure-the-publishable-key)
 5. [Enable native capabilities on iOS](#step-5-enable-native-capabilities-on-ios)
+6. [(optional) Enable remote notifications](#step-6-optional-enable-remote-notifications)
 
-### Step 1: Install the module
+### Step 1. Install the module
 
 In your project directory, install the module from npm, and then link it.
 
@@ -43,7 +44,7 @@ npm install hypertrack-sdk-react-native --save
 react-native link hypertrack-sdk-react-native
 ```
 
-### Step 2: Setup native dependencies
+### Step 2. Setup native dependencies
 
 #### iOS
 
@@ -168,14 +169,14 @@ allprojects {
 }
 ```
 
-### Step 3: Import the module
+### Step 3. Import the module
 
 ```js
 import { NativeModules } from 'react-native';
 var RNHyperTrack = NativeModules.RNHyperTrack;
 ```
 
-### Step 4: Configure the Publishable Key
+### Step 4. Configure the Publishable Key
 
 To configure the SDK, set the [publishable key](#publishable-key). This can be done in the `constructor` of your component class.
 
@@ -188,7 +189,7 @@ export default class App extends Component {
 }
 ```
 
-### Step 5: Enable native capabilities on iOS
+### Step 5. Enable native capabilities on iOS
 
 #### Enable background location updates
 
@@ -209,6 +210,73 @@ You can ask for "When In Use" permission only, but be advised that the device wi
 ![In use authorization location](Images/In_Use_Authorization.png)
 
 Be advised, purpose strings are mandatory, and the app crashes without them.
+
+### Step 6. (optional) Enable remote notifications
+
+The SDK has a bi-directional communication model with the server. This enables the SDK to run on a variable frequency model, which balances the fine trade-off between low latency tracking and battery efficiency, and improve robustness. For this purpose, the iOS SDK uses APNs silent remote notifications and Android SDK uses FCM silent notifications.
+
+#### iOS
+
+This guide assumes you have configured APNs in your application. If you haven't, read the [iOS documentation on APNs](https://developer.apple.com/documentation/usernotifications/registering_your_app_with_apns).
+
+##### Configure APNs on the dashboard
+
+Log into the HyperTrack dashboard, and open the [setup page](https://dashboard.hypertrack.com/setup). Upload your Auth Key (file in the format `AuthKey_KEYID.p8`) and fill in your Team ID.
+
+This key will only be used to send remote push notifications to your apps.
+
+##### Enable remote notifications in the app
+
+In the app capabilities, ensure that **remote notifications** inside background modes is enabled.
+
+##### Registering and receiving notifications
+
+The following changes inside AppDelegate will register the SDK for push notifications and route HyperTrack notifications to the SDK.
+
+###### Register for notifications
+
+Inside `didFinishLaunchingWithOptions`, use the SDK method to register for notifications.
+
+```objc
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [HTSDK registerForRemoteNotifications];
+    return YES;
+}
+```
+
+###### Register device token
+
+Inside and `didRegisterForRemoteNotificationsWithDeviceToken` and `didFailToRegisterForRemoteNotificationsWithError` methods, add the relevant lines so that HyperTrack can register the device token.
+
+```objc
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    [HTSDK didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+    [HTSDK didFailToRegisterForRemoteNotificationsWithError:error];
+}
+```
+
+###### Receive notifications
+
+Inside the `didReceiveRemoteNotification` method, add the HyperTrack receiver. This method parses only the notifications that sent from HyperTrack.
+
+```objc
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    [HTSDK didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
+}
+```
+
+#### Android
+
+This guide assumes you have configured FCM in your application. If you haven't, read the [Firebase guide](https://firebase.google.com/docs/cloud-messaging/android/client).
+
+##### Configure FCM key on the Dashboard
+
+Log into the HyperTrack dashboard, and open the [setup page](https://dashboard.hypertrack.com/setup). Enter your FCM Key.
+
+This key will only be used to send remote push notifications to your apps.
 
 ### You are all set
 
