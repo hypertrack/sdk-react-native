@@ -33,7 +33,7 @@ If you want to quickly try the module in a test app, you can use the [React Nati
 3. [Import the module](#step-3-import-the-module)
 4. [Configure the Publishable Key](#step-4-configure-the-publishable-key)
 5. [Enable native capabilities on iOS](#step-5-enable-native-capabilities-on-ios)
-6. [(optional) Enable remote notifications](#step-6-optional-enable-remote-notifications)
+6. [Enable remote notifications](#step-6-enable-remote-notifications)
 
 ### Step 1. Install the module
 
@@ -211,9 +211,9 @@ You can ask for "When In Use" permission only, but be advised that the device wi
 
 Be advised, purpose strings are mandatory, and the app crashes without them.
 
-### Step 6. (optional) Enable remote notifications
+### Step 6. Enable remote notifications
 
-The SDK has a bi-directional communication model with the server. This enables the SDK to run on a variable frequency model, which balances the fine trade-off between low latency tracking and battery efficiency, and improve robustness. For this purpose, the iOS SDK uses APNs silent remote notifications and Android SDK uses FCM silent notifications.
+The SDK has a bi-directional communication model with the server. This enables the SDK to run on a variable frequency model, which balances the fine trade-off between low latency tracking and battery efficiency, and improves robustness. For this purpose, the iOS SDK uses APNs silent remote notifications and Android SDK uses FCM silent notifications.
 
 #### iOS
 
@@ -228,6 +228,12 @@ This key will only be used to send remote push notifications to your apps.
 ##### Enable remote notifications in the app
 
 In the app capabilities, ensure that **remote notifications** inside background modes is enabled.
+
+![Remote Notifications in Xcode](Images/Remote_Notifications.png)
+
+In the same tab, ensure that **push notifications** is enabled.
+
+![Push Notifications in Xcode](Images/Push_Notifications.png)
 
 ##### Registering and receiving notifications
 
@@ -265,6 +271,19 @@ Inside the `didReceiveRemoteNotification` method, add the HyperTrack receiver. T
 ```objc
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     [HTSDK didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
+}
+```
+
+If you want to make sure to only pass HyperTrack notifications to the SDK, you can use the "hypertrack" key:
+
+```objc
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    if (userInfo[@"hypertrack"] != nil) {
+        // This is HyperTrack's notification
+        [HTSDK didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
+    } else {
+        // Handle your server's notification here
+    }
 }
 ```
 
