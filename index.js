@@ -44,10 +44,10 @@ module.exports = {
     RNHyperTrack.setDevice(name, rMap);
   },
   /**
-   * Send a custom event
+   * Set a trip marker
    * @param {ReadableMap} rMap - Include anything that can be parsed into JSON.
    */
-  sendCustomEvent(rMap) {
+  setTripMarker(rMap) {
     RNHyperTrack.sendCustomEvent(rMap);
   }
 };
