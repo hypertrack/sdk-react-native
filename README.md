@@ -155,7 +155,7 @@ allprojects {
         maven {
             name 'hypertrack'
             url 'http://m2.hypertrack.com'
-        }        
+        }
         jcenter()
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
@@ -167,6 +167,17 @@ allprojects {
         }
     }
 }
+```
+
+##### Allow backups
+
+Set `allowBackup` to `true` in `android > app > src > main > AndroidManifest.xml`. This allows HyperTrack to persist important tracking metadata between app updates.
+
+```
+    <application
+      ...
+      android:allowBackup="true"
+      android:theme="@style/AppTheme">
 ```
 
 ### Step 3. Import the module
