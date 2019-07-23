@@ -48,6 +48,6 @@ module.exports = {
    * @param {ReadableMap} rMap - Include anything that can be parsed into JSON.
    */
   setTripMarker(rMap) {
-    RNHyperTrack.sendCustomEvent(rMap);
+    RNHyperTrack.setTripMarker(rMap);
   }
 };

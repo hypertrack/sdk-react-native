@@ -46,7 +46,7 @@ repositories {
 
 dependencies {
     implementation('com.facebook.react:react-native:0.59.8')
-    implementation('com.hypertrack:hypertrack:3.1.7@aar') {
+    implementation('com.hypertrack:hypertrack:3.3.0@aar') {
         transitive = true;
     }
 }

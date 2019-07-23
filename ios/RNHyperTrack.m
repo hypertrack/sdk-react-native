@@ -59,9 +59,9 @@ RCT_EXPORT_METHOD(setDevice :(NSString *)name :(NSDictionary<NSString*, id>*)met
   }];
 }
   
-RCT_EXPORT_METHOD(sendCustomEvent:(NSDictionary<NSString*, id>*)metadata :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  [HTSDK sendCustomEventWithMetadata:metadata
-                   completionHandler:^(HTSDKCustomEventError * _Nullable error) {
+RCT_EXPORT_METHOD(setTripMarker:(NSDictionary<NSString*, id>*)metadata :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  [HTSDK setTripMarker:metadata
+     completionHandler:^(HTSDKCustomEventError * _Nullable error) {
                      if (error) {
                        NSError * nsError = [NSError errorWithDomain:@"HTSDKCustomEventError"
                                                                code:error.type

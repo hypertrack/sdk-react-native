@@ -85,9 +85,9 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
  }
 
  @ReactMethod
- public void sendCustomEvent(ReadableMap rMap) {
+ public void setTripMarker(ReadableMap rMap) {
   HashMap < String, Object > map = recursivelyDeconstructReadableMap(rMap);
-  HyperTrack.customEvent(map);
+  HyperTrack.tripMarker(map);
  }
 
  @ReactMethod
