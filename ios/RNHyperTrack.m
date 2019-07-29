@@ -20,12 +20,12 @@ RCT_EXPORT_MODULE();
   
 #pragma mark - HyperTrack SDK
   
-RCT_EXPORT_METHOD(initialize :(NSString *)publishableKey) {
+RCT_EXPORT_METHOD(initialize :(NSString *)publishableKey startsTracking :(BOOL)startsTracking) {
   RCTLogInfo(@"Initializing HyperTrack with publishableKey: %@", publishableKey);
   __weak __typeof(self) weakSelf = self;
   dispatch_async(dispatch_get_main_queue(), ^{
     [weakSelf addObservers];
-    [HTSDK initializeWithPublishableKey:publishableKey delegate:weakSelf startsTracking:YES requestsPermissions:YES];
+    [HTSDK initializeWithPublishableKey:publishableKey delegate:weakSelf startsTracking:startsTracking requestsPermissions:startsTracking];
   });
 }
 

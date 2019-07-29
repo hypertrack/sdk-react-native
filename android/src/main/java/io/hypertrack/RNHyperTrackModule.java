@@ -1,4 +1,6 @@
 package io.hypertrack;
+import com.hypertrack.sdk.TrackingInitDelegate;
+import com.hypertrack.sdk.TrackingInitError;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -42,8 +44,13 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
  }
 
  @ReactMethod
- public void initialize(String publishableKey) {
-  HyperTrack.initialize(getReactApplicationContext().getCurrentActivity(), publishableKey);
+ public void initialize(String publishableKey, Boolean startsTracking) {
+  TrackingInitDelegate delegate = new TrackingInitDelegate() {
+            @Override public void onError(@NonNull TrackingInitError error) { }
+            @Override public void onSuccess() { }
+        };
+
+  HyperTrack.initialize(getReactApplicationContext().getCurrentActivity(), publishableKey, startsTracking, startsTracking, delegate);
  }
 
  @Override

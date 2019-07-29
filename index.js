@@ -6,9 +6,10 @@ module.exports = {
   /**
    * Initialize the HyperTrack SDK
    * @param {string} publishableKey - A unique String that is used to identify your account with HyperTrack.
+   * @param {bool} startsTracking - Should the SDK start tracking immediately after initialization
    */
   initialize(publishableKey) {
-    RNHyperTrack.initialize(publishableKey);
+    RNHyperTrack.initialize(publishableKey, startsTracking);
   },
   /**
    * Determine whether the SDK is tracking the movement of the user.
