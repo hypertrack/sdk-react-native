@@ -25,17 +25,20 @@ import com.facebook.react.bridge.ReadableType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import android.app.Activity;
 
 
 public class RNHyperTrackModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
 
  private static final String TAG = RNHyperTrackModule.class.getSimpleName();
  private final ReactApplicationContext reactContext;
+ private final Activity currentActivity;
 
  public RNHyperTrackModule(ReactApplicationContext reactContext) {
   super(reactContext);
   this.reactContext = reactContext;
-  reactContext.addLifecycleEventListener(this);
+  this.reactContext.addLifecycleEventListener(this);
+  this.currentActivity = this.reactContext.getCurrentActivity();
  }
 
  @Override
@@ -50,7 +53,16 @@ public class RNHyperTrackModule extends ReactContextBaseJavaModule implements Li
             @Override public void onSuccess() { }
         };
 
-  HyperTrack.initialize(getReactApplicationContext().getCurrentActivity(), publishableKey, startsTracking, startsTracking, delegate);
+  if (this.currentActivity != null){
+    HyperTrack.initialize(this.currentActivity, publishableKey, startsTracking, startsTracking, delegate);
+  } else{
+       try {
+         HyperTrack.initialize(getReactApplicationContext().getCurrentActivity(), publishableKey, startsTracking, startsTracking, delegate);
+       }
+       catch(Exception e) {
+         Log.d("exception while initialising hypertrack sdk: ",Log.getStackTraceString(e));
+       }
+   }
  }
 
  @Override
