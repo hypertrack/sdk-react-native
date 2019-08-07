@@ -43,7 +43,7 @@ RCT_EXPORT_METHOD(isTracking :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromi
 
 RCT_EXPORT_METHOD(getDeviceID: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSString * deviceId = [HTSDK deviceID];
-  resolve(@[deviceId]);
+  resolve(deviceId);
 }
 
 RCT_EXPORT_METHOD(setDevice :(NSString *)name :(NSDictionary<NSString*, id>*)metadata :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
