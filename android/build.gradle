@@ -2,51 +2,59 @@ apply plugin: 'com.android.library'
 
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
         maven {
             url 'https://maven.google.com/'
             name 'Google'
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.1'
+        classpath 'com.android.tools.build:gradle:3.4.2'
     }
 }
 
+def DEFAULT_COMPILE_SDK_VERSION = 28
+def DEFAULT_BUILD_TOOLS_VERSION = "28.0.3"
+def DEFAULT_MIN_SDK_VERSION = 19
+def DEFAULT_TARGET_SDK_VERSION = 28
+def DEFAULT_HYPERTRACK_SDK_VERSION = "3.4.4"
+
+def HYPERTRACK_SDK_VERSION = rootProject.hasProperty('hypertrackSdkVersion') ? rootProject.hypertrackSdkVersion : DEFAULT_HYPERTRACK_SDK_VERSION
 
 android {
-    compileSdkVersion 28
+
+    compileSdkVersion rootProject.hasProperty('compileSdkVersion') ? rootProject.compileSdkVersion : DEFAULT_COMPILE_SDK_VERSION
+    buildToolsVersion rootProject.hasProperty('buildToolsVersion') ? rootProject.buildToolsVersion : DEFAULT_BUILD_TOOLS_VERSION
 
     defaultConfig {
-        minSdkVersion 19
-        targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
-        ndk {
-            abiFilters "armeabi-v7a", "x86"
+        minSdkVersion rootProject.hasProperty('minSdkVersion') ? rootProject.minSdkVersion : DEFAULT_MIN_SDK_VERSION
+        targetSdkVersion rootProject.hasProperty('targetSdkVersion') ? rootProject.targetSdkVersion : DEFAULT_TARGET_SDK_VERSION
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    lintOptions {
-       warning 'InvalidPackage'
+}
+
+dependencies {
+    api ('com.facebook.react:react-native:+') {
+        exclude group: 'com.parse.bolts'
     }
+    api ("com.hypertrack:hypertrack:${HYPERTRACK_SDK_VERSION}")
+
 }
 
 repositories {
-    maven {
-        name 'hypertrack'
-        url 'http://m2.hypertrack.com'
-    }
+    jcenter()
+    mavenCentral()
     maven {
         url 'https://maven.google.com/'
         name 'Google'
     }
-    jcenter()
-    mavenCentral()
-}
-
-dependencies {
-    implementation('com.facebook.react:react-native:0.59.8')
-    implementation('com.hypertrack:hypertrack:3.3.1@aar') {
-        transitive = true;
+    maven {
+        name 'hypertrack'
+        url 'http://m2.hypertrack.com'
     }
 }

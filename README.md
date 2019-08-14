@@ -320,18 +320,32 @@ Once your app is running, go to the [dashboard](https://dashboard.hypertrack.com
 
 ![Dashboard](Images/Dashboard.png)
 
+## Example app
+
+- Run `npm start` in the repo root to start the packager for the example app
+
+### iOS
+
+- Run `pod install` in `example/ios`
+- Open `example/ios/RNFBSDKExample.xcworkspace` with xcode
+- Run the example app
+
+### Android
+
+- Start a emulator
+- Run `./gradlew installDebug` in `example/android`
 
 ## Frequently Asked Questions
 
 ### iOS
 - [What iOS versions are supported](#supported-versions-on-ios)
-- [Error: Access to Activity services has not been authorized](#error-access-to-activity-services-has-not-been-authorized)
+- [TrackingErrors: Access to Activity services has not been authorized](#error-access-to-activity-services-has-not-been-authorized)
 
 #### Supported versions on iOS
 
 Currently we do support all of the iOS versions starting from iOS 10.
 
-#### Error: Access to Activity services has not been authorized
+#### TrackingErrors: Access to Activity services has not been authorized
 You are running the quickstart app on the iOS simulator, which currently does not support CoreMotion services. You can test the quickstart app on real iOS devices only.
 
 ### Android
