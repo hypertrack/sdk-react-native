@@ -11,11 +11,7 @@ export default class App extends Component<{}> {
         trackingState: "",
     };
 
-    componentWillUnmount() {
-        HyperTrack.removeTrackingListeners(this);
-    }
-
-    async _startTracking() {
+    componentDidMount() {
         HyperTrack.initialize(PUBLISHABLE_KEY);
         HyperTrack.enableDebugLogging(true);
         HyperTrack.addTrackingListeners(this,
@@ -35,11 +31,15 @@ export default class App extends Component<{}> {
         HyperTrack.getDeviceID().then((deviceId) => {
             this.setState({deviceId: deviceId});
         });
-        try {
-            await HyperTrack.setDevice("Elvis", {key1: "value", key2: 7});
-        } catch (e) {
-            console.error(e);
-        }
+        HyperTrack.setDevice("Elvis", {key1: "value", key2: 7});
+    }
+
+    componentWillUnmount() {
+        HyperTrack.removeTrackingListeners(this);
+    }
+
+    _startTracking() {
+        HyperTrack.startTracking();
     }
 
     _stopTracking() {
