@@ -26,13 +26,13 @@
     "lint": "eslint ."
   },
   "files": [
-   "android/src/main/AndroidManifest.xml",
-   "android/src/main/java/",
-   "android/build.gradle",
-   "ios",
-   "js",
-   "LICENSE.txt",
-   "README.md"
+    "android/src/main/AndroidManifest.xml",
+    "android/src/main/java/",
+    "android/build.gradle",
+    "ios",
+    "js",
+    "LICENSE.txt",
+    "README.md"
   ],
   "dependencies": {},
   "peerDependencies": {

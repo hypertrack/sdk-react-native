@@ -1,5 +1,9 @@
 package com.hypertrack.reactnative.androidsdk;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
@@ -11,13 +15,17 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.facebook.react.modules.core.PermissionAwareActivity;
+import com.facebook.react.modules.core.PermissionListener;
+import com.hypertrack.sdk.Config;
 import com.hypertrack.sdk.HyperTrack;
 import com.hypertrack.sdk.TrackingError;
 import com.hypertrack.sdk.TrackingStateObserver.OnTrackingStateChangeListener;
+import com.hypertrack.sdk.logger.HTLogger;
 
 
 @ReactModule(name = HTSDKModule.NAME)
-public class HTSDKModule extends ReactContextBaseJavaModule {
+public class HTSDKModule extends ReactContextBaseJavaModule implements PermissionListener {
 
     private static final String TAG = HTSDKModule.class.getSimpleName();
 
@@ -39,7 +47,12 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
         if (getCurrentActivity() != null) {
             HyperTrack.removeTrackingStateListener(trackingStateChangeListener);
             trackingStateChangeListener = null;
-            HyperTrack.initialize(getCurrentActivity(), publishableKey, startsTracking);
+            HyperTrack.initialize(getCurrentActivity(),
+                    publishableKey,
+                    new Config.Builder()
+                            .enableRequestPermissionIfMissing(startsTracking)
+                            .enableAutoStartTracking(startsTracking)
+                            .build());
         } else {
             Log.d(TAG, "Hypertrack SDK initialization failed while: CurrentActivity is null");
         }
@@ -90,7 +103,9 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void startTracking() {
-        HyperTrack.startTracking();
+        if (checkLocationPermissions()) {
+            HyperTrack.startTracking();
+        }
     }
 
     @ReactMethod
@@ -148,5 +163,56 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
             default:
                 return RN_ERROR_GENERAL;
         }
+    }
+
+    private static final int REQUEST_LOCATION_PERMISSIONS = 21012;
+
+    private boolean checkLocationPermissions() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
+                || PackageManager.PERMISSION_GRANTED == getReactApplicationContext().checkSelfPermission(
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                || getCurrentActivity() == null) {
+            return true;
+
+        }
+        PermissionAwareActivity activity = getPermissionAwareActivity();
+        activity.requestPermissions(new String[]{
+                        android.Manifest.permission.ACCESS_FINE_LOCATION
+        }, REQUEST_LOCATION_PERMISSIONS, this);
+        return false;
+    }
+
+
+    private PermissionAwareActivity getPermissionAwareActivity() {
+        Activity activity = getCurrentActivity();
+        if (activity == null) {
+            throw new IllegalStateException(
+                    "Tried to use permissions API while not attached to an " + "Activity.");
+        } else if (!(activity instanceof PermissionAwareActivity)) {
+            throw new IllegalStateException(
+                    "Tried to use permissions API but the host Activity doesn't"
+                            + " implement PermissionAwareActivity.");
+        }
+        return (PermissionAwareActivity) activity;
+    }
+
+    @Override
+    public boolean onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == REQUEST_LOCATION_PERMISSIONS) {
+            for (int i = 0; i < permissions.length; i++) {
+                String permission = permissions[i];
+                if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                        HTLogger.d(TAG, "Location permission was granted");
+                        startTracking();
+                        return true;
+
+                    } else {
+                        HTLogger.d(TAG, "Location permission was denied");
+                    }
+                }
+            }
+        }
+        return false;
     }
 }
