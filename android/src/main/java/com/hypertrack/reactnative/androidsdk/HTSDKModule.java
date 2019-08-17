@@ -17,10 +17,9 @@ import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.modules.core.PermissionAwareActivity;
 import com.facebook.react.modules.core.PermissionListener;
-import com.hypertrack.sdk.Config;
 import com.hypertrack.sdk.HyperTrack;
-import com.hypertrack.sdk.TrackingError;
-import com.hypertrack.sdk.TrackingStateObserver.OnTrackingStateChangeListener;
+import com.hypertrack.sdk.TrackingInitDelegate;
+import com.hypertrack.sdk.TrackingInitError;
 import com.hypertrack.sdk.logger.HTLogger;
 
 
@@ -30,8 +29,6 @@ public class HTSDKModule extends ReactContextBaseJavaModule implements Permissio
     private static final String TAG = HTSDKModule.class.getSimpleName();
 
     public static final String NAME = "HyperTrack";
-
-    public OnTrackingStateChangeListener trackingStateChangeListener;
 
     public HTSDKModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -43,16 +40,28 @@ public class HTSDKModule extends ReactContextBaseJavaModule implements Permissio
     }
 
     @ReactMethod
-    public void initialize(String publishableKey, Boolean startsTracking) {
+    public void initialize(String publishableKey, final Boolean startsTracking) {
         if (getCurrentActivity() != null) {
-            HyperTrack.removeTrackingStateListener(trackingStateChangeListener);
-            trackingStateChangeListener = null;
             HyperTrack.initialize(getCurrentActivity(),
-                    publishableKey,
-                    new Config.Builder()
-                            .enableRequestPermissionIfMissing(startsTracking)
-                            .enableAutoStartTracking(startsTracking)
-                            .build());
+                    publishableKey, startsTracking, startsTracking, new TrackingInitDelegate() {
+                        @Override
+                        public void onError(TrackingInitError trackingInitError) {
+                            WritableMap params = Arguments.createMap();
+                            params.putInt("code", convertToRNErrorsCode(trackingInitError));
+                            getReactApplicationContext()
+                                    .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                                    .emit("onTrackingErrorHyperTrack", params);
+                        }
+
+                        @Override
+                        public void onSuccess() {
+                            if (startsTracking) {
+                                getReactApplicationContext()
+                                        .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                                        .emit("onTrackingStartHyperTrack", null);
+                            }
+                        }
+                    });
         } else {
             Log.d(TAG, "Hypertrack SDK initialization failed while: CurrentActivity is null");
         }
@@ -60,34 +69,6 @@ public class HTSDKModule extends ReactContextBaseJavaModule implements Permissio
 
     @ReactMethod
     public void subscribeOnEvents() {
-        if (trackingStateChangeListener == null) {
-            trackingStateChangeListener = new OnTrackingStateChangeListener() {
-                @Override
-                public void onError(TrackingError trackingError) {
-                    WritableMap params = Arguments.createMap();
-                    params.putInt("code", convertToRNErrorsCode(trackingError.getCode()));
-                    params.putString("message", trackingError.getMessage());
-                    getReactApplicationContext()
-                            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                            .emit("onTrackingErrorHyperTrack", params);
-                }
-
-                @Override
-                public void onTrackingStart() {
-                    getReactApplicationContext()
-                            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                            .emit("onTrackingStartHyperTrack", null);
-                }
-
-                @Override
-                public void onTrackingStop() {
-                    getReactApplicationContext()
-                            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                            .emit("onTrackingStopHyperTrack", null);
-                }
-            };
-            HyperTrack.addTrackingStateListener(trackingStateChangeListener);
-        }
     }
 
     @ReactMethod
@@ -103,9 +84,23 @@ public class HTSDKModule extends ReactContextBaseJavaModule implements Permissio
 
     @ReactMethod
     public void startTracking() {
-        if (checkLocationPermissions()) {
-            HyperTrack.startTracking();
-        }
+        HyperTrack.startTracking(true, new TrackingInitDelegate() {
+            @Override
+            public void onError(TrackingInitError trackingInitError) {
+                WritableMap params = Arguments.createMap();
+                params.putInt("code", convertToRNErrorsCode(trackingInitError));
+                getReactApplicationContext()
+                        .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                        .emit("onTrackingErrorHyperTrack", params);
+            }
+
+            @Override
+            public void onSuccess() {
+                getReactApplicationContext()
+                        .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                        .emit("onTrackingStartHyperTrack", null);
+            }
+        });
     }
 
     @ReactMethod
@@ -152,16 +147,15 @@ public class HTSDKModule extends ReactContextBaseJavaModule implements Permissio
     private static final int RN_ERROR_AUTHORIZATION_FAILED = 2;
     private static final int RN_ERROR_PERMISSION_DENIED = 3;
 
-    private int convertToRNErrorsCode(int androidSdkCode) {
-        switch (androidSdkCode) {
-            case TrackingError.INVALID_PUBLISHABLE_KEY_ERROR:
-                return RN_ERROR_INVALID_PUBLISHABLE_KEY;
-            case TrackingError.AUTHORIZATION_ERROR:
-                return RN_ERROR_AUTHORIZATION_FAILED;
-            case TrackingError.PERMISSION_DENIED_ERROR:
-                return RN_ERROR_PERMISSION_DENIED;
-            default:
-                return RN_ERROR_GENERAL;
+    private int convertToRNErrorsCode(TrackingInitError trackingInitError) {
+        if (trackingInitError instanceof TrackingInitError.InvalidPublishableKeyError) {
+            return RN_ERROR_INVALID_PUBLISHABLE_KEY;
+        } else if (trackingInitError instanceof TrackingInitError.AuthorizationError) {
+            return RN_ERROR_AUTHORIZATION_FAILED;
+        } else if (trackingInitError instanceof TrackingInitError.PermissionDeniedError) {
+            return RN_ERROR_PERMISSION_DENIED;
+        } else {
+            return RN_ERROR_GENERAL;
         }
     }
 

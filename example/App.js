@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {StyleSheet, Text, Button, View} from 'react-native';
 import {HyperTrack, CriticalErrors} from 'hypertrack-sdk-react-native';
 
-const PUBLISHABLE_KEY = "YOUR_PUBLISHABLE_KEY";
+const PUBLISHABLE_KEY = "uvIAA8xJANxUxDgINOX62-LINLuLeymS6JbGieJ9PegAPITcr9fgUpROpfSMdL9kv-qFjl17NeAuBHse8Qu9sw";
 export default class App extends Component<{}> {
 
     state = {
