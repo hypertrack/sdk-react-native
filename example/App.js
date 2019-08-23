@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {StyleSheet, Text, Button, View} from 'react-native';
 import {HyperTrack, CriticalErrors} from 'hypertrack-sdk-react-native';
 
-const PUBLISHABLE_KEY = "uvIAA8xJANxUxDgINOX62-LINLuLeymS6JbGieJ9PegAPITcr9fgUpROpfSMdL9kv-qFjl17NeAuBHse8Qu9sw";
+const PUBLISHABLE_KEY = "paste_your_key_here";
 export default class App extends Component<{}> {
 
     state = {
@@ -29,21 +29,15 @@ export default class App extends Component<{}> {
             () => this.setState({trackingState: "Started", isTracking: true}),
             () => this.setState({trackingState: "Stopped", isTracking: false}));
         HyperTrack.getDeviceID().then((deviceId) => {
+            console.log(deviceId);
             this.setState({deviceId: deviceId});
         });
-        HyperTrack.setDevice("Elvis", {key1: "value", key2: 7});
+        HyperTrack.setTripMarker({key1: "value", key2: 7});
+        HyperTrack.setDevice("Elvis", {key1: "value", key2: "7"});
     }
 
     componentWillUnmount() {
         HyperTrack.removeTrackingListeners(this);
-    }
-
-    _startTracking() {
-        HyperTrack.startTracking();
-    }
-
-    _stopTracking() {
-        HyperTrack.stopTracking();
     }
 
     render() {
@@ -59,7 +53,9 @@ export default class App extends Component<{}> {
                 <Button
                     style={styles.button}
                     title={isTracking ? "Stop tracking" : "Start tracking"}
-                    onPress={() => isTracking ? this._stopTracking() : this._startTracking()}
+                    onPress={() => {
+                        HyperTrack.isTracking().then((isTracking) => isTracking ? HyperTrack.stopTracking() : HyperTrack.startTracking())
+                    }}
                 />
                 <Text style={styles.textTitle}>{"Tracking state"}</Text>
                 <Text style={styles.text}>{trackingState}</Text>

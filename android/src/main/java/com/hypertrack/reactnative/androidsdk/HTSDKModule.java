@@ -106,6 +106,9 @@ public class HTSDKModule extends ReactContextBaseJavaModule implements Permissio
     @ReactMethod
     public void stopTracking() {
         HyperTrack.stopTracking();
+        getReactApplicationContext()
+                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                .emit("onTrackingStopHyperTrack", null);
     }
 
     @ReactMethod
