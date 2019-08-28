@@ -32,7 +32,7 @@ export default class App extends Component<{}> {
             console.log(deviceId);
             this.setState({deviceId: deviceId});
         });
-        HyperTrack.setTripMarker({key1: "value", key2: 7});
+        HyperTrack.setTripMarker({key1: "value", key2: "7"});
         HyperTrack.setDevice("Elvis", {key1: "value", key2: "7"});
     }
 
