@@ -1,14 +1,21 @@
-# React Native module for HyperTrack SDKs
+# React Native HyperTrack SDK
 
 ![GitHub](https://img.shields.io/github/license/hypertrack/sdk-react-native.svg)
 ![npm](https://img.shields.io/npm/v/hypertrack-sdk-react-native.svg)
-[![iOS SDK](https://img.shields.io/badge/iOS%20SDK-3.3.5-brightgreen.svg)](https://cocoapods.org/pods/HyperTrack)
-![Android SDK](https://img.shields.io/badge/Android%20SDK-3.3.0-brightgreen.svg)
+[![iOS SDK](https://img.shields.io/badge/iOS%20SDK-3.5.0-brightgreen.svg)](https://cocoapods.org/pods/HyperTrack)
+![Android SDK](https://img.shields.io/badge/Android%20SDK-3.4.5-brightgreen.svg)
 
-[HyperTrack](https://www.hypertrack.com) lets you add live location tracking to your mobile app. Live location is made available along with ongoing activity, tracking controls and tracking outage with reasons. This repo contains an example React Native app that has everything you need to get started in minutes.
+[HyperTrack](https://www.hypertrack.com) lets you add live location tracking to your mobile app. Live location is made available along with ongoing activity, tracking controls and tracking outage with reasons.
+
+React Native HyperTrack SDK is a wrapper around native iOS and Android SDKs that allows to integrate them into React Native apps.
+
+SDK proviced access to functionality that collects location, activity and device health data. The module exposes methods to start and stop tracking, and interact with the HyperTrack APIs.
+
+Functionality is provided through one single npm package so you can use it for both platforms without downloading any extra packages.
 
 * [Publishable Key](#publishable-key)–Sign up and get your keys
-* [Integrate the React Native module](#integrate-the-react-native-module)–Integrate the React Native module into your app
+* [Installation](#installation)–Integrate the HyperTrack into your app
+* [Enable remote notifications](#enable-remote-notifications)–Improve battery efficiency and enable HyperTrack Trips
 * [Dashboard](#dashboard)–See live location of all your devices on your HyperTrack dashboard
 * [FAQs](#frequently-asked-questions)–Frequently asked questions
 * [Support](#support)–Support
@@ -22,33 +29,116 @@ We use Publishable Key to idetify your devices. To get one:
 
 ![Signup flow](Images/Signup_flow.png)
 
-## Integrate the React Native module
-
-This guide will help you install the React Native module in your application. The module is built on top of native iOS and Android SDKs, which collect location, activity and device health data. The module exposes methods to start and stop tracking, and interact with the HyperTrack APIs.
+## Installation
 
 In case you are not using React Native, you can refer to the [iOS](https://github.com/hypertrack/quickstart-ios) or [Android](https://github.com/hypertrack/quickstart-android) versions.
-
 If you want to quickly try the module in a test app, you can use the [React Native Quickstart app](https://github.com/hypertrack/quickstart-react-native).
 
-1. [Install the module](#step-1-install-the-module)
-2. [Setup native dependencies](#step-2-setup-native-dependencies)
-3. [Import the module](#step-3-import-the-module)
-4. [Configure the Publishable Key](#step-4-configure-the-publishable-key)
-5. [Enable native capabilities on iOS](#step-5-enable-native-capabilities-on-ios)
-6. [Enable remote notifications](#step-6-enable-remote-notifications)
+You will need either [npm](https://www.npmjs.com/) or [Yarn](https://yarnpkg.com) in order to install the SDK and configure the Android and iOS projects.
 
-### Step 1. Install the module
+### 1. Create React Native project
 
-In your project directory, install the module from npm, and then link it.
+First create a React Native project:
 
 ```bash
-npm install hypertrack-sdk-react-native --save
-react-native link hypertrack-sdk-react-native
+react-native init YourApp
 ```
 
-### Step 2. Setup native dependencies
+### 2. Install JavaScript packages
 
-#### iOS
+Run `yarn` (or `npm install`, if using npm) inside your new `YourApp` directory:
+
+```bash
+cd YourApp
+yarn
+```
+
+Then, install the `hypertrack-sdk-react-native` package:
+
+```bash
+yarn add hypertrack-sdk-react-native
+```
+
+> Or, if using npm:
+
+```bash
+npm install hypertrack-sdk-react-native
+```
+
+Finally, link the SDK to configure the iOS and Android projects:
+
+```bash
+react-native link hypertrack-sdk-react-native
+```
+### 3. Configure projects
+
+#### 3.1 Android
+
+Assuming you have [Android Studio](http://developer.android.com/sdk/index.html) installed, open the project with Android Studio.
+
+Go to `MainApplication.java` under `app/src/main/java/com/<project name>/` to complete setup.
+
+Register SDK package in method `getPackages()`.
+
+```java
+import com.hypertrack.reactnative.androidsdk.HTSDKPackage;
+
+// ...
+
+private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
+    @Override
+    public boolean getUseDeveloperSupport() {
+      return BuildConfig.DEBUG;
+    }
+
+    @Override
+    protected List<ReactPackage> getPackages() {
+      return Arrays.<ReactPackage>asList(
+          new MainReactPackage(),
+          new HTSDKPackage()
+      );
+    }
+};
+```
+
+Add in your `settings.gradle`:
+
+```
+include ':hypertrack-sdk-react-native'
+project(':hypertrack-sdk-react-native').projectDir = new File(rootProject.projectDir, '../hypertrack-sdk-react-native/android')
+```
+
+You can skip the build.gradle changes since that's taken care of by the npm link step above, but **make sure** you follow the rest of the steps such as updating `AndroidManifest.xml`.
+
+**project stage:**
+```
+allprojects {
+    repositories {
+        ...
+        maven {
+            name 'hypertrack'
+            url 'http://m2.hypertrack.com'
+        }
+    }
+}
+```
+**app stage:**
+```
+dependencies {
+    ...
+    implementation project(":hypertrack-sdk-react-native")
+}
+```
+
+Set `allowBackup` to `true` in `android > app > src > main > AndroidManifest.xml`. This allows HyperTrack to persist important tracking metadata between app updates.
+
+```
+    <application
+      ...
+      android:allowBackup="true">
+```
+
+#### 3.2 iOS
 
 ##### Add HyperTrack iOS SDK to your Podfile
 
@@ -63,19 +153,19 @@ cd ios
 pod init
 ```
 
-Edit the Podfile to include `HyperTrack` as a dependency for your project by adding `pod 'HyperTrack'` line in your target. HyperTrack iOS SDK supports iOS 10 and above, that's why `platform :ios, '10.0'` is included explicitly. And lastly, add the `post_install` script to keep dependencies with the correct Swift version.
+Edit the Podfile to include `HyperTrack` as a dependency for your project by adding `pod 'HyperTrack'` line in your target. HyperTrack iOS SDK supports iOS 11 and above, that's why `platform :ios, '11.0'` is included explicitly. And lastly, add the `post_install` script to keep dependencies with the correct Swift version.
 
 ```bash
-platform :ios, '10.0'
+platform :ios, '11.0'
 
-target 'AppName' do
+target 'YourApp' do
   use_frameworks!
   pod 'HyperTrack'
 end
 
 post_install do |installer|
   installer.pods_project.targets.each do |target|
-    if ['GRDB.swift', 'CocoaLumberjack'].include? target.name
+    if ['GRDB.swift'].include? target.name
       target.build_configurations.each do |config|
         config.build_settings['SWIFT_VERSION'] = '4.2'
       end
@@ -84,7 +174,7 @@ post_install do |installer|
 end
 ```
 
-Check the Swift version in build settings. Open your `.xcodeproj` project file with Xcode. Select the projects Xcode project file in the navigator, go to your app's target (Should be with the same name as a project name) > Build Settings and search for `SWIFT_VERSION` flag. If there isn't one, create it by clicking on the plus icon to the left of the search bar, select "Add User-Defined Setting", name it `SWIFT_VERSION` and set it to `4.2`.
+Check the Swift version in build settings. Open your `.xcodeproj` project file with Xcode. Select the projects Xcode project file in the navigator, go to your app's target (Should be with the same name as a project name) > Build Settings and search for `SWIFT_VERSION` flag. If there isn't one, create a new Swift file without creating a bridging header, and Xcode will create this setting for you. Set it to `4.2`. You can then delete the file.
 
 ![Swift version](Images/Swift_Version.png)
 
@@ -100,123 +190,21 @@ After Cocoapods is finished installing dependencies, we need to manually link th
 
 1. Open the iOS module files directory, located inside `node_modules/hypertrack-sdk-react-native/ios/`.
 2. Open the app's workspace file (`.xcworkspace`) in Xcode.
-3. Move the `RNHyperTrack.h` and `RNHyperTrack.m` files to your project. When shown a popup window, select `Create groups`.
+3. Move the `HyperTrack.h` and `HyperTrack.m` files to your project. When shown a popup window, select `Create folder references` and make sure `Copy items if needed` is deselected. This will allow to update those files every time the JS module updates.
 
 ![Linking on iOS](Images/link.gif)
 
-#### Android
-
-##### Update compileSdkVersion, buildToolsVersion, support library version
-
-Edit the `build.gradle` file in your `android/app` directory:
-
-```groovy
-android {
-    compileSdkVersion 28
-    ...
-}
-```
-
-```groovy
-dependencies {
-    ...
-    compile project(':hypertrack-sdk-react-native')
-    compile fileTree(dir: "libs", include: ["*.jar"])
-    compile "com.android.support:appcompat-v7:26.1.0"
-    compile "com.facebook.react:react-native:+"  // From node_modules
-    ...
-}
-```
-
-##### Add maven for Google Play Service Libraries
-
-Edit the `build.gradle` file in your `android` directory:
-
-```groovy
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-buildscript {
-    repositories {
-        jcenter()
-        maven {
-            url 'https://maven.google.com/'
-            name 'Google'
-        }
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
-        classpath 'com.google.gms:google-services:3.1.0'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-}
-
-allprojects {
-    repositories {
-        mavenLocal()
-        maven {
-            name 'hypertrack'
-            url 'http://m2.hypertrack.com'
-        }
-        jcenter()
-        maven {
-            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-            url "$rootDir/../node_modules/react-native/android"
-        }
-        maven {
-            url 'https://maven.google.com/'
-            name 'Google'
-        }
-    }
-}
-```
-
-##### Allow backups
-
-Set `allowBackup` to `true` in `android > app > src > main > AndroidManifest.xml`. This allows HyperTrack to persist important tracking metadata between app updates.
-
-```
-    <application
-      ...
-      android:allowBackup="true"
-      android:theme="@style/AppTheme">
-```
-
-### Step 3. Import the module
-
-```js
-import { NativeModules } from 'react-native';
-var RNHyperTrack = NativeModules.RNHyperTrack;
-```
-
-### Step 4. Configure the Publishable Key
-
-To configure the SDK, set the [publishable key](#publishable-key). This can be done in the `constructor` of your component class.
-
-```js
-export default class App extends Component {
-  constructor() {
-    super();
-    RNHyperTrack.initialize('YOUR_PUBLISHABLE_KEY');
-  }
-}
-```
-
-### Step 5. Enable native capabilities on iOS
-
-#### Enable background location updates
+##### Enable background location updates
 
 Enable Background Modes in your project target's Capabilities tab. Choose "Location updates".
 
 ![Capabilities tab in Xcode](Images/Background_Modes.png)
 
-#### Add purpose strings
+##### Add purpose strings
 
 Set the following purpose strings in the `Info.plist` file:
 
 ![Always authorization location](Images/Always_Authorization.png)
-
-Include `Privacy - Location Always Usage Description` key only when you need iOS 10 compatibility.
 
 You can ask for "When In Use" permission only, but be advised that the device will see a blue bar at the top while your app is running.
 
@@ -224,21 +212,49 @@ You can ask for "When In Use" permission only, but be advised that the device wi
 
 Be advised, purpose strings are mandatory, and the app crashes without them.
 
-### Step 6. Enable remote notifications
+## Enable remote notifications
 
-The SDK has a bi-directional communication model with the server. This enables the SDK to run on a variable frequency model, which balances the fine trade-off between low latency tracking and battery efficiency, and improves robustness. For this purpose, the iOS SDK uses APNs silent remote notifications and Android SDK uses FCM silent notifications.
+The SDK has a bi-directional communication model with the server. This enables the SDK to run on a variable frequency model, which balances the fine trade-off between low latency tracking and battery efficiency, and improves robustness. This also enables HyperTrack Trips to start and stop tracking automatically when trip starts and ends. For this purpose, the iOS SDK uses APNs silent remote notifications and Android SDK uses FCM silent notifications.
 
-#### iOS
+### Android
+
+This guide assumes you have configured FCM in your application. If you haven't, read the [Firebase guide](https://firebase.google.com/docs/android/setup).
+
+#### Configure FCM key on the Dashboard
+
+Log into the HyperTrack dashboard, and open the [setup page](https://dashboard.hypertrack.com/setup). Enter your FCM Key.
+
+This key will only be used to send remote push notifications to your apps.
+
+##### Enable server to device communication
+
+Specify `HyperTrackMessagingService` as push messages receiver by adding following snippet to your app's Android manifest:
+
+```xml
+...
+  <service android:name="com.hypertrack.sdk.HyperTrackMessagingService" android:exported="false">
+      <intent-filter>
+          <action android:name="com.google.firebase.MESSAGING_EVENT" />
+      </intent-filter>
+  </service>
+</application>
+```
+
+If you already use firebase push notifications you can extend `HyperTrackMessagingService` instead of Firebase, or declare two receivers side by side, if you wish.
+
+Check out [Quickstart app with notifications integrated](https://github.com/hypertrack/quickstart-android/tree/push-integration-example) if you prefer to get a look at example.
+
+### iOS
 
 This guide assumes you have configured APNs in your application. If you haven't, read the [iOS documentation on APNs](https://developer.apple.com/documentation/usernotifications/registering_your_app_with_apns).
 
-##### Configure APNs on the dashboard
+#### Configure APNs on the dashboard
 
 Log into the HyperTrack dashboard, and open the [setup page](https://dashboard.hypertrack.com/setup). Upload your Auth Key (file in the format `AuthKey_KEYID.p8`) and fill in your Team ID.
 
 This key will only be used to send remote push notifications to your apps.
 
-##### Enable remote notifications in the app
+#### Enable remote notifications in the app
 
 In the app capabilities, ensure that **remote notifications** inside background modes is enabled.
 
@@ -248,11 +264,11 @@ In the same tab, ensure that **push notifications** is enabled.
 
 ![Push Notifications in Xcode](Images/Push_Notifications.png)
 
-##### Registering and receiving notifications
+#### Registering and receiving notifications
 
 The following changes inside AppDelegate will register the SDK for push notifications and route HyperTrack notifications to the SDK.
 
-###### Register for notifications
+##### Register for notifications
 
 Inside `didFinishLaunchingWithOptions`, use the SDK method to register for notifications.
 
@@ -263,7 +279,7 @@ Inside `didFinishLaunchingWithOptions`, use the SDK method to register for notif
 }
 ```
 
-###### Register device token
+##### Register device token
 
 Inside and `didRegisterForRemoteNotificationsWithDeviceToken` and `didFailToRegisterForRemoteNotificationsWithError` methods, add the relevant lines so that HyperTrack can register the device token.
 
@@ -277,7 +293,7 @@ Inside and `didRegisterForRemoteNotificationsWithDeviceToken` and `didFailToRegi
 }
 ```
 
-###### Receive notifications
+##### Receive notifications
 
 Inside the `didReceiveRemoteNotification` method, add the HyperTrack receiver. This method parses only the notifications that sent from HyperTrack.
 
@@ -300,15 +316,60 @@ If you want to make sure to only pass HyperTrack notifications to the SDK, you c
 }
 ```
 
-#### Android
+## Usage
 
-This guide assumes you have configured FCM in your application. If you haven't, read the [Firebase guide](https://firebase.google.com/docs/cloud-messaging/android/client).
+### Initialize
 
-##### Configure FCM key on the Dashboard
+```js
+import {HyperTrack} from 'hypertrack-sdk-react-native';
 
-Log into the HyperTrack dashboard, and open the [setup page](https://dashboard.hypertrack.com/setup). Enter your FCM Key.
+const PUBLISHABLE_KEY = "paste_your_key_here";
+export default class App extends Component<{}> {
 
-This key will only be used to send remote push notifications to your apps.
+    constructor(props) {
+            super(props);
+            HyperTrack.initialize(PUBLISHABLE_KEY);
+            HyperTrack.enableDebugLogging(true);
+        }
+
+}
+```
+
+### Add tracking listeners
+
+```js
+export default class App extends Component<{}> {
+    ...
+
+    state = {
+        ...
+        isTracking: false,
+        trackingState: "",
+    };
+
+    componentWillMount() {
+        HyperTrack.addTrackingListeners(this,
+            (error) => {
+                if (error.code === CriticalErrors.INVALID_PUBLISHABLE_KEY
+                    || error.code === CriticalErrors.AUTHORIZATION_FAILED) {
+                    console.log("Initialization failed")
+                } else {
+                    console.log("Tracking failed")
+                }
+                this.setState({
+                    trackingState: "Stopped with error: " + ((error.code + " - " + error.message) || "unknown"),
+                    isTracking: false
+                })
+            },
+            () => this.setState({trackingState: "Started", isTracking: true}),
+            () => this.setState({trackingState: "Stopped", isTracking: false}));
+    }
+
+    componentWillUnmount() {
+        HyperTrack.removeTrackingListeners(this);
+    }
+}
+```
 
 ### You are all set
 
@@ -320,21 +381,6 @@ Once your app is running, go to the [dashboard](https://dashboard.hypertrack.com
 
 ![Dashboard](Images/Dashboard.png)
 
-## Example app
-
-- Run `npm start` in the repo root to start the packager for the example app
-
-### iOS
-
-- Run `pod install` in `example/ios`
-- Open `example/ios/RNFBSDKExample.xcworkspace` with xcode
-- Run the example app
-
-### Android
-
-- Start a emulator
-- Run `./gradlew installDebug` in `example/android`
-
 ## Frequently Asked Questions
 
 ### iOS
@@ -343,7 +389,7 @@ Once your app is running, go to the [dashboard](https://dashboard.hypertrack.com
 
 #### Supported versions on iOS
 
-Currently we do support all of the iOS versions starting from iOS 10.
+Currently we do support all of the iOS versions starting from iOS 11.
 
 #### TrackingErrors: Access to Activity services has not been authorized
 You are running the quickstart app on the iOS simulator, which currently does not support CoreMotion services. You can test the quickstart app on real iOS devices only.

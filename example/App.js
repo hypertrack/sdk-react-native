@@ -11,12 +11,17 @@ export default class App extends Component<{}> {
         trackingState: "",
     };
 
-    componentDidMount() {
+    constructor(props) {
+        super(props);
         HyperTrack.initialize(PUBLISHABLE_KEY);
         HyperTrack.enableDebugLogging(true);
+    }
+
+    componentWillMount() {
         HyperTrack.addTrackingListeners(this,
             (error) => {
-                if (error.code === CriticalErrors.INVALID_PUBLISHABLE_KEY || error.code === CriticalErrors.AUTHORIZATION_FAILED) {
+                if (error.code === CriticalErrors.INVALID_PUBLISHABLE_KEY
+                    || error.code === CriticalErrors.AUTHORIZATION_FAILED) {
                     console.log("Initialization failed")
                 } else {
                     console.log("Tracking failed")

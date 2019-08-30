@@ -5,8 +5,7 @@ import com.android.build.OutputFile
 
 project.ext.react = [
     entryFile: "example/index",
-    root: "../../../",
-    enableHermes: false,  // clean and rebuild if changing
+    root: "../../../"
 ]
 
 apply from: "../../../node_modules/react-native/react.gradle"
@@ -25,6 +24,15 @@ def enableSeparateBuildPerCPUArchitecture = false
  * Run Proguard to shrink the Java bytecode in release builds.
  */
 def enableProguardInReleaseBuilds = false
+
+/**
+ * Use international variant JavaScriptCore
+ * International variant includes ICU i18n library and necessary data allowing to use
+ * e.g. Date.toLocaleString and String.localeCompare that give correct results
+ * when using with locales other than en-US.
+ * Note that this variant is about 6MiB larger per architecture than default.
+ */
+def useIntlJsc = false
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -80,6 +88,10 @@ android {
 }
 
 dependencies {
+    // JSC from node_modules
+    if (useIntlJsc) {
+        implementation 'org.webkit:android-jsc-intl:+'
+    }
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation project(":hypertrack-sdk-react-native")
     implementation "com.facebook.react:react-native:+"  // From node_modules
