@@ -190,7 +190,7 @@ After Cocoapods is finished installing dependencies, we need to manually link th
 
 1. Open the iOS module files directory, located inside `node_modules/hypertrack-sdk-react-native/ios/`.
 2. Open the app's workspace file (`.xcworkspace`) in Xcode.
-3. Move the `HyperTrack.h` and `HyperTrack.m` files to your project. When shown a popup window, select `Create folder references` and make sure `Copy items if needed` is deselected. This will allow to update those files every time the JS module updates.
+3. Move the `HyperTrack.h` and `HyperTrack.m` files to your project. When shown a popup window, select `Create folder references` and make sure `Copy items if needed` is deselected. This will allow these files to update every time the JS module updates.
 
 ![Linking on iOS](Images/link.gif)
 
@@ -318,37 +318,38 @@ If you want to make sure to only pass HyperTrack notifications to the SDK, you c
 
 ## Usage
 
-### Initialize
-
 ```js
-import {HyperTrack} from 'hypertrack-sdk-react-native';
+// Import HyperTrack SDK API
+// You can also use CriticalErrors to react to different kind of errors preventing tracking (ex: permissions deined)
+import {CriticalErrors, HyperTrack} from 'hypertrack-sdk-react-native';
 
-const PUBLISHABLE_KEY = "paste_your_key_here";
-export default class App extends Component<{}> {
-
-    constructor(props) {
-            super(props);
-            HyperTrack.initialize(PUBLISHABLE_KEY);
-            HyperTrack.enableDebugLogging(true);
-        }
-
-}
-```
-
-### Add tracking listeners
-
-```js
-export default class App extends Component<{}> {
-    ...
+export default class App extends Component {
 
     state = {
-        ...
-        isTracking: false,
-        trackingState: "",
+        deviceID: "",
+        isTracking: true
     };
 
-    componentWillMount() {
-        HyperTrack.addTrackingListeners(this,
+    _initializeHyperTrack = async () => {
+        // (Optional) This turns on logging for underlying native SDKs. Placed on top so SDKs start logging immediately
+        HyperTrack.enableDebugLogging(true);
+
+        // Initialize HyperTrack with a publishable key
+        this.hyperTrack = await HyperTrack.createInstance("paste_your_key_here");
+
+        // Obtain the unique HyperTrack's DeviceID identifier to use it with HyperTrack's APIs
+        const deviceID = await this.hyperTrack.getDeviceID();
+        this.setState({deviceID: deviceID});
+
+        // (Optional) Set the device name to display in dashboard (for ex. user name)
+        this.hyperTrack.setDeviceName("Your Device Name");
+
+        // (Optional) Attach any JSON metadata to this device to see in HyperTrack's API responses
+        this.hyperTrack.setMetadata({driver_id: "83B3X5", state: "IN_PROGRESS"});
+
+        // (Optional) Register tracking listeners to update your UI when SDK starts/stops or react to errors
+        this.hyperTrack.registerTrackingListeners(this,
+            // Log errors or update UI accordingly
             (error) => {
                 if (error.code === CriticalErrors.INVALID_PUBLISHABLE_KEY
                     || error.code === CriticalErrors.AUTHORIZATION_FAILED) {
@@ -356,18 +357,26 @@ export default class App extends Component<{}> {
                 } else {
                     console.log("Tracking failed")
                 }
-                this.setState({
-                    trackingState: "Stopped with error: " + ((error.code + " - " + error.message) || "unknown"),
-                    isTracking: false
-                })
             },
-            () => this.setState({trackingState: "Started", isTracking: true}),
-            () => this.setState({trackingState: "Stopped", isTracking: false}));
+            // Update UI when tracking starts
+            () => this.setState({isTracking: true}),
+            // Update UI when tracking stops
+            () => this.setState({isTracking: false})
+        );
+
+
+    };
+
+    // Call the initialization in componentWillMount
+    componentWillMount() {
+        this._initializeHyperTrack();
     }
 
+    // (Optional) Unregister tracking listeners if they were registered in previous step
     componentWillUnmount() {
-        HyperTrack.removeTrackingListeners(this);
+        this.hyperTrack.unregisterTrackingListeners(this);
     }
+
 }
 ```
 

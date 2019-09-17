@@ -28,7 +28,7 @@ RCT_EXPORT_MODULE();
 
 #pragma mark - HyperTrack SDK
 
-RCT_EXPORT_METHOD(initialize :(NSString *)publishableKey startsTracking :(BOOL)startsTracking) {
+RCT_EXPORT_METHOD(initialize :(NSString *)publishableKey startsTracking :(BOOL)startsTracking :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     RCTLogInfo(@"Initializing HyperTrack with publishableKey: %@", publishableKey);
     __weak __typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -38,6 +38,7 @@ RCT_EXPORT_METHOD(initialize :(NSString *)publishableKey startsTracking :(BOOL)s
         if (startsTracking) {
           [HTSDK startTracking];
         }
+        resolve(nil);
     });
 }
 
@@ -57,19 +58,23 @@ RCT_EXPORT_METHOD(enableDebugLogging:(BOOL)isEnable) {
   
 }
 
-RCT_EXPORT_METHOD(isTracking :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(isTracking:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     resolve([NSNumber numberWithBool:[HTSDK isTracking]]);
 }
 
-RCT_EXPORT_METHOD(getDeviceID: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(getDeviceID:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     NSString * deviceId = [HTSDK deviceID];
     resolve(deviceId);
 }
 
-RCT_EXPORT_METHOD(setDevice :(NSString *)name :(NSDictionary<NSString*, id>*)metadata :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(setDeviceName:(NSString *)deviceName :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  HTSDK.deviceName = deviceName;
+  resolve(nil);
+}
+
+RCT_EXPORT_METHOD(setMetadata:(NSDictionary<NSString*, id>*)metadata :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   [HTSDKMetadata makeMetadata:metadata
                       success:^(HTSDKMetadata * _Nonnull metadata) {
-                        HTSDK.deviceName = name;
                         HTSDK.metadata = metadata;
                         resolve(nil);
                       } failure:^(HTSDKMetadataError * _Nonnull error) {

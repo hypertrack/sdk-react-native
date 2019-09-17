@@ -7,18 +7,16 @@ export default class App extends Component<{}> {
 
     state = {
         deviceId: "",
-        isTracking: false,
-        trackingState: "",
+        isTracking: true,
+        trackingState: "Started",
     };
 
-    constructor(props) {
-        super(props);
-        HyperTrack.initialize(PUBLISHABLE_KEY);
+    _initializeHyperTrack = async () => {
         HyperTrack.enableDebugLogging(true);
-    }
-
-    componentWillMount() {
-        HyperTrack.addTrackingListeners(this,
+        this.hyperTrack = await HyperTrack.createInstance(PUBLISHABLE_KEY);
+        this.hyperTrack.setDeviceName("RNElvis");
+        this.hyperTrack.setMetadata({key1: "vaLue", key2: "8"});
+        this.hyperTrack.registerTrackingListeners(this,
             (error) => {
                 if (error.code === CriticalErrors.INVALID_PUBLISHABLE_KEY
                     || error.code === CriticalErrors.AUTHORIZATION_FAILED) {
@@ -33,16 +31,24 @@ export default class App extends Component<{}> {
             },
             () => this.setState({trackingState: "Started", isTracking: true}),
             () => this.setState({trackingState: "Stopped", isTracking: false}));
-        HyperTrack.getDeviceID().then((deviceId) => {
-            console.log(deviceId);
-            this.setState({deviceId: deviceId});
-        });
-        HyperTrack.setTripMarker({key1: "value", key2: "7"});
-        HyperTrack.setDevice("Elvis", {key1: "value", key2: "7"});
+        const deviceId = await this.hyperTrack.getDeviceID();
+        console.log(deviceId);
+        this.setState({deviceId: deviceId});
+    };
+
+    _onPressTrackingButton  = async () => {
+        const isTracking = await this.hyperTrack.isTracking();
+
+        if (isTracking) this.hyperTrack.stopTracking();
+        else this.hyperTrack.startTracking();
+    };
+
+    componentWillMount() {
+        this._initializeHyperTrack();
     }
 
     componentWillUnmount() {
-        HyperTrack.removeTrackingListeners(this);
+        this.hyperTrack.unregisterTrackingListeners(this);
     }
 
     render() {
@@ -58,9 +64,7 @@ export default class App extends Component<{}> {
                 <Button
                     style={styles.button}
                     title={isTracking ? "Stop tracking" : "Start tracking"}
-                    onPress={() => {
-                        HyperTrack.isTracking().then((isTracking) => isTracking ? HyperTrack.stopTracking() : HyperTrack.startTracking())
-                    }}
+                    onPress={this._onPressTrackingButton.bind(this)}
                 />
                 <Text style={styles.textTitle}>{"Tracking state"}</Text>
                 <Text style={styles.text}>{trackingState}</Text>
