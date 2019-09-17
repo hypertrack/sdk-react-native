@@ -22,21 +22,27 @@ Functionality is provided through one single npm package so you can use it for b
 
 ## Publishable Key
 
-We use Publishable Key to idetify your devices. To get one:
+We use Publishable Key to identify your devices. To get one:
 1. Go to the [Signup page](https://dashboard.hypertrack.com/signup). Enter your email address and password.
 2. Open the verification link sent to your email.
 3. Open the [Setup page](https://dashboard.hypertrack.com/setup), where you can copy your Publishable Key.
 
 ![Signup flow](Images/Signup_flow.png)
 
-## Installation
+## Integrate the React Native SDK
 
 In case you are not using React Native, you can refer to the [iOS](https://github.com/hypertrack/quickstart-ios) or [Android](https://github.com/hypertrack/quickstart-android) versions.
 If you want to quickly try the module in a test app, you can use the [React Native Quickstart app](https://github.com/hypertrack/quickstart-react-native).
 
 You will need either [npm](https://www.npmjs.com/) or [Yarn](https://yarnpkg.com) in order to install the SDK and configure the Android and iOS projects.
 
-### 1. Create React Native project
+1. [Create React Native project](#step-1-create-react-native-project)
+2. [Install JavaScript packages](#step-2-install-javascript-packages)
+3. [Configure projects](#step-3-configure-projects)
+4. [Enable remote notifications](#step-4-enable-remote-notifications)
+5. [Usage](#step-5-usage)
+
+### Step 1: Create React Native project
 
 First create a React Native project:
 
@@ -44,7 +50,7 @@ First create a React Native project:
 react-native init YourApp
 ```
 
-### 2. Install JavaScript packages
+### Step 2: Install JavaScript packages
 
 Run `yarn` (or `npm install`, if using npm) inside your new `YourApp` directory:
 
@@ -70,9 +76,9 @@ Finally, link the SDK to configure the iOS and Android projects:
 ```bash
 react-native link hypertrack-sdk-react-native
 ```
-### 3. Configure projects
+### Step 3: Configure projects
 
-#### 3.1 Android
+#### Android
 
 Assuming you have [Android Studio](http://developer.android.com/sdk/index.html) installed, open the project with Android Studio.
 
@@ -138,7 +144,7 @@ Set `allowBackup` to `true` in `android > app > src > main > AndroidManifest.xml
       android:allowBackup="true">
 ```
 
-#### 3.2 iOS
+#### iOS
 
 ##### Add HyperTrack iOS SDK to your Podfile
 
@@ -212,21 +218,21 @@ You can ask for "When In Use" permission only, but be advised that the device wi
 
 Be advised, purpose strings are mandatory, and the app crashes without them.
 
-## Enable remote notifications
+### Step 4: Enable remote notifications
 
 The SDK has a bi-directional communication model with the server. This enables the SDK to run on a variable frequency model, which balances the fine trade-off between low latency tracking and battery efficiency, and improves robustness. This also enables HyperTrack Trips to start and stop tracking automatically when trip starts and ends. For this purpose, the iOS SDK uses APNs silent remote notifications and Android SDK uses FCM silent notifications.
 
-### Android
+#### Android
 
 This guide assumes you have configured FCM in your application. If you haven't, read the [Firebase guide](https://firebase.google.com/docs/android/setup).
 
-#### Configure FCM key on the Dashboard
+##### Configure FCM key on the Dashboard
 
 Log into the HyperTrack dashboard, and open the [setup page](https://dashboard.hypertrack.com/setup). Enter your FCM Key.
 
 This key will only be used to send remote push notifications to your apps.
 
-##### Enable server to device communication
+###### Enable server to device communication
 
 Specify `HyperTrackMessagingService` as push messages receiver by adding following snippet to your app's Android manifest:
 
@@ -244,17 +250,17 @@ If you already use firebase push notifications you can extend `HyperTrackMessagi
 
 Check out [Quickstart app with notifications integrated](https://github.com/hypertrack/quickstart-android/tree/push-integration-example) if you prefer to get a look at example.
 
-### iOS
+#### iOS
 
 This guide assumes you have configured APNs in your application. If you haven't, read the [iOS documentation on APNs](https://developer.apple.com/documentation/usernotifications/registering_your_app_with_apns).
 
-#### Configure APNs on the dashboard
+##### Configure APNs on the dashboard
 
 Log into the HyperTrack dashboard, and open the [setup page](https://dashboard.hypertrack.com/setup). Upload your Auth Key (file in the format `AuthKey_KEYID.p8`) and fill in your Team ID.
 
 This key will only be used to send remote push notifications to your apps.
 
-#### Enable remote notifications in the app
+##### Enable remote notifications in the app
 
 In the app capabilities, ensure that **remote notifications** inside background modes is enabled.
 
@@ -264,11 +270,11 @@ In the same tab, ensure that **push notifications** is enabled.
 
 ![Push Notifications in Xcode](Images/Push_Notifications.png)
 
-#### Registering and receiving notifications
+##### Registering and receiving notifications
 
 The following changes inside AppDelegate will register the SDK for push notifications and route HyperTrack notifications to the SDK.
 
-##### Register for notifications
+###### Register for notifications
 
 Inside `didFinishLaunchingWithOptions`, use the SDK method to register for notifications.
 
@@ -279,7 +285,7 @@ Inside `didFinishLaunchingWithOptions`, use the SDK method to register for notif
 }
 ```
 
-##### Register device token
+###### Register device token
 
 Inside and `didRegisterForRemoteNotificationsWithDeviceToken` and `didFailToRegisterForRemoteNotificationsWithError` methods, add the relevant lines so that HyperTrack can register the device token.
 
@@ -293,7 +299,7 @@ Inside and `didRegisterForRemoteNotificationsWithDeviceToken` and `didFailToRegi
 }
 ```
 
-##### Receive notifications
+###### Receive notifications
 
 Inside the `didReceiveRemoteNotification` method, add the HyperTrack receiver. This method parses only the notifications that sent from HyperTrack.
 
@@ -316,7 +322,7 @@ If you want to make sure to only pass HyperTrack notifications to the SDK, you c
 }
 ```
 
-## Usage
+### Step 5: Usage
 
 ```js
 // Import HyperTrack SDK API
@@ -394,14 +400,14 @@ Once your app is running, go to the [dashboard](https://dashboard.hypertrack.com
 
 ### iOS
 - [What iOS versions are supported](#supported-versions-on-ios)
-- [TrackingErrors: Access to Activity services has not been authorized](#error-access-to-activity-services-has-not-been-authorized)
+- [Error: Access to Activity services has not been authorized](#error-access-to-activity-services-has-not-been-authorized)
 
 #### Supported versions on iOS
 
 Currently we do support all of the iOS versions starting from iOS 11.
 
-#### TrackingErrors: Access to Activity services has not been authorized
-You are running the quickstart app on the iOS simulator, which currently does not support CoreMotion services. You can test the quickstart app on real iOS devices only.
+#### Error: Access to Activity services has not been authorized
+You are running your app on the iOS simulator, which currently does not support CoreMotion services. You can test the quickstart app on real iOS devices only.
 
 ### Android
 - [What API levels (Android versions) are supported](#supported-versions-on-android)
