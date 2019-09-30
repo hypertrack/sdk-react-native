@@ -23,6 +23,13 @@ class HyperTrackAPI {
     }
 
     /**
+     * Update device state from server.
+     */
+    syncDeviceSettings() {
+        return HyperTrack.syncDeviceSettings();
+    }
+
+    /**
      * Start or resume tracking location and activity events.
      */
     startTracking() {

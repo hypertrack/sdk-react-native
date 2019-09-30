@@ -115,6 +115,11 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void syncDeviceSettings() {
+        HyperTrack.syncDeviceSettings();
+    }
+
+    @ReactMethod
     public void setTripMarker(ReadableMap rMap, Promise promise) {
         try {
             HyperTrack.tripMarker(rMap.toHashMap());

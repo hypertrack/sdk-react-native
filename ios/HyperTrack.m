@@ -58,6 +58,10 @@ RCT_EXPORT_METHOD(enableDebugLogging:(BOOL)isEnable) {
   
 }
 
+RCT_EXPORT_METHOD(syncDeviceSettings) {
+    [HTSDK syncDeviceSettings];
+}
+
 RCT_EXPORT_METHOD(isTracking:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     resolve([NSNumber numberWithBool:[HTSDK isTracking]]);
 }
