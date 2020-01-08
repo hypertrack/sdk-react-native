@@ -2,6 +2,13 @@
 #import <React/RCTLog.h>
 #import <React/RCTEventDispatcher.h>
 
+@interface HyperTrack ()
+
+@property(nonatomic) HTSDK *hyperTrack;
+
+@end
+
+
 @implementation HyperTrack
 
 /**
@@ -33,21 +40,26 @@ RCT_EXPORT_METHOD(initialize :(NSString *)publishableKey startsTracking :(BOOL)s
     __weak __typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         [weakSelf addObservers];
-        HTSDK.publishableKey = publishableKey;
-      
-        if (startsTracking) {
-          [HTSDK startTracking];
+        HTResult *result = [HTSDK makeSDKWithPublishableKey:publishableKey];
+        if (result.hyperTrack != nil) {
+          RCTLogInfo(@"Successfully set publishableKey and created SDK instance");
+          self.hyperTrack = result.hyperTrack;
+          if (startsTracking) {
+            [self.hyperTrack start];
+          }
+        } else if (result.error != nil) {
+          [self sendError:result.error];
         }
         resolve(nil);
     });
 }
 
 RCT_EXPORT_METHOD(startTracking) {
-    [HTSDK startTracking];
+    [self.hyperTrack start];
 }
 
 RCT_EXPORT_METHOD(stopTracking) {
-    [HTSDK stopTracking];
+    [self.hyperTrack stop];
 }
 
 RCT_EXPORT_METHOD(subscribeOnEvents) {
@@ -58,48 +70,39 @@ RCT_EXPORT_METHOD(enableDebugLogging:(BOOL)isEnable) {
   
 }
 
-RCT_EXPORT_METHOD(syncDeviceSettings) {
-    [HTSDK syncDeviceSettings];
-}
-
 RCT_EXPORT_METHOD(isTracking:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-    resolve([NSNumber numberWithBool:[HTSDK isTracking]]);
+    resolve([NSNumber numberWithBool:[self.hyperTrack isRunning]]);
 }
 
 RCT_EXPORT_METHOD(getDeviceID:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-    NSString * deviceId = [HTSDK deviceID];
-    resolve(deviceId);
+    resolve(self.hyperTrack.deviceID);
 }
 
 RCT_EXPORT_METHOD(setDeviceName:(NSString *)deviceName :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  HTSDK.deviceName = deviceName;
+  self.hyperTrack.deviceName = deviceName;
   resolve(nil);
 }
 
 RCT_EXPORT_METHOD(setMetadata:(NSDictionary<NSString*, id>*)metadata :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  [HTSDKMetadata makeMetadata:metadata
-                      success:^(HTSDKMetadata * _Nonnull metadata) {
-                        HTSDK.metadata = metadata;
-                        resolve(nil);
-                      } failure:^(HTSDKMetadataError * _Nonnull error) {
-                        NSError * nsError = [NSError errorWithDomain:@"HyperTrackMetadataError"
-                                                                code:-1
-                                                            userInfo:@{@"description": error.errorMessage}];
-                        reject([NSString stringWithFormat:@"%d", (int)nsError.code], nsError.localizedDescription, nsError);
-                      }];
+  HTMetadata *hyperTrackMetadata = [[HTMetadata alloc] initWithDictionary:metadata];
+  if (metadata != nil) {
+    [self.hyperTrack setDeviceMetadata:hyperTrackMetadata];
+    resolve(nil);
+  } else {
+    NSError *error = [NSError errorWithDomain:@"HyperTrackMetadataError" code:-1 userInfo:@{ @"description": @"Metadata is not a valid JSON" }];
+    reject([NSString stringWithFormat:@"%d", (int)error.code], error.localizedDescription, error);
+  }
 }
 
 RCT_EXPORT_METHOD(setTripMarker:(NSDictionary<NSString*, id>*)metadata :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  [HTSDKMetadata makeMetadata:metadata
-                      success:^(HTSDKMetadata * _Nonnull metadata) {
-                        [HTSDK setTripMarker: metadata];
-                        resolve(nil);
-                      } failure:^(HTSDKMetadataError * _Nonnull error) {
-                        NSError * nsError = [NSError errorWithDomain:@"HyperTrackMetadataError"
-                                                                code:-1
-                                                            userInfo:@{@"description": error.errorMessage}];
-                        reject([NSString stringWithFormat:@"%d", (int)nsError.code], nsError.localizedDescription, nsError);
-                      }];
+  HTMetadata *hyperTrackMetadata = [[HTMetadata alloc] initWithDictionary:metadata];
+  if (metadata != nil) {
+    [self.hyperTrack addTripMarker:hyperTrackMetadata];
+    resolve(nil);
+  } else {
+    NSError *error = [NSError errorWithDomain:@"HyperTrackMetadataError" code:-1 userInfo:@{ @"description": @"Trip marker is not a valid JSON" }];
+    reject([NSString stringWithFormat:@"%d", (int)error.code], error.localizedDescription, error);
+  }
 }
 
 #pragma mark - NSNotificationCenter
@@ -108,15 +111,19 @@ RCT_EXPORT_METHOD(setTripMarker:(NSDictionary<NSString*, id>*)metadata :(RCTProm
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(sendTrackingStateToRNWith:)
-                                                 name:HyperTrackStartedTrackingNotification
+                                                 name:HTSDK.startedTrackingNotification
                                                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(sendTrackingStateToRNWith:)
-                                                 name:HyperTrackStoppedTrackingNotification
+                                                 name:HTSDK.stoppedTrackingNotification
                                                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(sendCriticalErrorToRNWith:)
-                                                 name:HyperTrackDidEncounterCriticalErrorNotification
+                                             selector:@selector(sendCriticalErrorForNotification:)
+                                                 name:HTSDK.didEncounterRestorableErrorNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(sendCriticalErrorForNotification:)
+                                                 name:HTSDK.didEncounterUnrestorableErrorNotification
                                                object:nil];
 }
 
@@ -129,24 +136,40 @@ RCT_EXPORT_METHOD(setTripMarker:(NSDictionary<NSString*, id>*)metadata :(RCTProm
   } else {
     return;
   }
-  [self sendEventWithName: eventName body: @{@"isTracking": @([HTSDK isTracking])}];
+  [self sendEventWithName: eventName body: @{@"isTracking": @([self.hyperTrack isRunning])}];
 }
 
-- (void)sendCriticalErrorToRNWith:(NSNotification*)notification {
-  [self sendEventWithName: @"onTrackingErrorHyperTrack" body: @{@"code": [self convertNativeErrorTypeToRN:[notification HTSDKError].type],
-                                                                @"message": [notification HTSDKError].errorMessage}];
+- (void)sendCriticalErrorForNotification:(NSNotification *)notification {
+  [self sendError:[notification hyperTrackTrackingError]];
 }
 
-- (NSNumber*)convertNativeErrorTypeToRN:(HTSDKCriticalErrorType)nativeType {
-  switch (nativeType) {
-    case criticalErrorPermissionDenied:
+- (void)sendError:(NSError *)error {
+  if (error != nil) {
+    [self sendEventWithName: @"onTrackingErrorHyperTrack"
+                       body: @{ @"code": [self convertErrorCodeToRN:[error code]], @"message": error.localizedDescription }];
+  }
+}
+
+- (NSNumber *)convertErrorCodeToRN:(NSInteger)errorCode {
+  switch (errorCode) {
+    case HTRestorableErrorLocationPermissionsDenied:
+    case HTRestorableErrorLocationServicesDisabled:
+    case HTRestorableErrorMotionActivityServicesDisabled:
+    case HTUnrestorableErrorMotionActivityPermissionsDenied:
+    case HTFatalErrorProductionMotionActivityPermissionsDenied:
       return [NSNumber numberWithInteger:permissionDenied];
-    case criticalErrorAuthorizationError:
+      break;
+    case HTRestorableErrorTrialEnded:
+    case HTRestorableErrorPaymentDefault:
       return [NSNumber numberWithInteger:authorizationError];
-    case criticalErrorInvalidPublishableKey:
+      break;
+    case HTUnrestorableErrorInvalidPublishableKey:
+    case HTFatalErrorDevelopmentPublishableKeyIsEmpty:
       return [NSNumber numberWithInteger:invalidPublishableKey];
-    case criticalErrorGeneralError:
+      break;
+    default:
       return [NSNumber numberWithInteger:generalError];
+      break;
   }
 }
 

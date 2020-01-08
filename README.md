@@ -2,7 +2,7 @@
 
 ![GitHub](https://img.shields.io/github/license/hypertrack/sdk-react-native.svg)
 ![npm](https://img.shields.io/npm/v/hypertrack-sdk-react-native.svg)
-[![iOS SDK](https://img.shields.io/badge/iOS%20SDK-3.7.0-brightgreen.svg)](https://cocoapods.org/pods/HyperTrack)
+[![iOS SDK](https://img.shields.io/badge/iOS%20SDK-4.0.1-brightgreen.svg)](https://cocoapods.org/pods/HyperTrack)
 ![Android SDK](https://img.shields.io/badge/Android%20SDK-3.4.6-brightgreen.svg)
 
 [HyperTrack](https://www.hypertrack.com) lets you add live location tracking to your mobile app. Live location is made available along with ongoing activity, tracking controls and tracking outage with reasons.
@@ -164,19 +164,9 @@ Edit the Podfile to include `HyperTrack` as a dependency for your project by add
 ```bash
 platform :ios, '11.0'
 
-target 'YourApp' do
+target 'Quickstart' do
   use_frameworks!
-  pod 'HyperTrack'
-end
-
-post_install do |installer|
-  installer.pods_project.targets.each do |target|
-    if ['GRDB.swift'].include? target.name
-      target.build_configurations.each do |config|
-        config.build_settings['SWIFT_VERSION'] = '4.2'
-      end
-    end
-  end
+  pod 'HyperTrack/Objective-C', '4.0.1'
 end
 ```
 
