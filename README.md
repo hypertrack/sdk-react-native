@@ -14,8 +14,8 @@ SDK proviced access to functionality that collects location, activity and device
 Functionality is provided through one single npm package so you can use it for both platforms without downloading any extra packages.
 
 * [Publishable Key](#publishable-key)–Sign up and get your keys
-* [Installation](#installation)–Integrate the HyperTrack into your app
-* [Enable remote notifications](#enable-remote-notifications)–Improve battery efficiency and enable HyperTrack Trips
+* [Installation](#integrate-the-react-native-sdk)–Integrate the HyperTrack into your app
+* [Enable remote notifications](#step-4-enable-remote-notifications)–Improve battery efficiency and enable HyperTrack Trips
 * [Dashboard](#dashboard)–See live location of all your devices on your HyperTrack dashboard
 * [FAQs](#frequently-asked-questions)–Frequently asked questions
 * [Support](#support)–Support
