@@ -9,4 +9,4 @@
 
 React Native HyperTrack SDK is a wrapper around native iOS and Android SDKs that allows to integrate them into React Native apps.
 
-For information about how to get started with React Native SDK, please visit this [HyperTrack Guide](https://www.hypertrack.com/docs/install-sdk-react-native).
+For information about how to get started with React Native SDK, please visit this [HyperTrack Guide](https://www.hypertrack.com/docs/install-sdk-react).
