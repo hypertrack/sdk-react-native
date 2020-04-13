@@ -3,10 +3,8 @@ apply plugin: 'com.android.library'
 buildscript {
     repositories {
         mavenCentral()
-        maven {
-            url 'https://maven.google.com/'
-            name 'Google'
-        }
+        jcenter()
+        google()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.4.2'
@@ -49,10 +47,7 @@ dependencies {
 repositories {
     jcenter()
     mavenCentral()
-    maven {
-        url 'https://maven.google.com/'
-        name 'Google'
-    }
+    google()
     maven {
         name 'hypertrack'
         url 'http://m2.hypertrack.com'
