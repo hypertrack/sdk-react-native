@@ -100,10 +100,11 @@ module.exports = {
     /**
      * Initialize the HyperTrack SDK
      * @param {string} publishableKey - A unique String that is used to identify your account with HyperTrack.
-     * @param {boolean} startsTracking - Should the SDK start tracking immediately after initialization
+     * @param {boolean} startsTracking - Should the SDK start tracking immediately after initialization.
+     * @param {boolean} automaticallyRequestPermissions - If true, SDK automatically triggers location and motion activity permissions dialogs when tracking starts.
      */
-    async createInstance(publishableKey, startsTracking = true): Promise<HyperTrackAPI> {
-        await HyperTrack.initialize(publishableKey, startsTracking);
+    async createInstance(publishableKey, startsTracking = true, automaticallyRequestPermissions = true): Promise<HyperTrackAPI> {
+        await HyperTrack.initialize(publishableKey, startsTracking, automaticallyRequestPermissions);
         return new HyperTrackAPI();
     },
     /**

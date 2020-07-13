@@ -35,12 +35,12 @@ RCT_EXPORT_MODULE();
 
 #pragma mark - HyperTrack SDK
 
-RCT_EXPORT_METHOD(initialize :(NSString *)publishableKey startsTracking :(BOOL)startsTracking :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(initialize:(NSString *)publishableKey startsTracking:(BOOL)startsTracking automaticallyRequestPermissions:(BOOL)automaticallyRequestPermissions :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     RCTLogInfo(@"Initializing HyperTrack with publishableKey: %@", publishableKey);
     __weak __typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         [weakSelf addObservers];
-        HTResult *result = [HTSDK makeSDKWithPublishableKey:publishableKey];
+        HTResult *result = [HTSDK makeSDKWithPublishableKey:publishableKey automaticallyRequestPermissions:automaticallyRequestPermissions];
         if (result.hyperTrack != nil) {
           RCTLogInfo(@"Successfully set publishableKey and created SDK instance");
           self.hyperTrack = result.hyperTrack;
@@ -97,10 +97,10 @@ RCT_EXPORT_METHOD(setMetadata:(NSDictionary<NSString*, id>*)metadata :(RCTPromis
 RCT_EXPORT_METHOD(setTripMarker:(NSDictionary<NSString*, id>*)metadata :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   HTMetadata *hyperTrackMetadata = [[HTMetadata alloc] initWithDictionary:metadata];
   if (metadata != nil) {
-    [self.hyperTrack addTripMarker:hyperTrackMetadata];
+    [self.hyperTrack addGeotag:hyperTrackMetadata];
     resolve(nil);
   } else {
-    NSError *error = [NSError errorWithDomain:@"HyperTrackMetadataError" code:-1 userInfo:@{ @"description": @"Trip marker is not a valid JSON" }];
+    NSError *error = [NSError errorWithDomain:@"HyperTrackMetadataError" code:-1 userInfo:@{ @"description": @"Geotag is not a valid JSON" }];
     reject([NSString stringWithFormat:@"%d", (int)error.code], error.localizedDescription, error);
   }
 }

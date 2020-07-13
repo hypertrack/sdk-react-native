@@ -45,7 +45,7 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void initialize(String publishableKey, Boolean startsTracking, Promise promise) {
+    public void initialize(String publishableKey, Boolean startsTracking, Boolean automaticallyRequestPermissions, Promise promise) {
         if (getReactApplicationContext().getApplicationContext() != null) {
             HyperTrack.initialize(getReactApplicationContext().getApplicationContext(),
                     publishableKey,
