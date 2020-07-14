@@ -127,6 +127,10 @@ RCT_EXPORT_METHOD(stopTracking) {
     [self.hyperTrack stop];
 }
 
+RCT_EXPORT_METHOD(syncDeviceSettings) {
+    [self.hyperTrack syncDeviceSettings];
+}
+
 RCT_EXPORT_METHOD(subscribeOnEvents) {
   
 }
