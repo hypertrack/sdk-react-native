@@ -40,17 +40,82 @@ RCT_EXPORT_METHOD(initialize:(NSString *)publishableKey startsTracking:(BOOL)sta
     __weak __typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         [weakSelf addObservers];
-        HTResult *result = [HTSDK makeSDKWithPublishableKey:publishableKey automaticallyRequestPermissions:automaticallyRequestPermissions];
+        HTResult *result = [HTSDK makeSDKWithPublishableKey:publishableKey
+                            automaticallyRequestPermissions:automaticallyRequestPermissions];
         if (result.hyperTrack != nil) {
           RCTLogInfo(@"Successfully set publishableKey and created SDK instance");
           self.hyperTrack = result.hyperTrack;
           if (startsTracking) {
             [self.hyperTrack start];
           }
-        } else if (result.error != nil) {
-          [self sendError:result.error];
+          resolve(nil);
+        } else {
+          switch ([result.error code]) {
+            
+            case HTFatalErrorDevelopmentPublishableKeyIsEmpty:
+            {
+              NSError *error = [NSError errorWithDomain: result.error.domain
+                                                   code: invalidPublishableKey
+                                               userInfo: result.error.userInfo];
+              reject([NSString stringWithFormat:@"%d", (int)error.code], error.localizedDescription, error);
+            }
+              break;
+            
+            case HTFatalErrorDevelopmentMissingLocationUpdatesBackgroundModeCapability:
+            {
+              NSError *error = [NSError errorWithDomain: result.error.domain
+                                                   code: generalError
+                                               userInfo: result.error.userInfo];
+              reject([NSString stringWithFormat:@"%d", (int)error.code], error.localizedDescription, error);
+            }
+              break;
+              
+            case HTFatalErrorDevelopmentRunningOnSimulatorUnsupported:
+            {
+              NSError *error = [NSError errorWithDomain: result.error.domain
+                                                   code: generalError
+                                               userInfo: result.error.userInfo];
+              reject([NSString stringWithFormat:@"%d", (int)error.code], error.localizedDescription, error);
+            }
+              break;
+              
+            case HTFatalErrorProductionLocationServicesUnavalible:
+            {
+              NSError *error = [NSError errorWithDomain: result.error.domain
+                                                   code: permissionDenied
+                                               userInfo: result.error.userInfo];
+              reject([NSString stringWithFormat:@"%d", (int)error.code], error.localizedDescription, error);
+            }
+              break;
+              
+            case HTFatalErrorProductionMotionActivityServicesUnavalible:
+            {
+              NSError *error = [NSError errorWithDomain: result.error.domain
+                                                   code: permissionDenied
+                                               userInfo: result.error.userInfo];
+              reject([NSString stringWithFormat:@"%d", (int)error.code], error.localizedDescription, error);
+            }
+              break;
+              
+            case HTFatalErrorProductionMotionActivityPermissionsDenied:
+            {
+              NSError *error = [NSError errorWithDomain: result.error.domain
+                                                   code: permissionDenied
+                                               userInfo: result.error.userInfo];
+              reject([NSString stringWithFormat:@"%d", (int)error.code], error.localizedDescription, error);
+            }
+              break;
+              
+            default:
+            {
+              NSError *error = [NSError errorWithDomain: result.error.domain
+                                                   code: generalError
+                                               userInfo: result.error.userInfo];
+              reject([NSString stringWithFormat:@"%d", (int)error.code], error.localizedDescription, error);
+            }
+              break;
+          }
         }
-        resolve(nil);
     });
 }
 
