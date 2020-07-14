@@ -10,7 +10,9 @@
 
 
 @implementation HyperTrack
-
+{
+  bool hasListeners;
+}
 /**
  * RN Critical error type.
  */
@@ -31,6 +33,14 @@ RCT_EXPORT_MODULE();
     return @[@"onTrackingErrorHyperTrack",
              @"onTrackingStopHyperTrack",
              @"onTrackingStartHyperTrack"];
+}
+
+- (void)startObserving {
+    hasListeners = YES;
+}
+
+- (void)stopObserving {
+    hasListeners = NO;
 }
 
 #pragma mark - HyperTrack SDK
@@ -205,7 +215,9 @@ RCT_EXPORT_METHOD(setTripMarker:(NSDictionary<NSString*, id>*)metadata :(RCTProm
   } else {
     return;
   }
-  [self sendEventWithName: eventName body: @{@"isTracking": @([self.hyperTrack isRunning])}];
+  if (hasListeners) {
+    [self sendEventWithName: eventName body: @{@"isTracking": @([self.hyperTrack isRunning])}];
+  }
 }
 
 - (void)sendCriticalErrorForNotification:(NSNotification *)notification {
@@ -213,7 +225,7 @@ RCT_EXPORT_METHOD(setTripMarker:(NSDictionary<NSString*, id>*)metadata :(RCTProm
 }
 
 - (void)sendError:(NSError *)error {
-  if (error != nil) {
+  if (error != nil && hasListeners) {
     [self sendEventWithName: @"onTrackingErrorHyperTrack"
                        body: @{ @"code": [self convertErrorCodeToRN:[error code]], @"message": error.localizedDescription }];
   }
