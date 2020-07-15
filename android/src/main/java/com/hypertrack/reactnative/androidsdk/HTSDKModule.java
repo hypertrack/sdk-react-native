@@ -1,6 +1,5 @@
 package com.hypertrack.reactnative.androidsdk;
 
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
@@ -12,18 +11,11 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
-import com.google.gson.reflect.TypeToken;
-import com.hypertrack.sdk.Config;
-import com.hypertrack.sdk.CoreSDKState;
 import com.hypertrack.sdk.HyperTrack;
 import com.hypertrack.sdk.TrackingError;
 import com.hypertrack.sdk.TrackingStateObserver;
-import com.hypertrack.sdk.persistence.DataStore;
-import com.hypertrack.sdk.utils.StaticUtilsAdapter;
 
-import java.lang.reflect.Type;
-import java.util.Collections;
-import java.util.Map;
+import java.util.Locale;
 
 
 @ReactModule(name = HTSDKModule.NAME)
@@ -48,23 +40,24 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void initialize(String publishableKey, Boolean startsTracking, Boolean automaticallyRequestPermissions, Promise promise) {
         try {
-            sdk = HyperTrack.initialize(
-                    publishableKey,
-                    new Config.Builder()
-                            .enableAutoStartTracking(startsTracking)
-                            .build()
+            sdkInstance = HyperTrack.getInstance(
+                    publishableKey
             );
+            if (startsTracking) {
+                sdkInstance.start();
+            }
             promise.resolve(true);
         } catch (java.lang.Exception exception) {
             Log.e(TAG, "Hypertrack SDK initialization failed.",  exception);
-            promise.reject(RN_ERROR_INVALID_PUBLISHABLE_KEY, new Exception("Hypertrack SDK initialization failed."));
+            String error = String.format(Locale.ENGLISH, "%d", RN_ERROR_INVALID_PUBLISHABLE_KEY);
+            promise.reject(error, new Exception("Hypertrack SDK initialization failed."));
         }
     }
 
     @ReactMethod
     public void subscribeOnEvents() {
         if (trackingStateChangeListener != null) {
-            sdkInstance.removeTrackingStateListener(trackingStateChangeListener);
+            sdkInstance.removeTrackingListener(trackingStateChangeListener);
             trackingStateChangeListener = null;
         }
         trackingStateChangeListener = new TrackingStateObserver.OnTrackingStateChangeListener() {
@@ -92,17 +85,17 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
                         .emit("onTrackingStopHyperTrack", null);
             }
         };
-        sdkInstance.addTrackingStateListener(trackingStateChangeListener);
+        sdkInstance.addTrackingListener(trackingStateChangeListener);
     }
 
     @ReactMethod
     public void getDeviceID(Promise promise) {
-        promise.resolve(sdkInstance.getDeviceId());
+        promise.resolve(sdkInstance.getDeviceID());
     }
 
     @ReactMethod
     public void isTracking(Promise promise) {
-        promise.resolve(sdkInstance.isTracking());
+        promise.resolve(sdkInstance.isRunning());
     }
 
 
@@ -127,7 +120,8 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
             sdkInstance.addGeotag(rMap.toHashMap());
             promise.resolve(null);
         } catch (Exception e) {
-            promise.reject(RN_ERROR_GENERAL, e);
+            String error = String.format(Locale.ENGLISH, "%d", RN_ERROR_GENERAL);
+            promise.reject(error, e);
         }
     }
 
@@ -137,17 +131,19 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
             sdkInstance.setDeviceName(name);
             promise.resolve(true);
         } catch (Exception e) {
-            promise.reject(RN_ERROR_GENERAL, e);
+            String error = String.format(Locale.ENGLISH, "%d", RN_ERROR_GENERAL);
+            promise.reject(error, e);
         }
     }
 
     @ReactMethod
     public void setMetadata(ReadableMap rMap, Promise promise) {
         try {
-            sdkInstance.setDeviceMetadata(name, rMap.toHashMap());
+            sdkInstance.setDeviceMetadata(rMap.toHashMap());
             promise.resolve(true);
         } catch (Exception e) {
-            promise.reject(RN_ERROR_GENERAL, e);
+            String error = String.format(Locale.ENGLISH, "%d", RN_ERROR_GENERAL);
+            promise.reject(error, e);
         }
     }
 
