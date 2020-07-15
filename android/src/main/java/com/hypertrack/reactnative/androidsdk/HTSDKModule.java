@@ -57,7 +57,7 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
             promise.resolve(true);
         } catch (java.lang.Exception exception) {
             Log.e(TAG, "Hypertrack SDK initialization failed.",  exception);
-            promise.reject(TAG + "_ERROR", new Exception("Hypertrack SDK initialization failed."));
+            promise.reject(RN_ERROR_INVALID_PUBLISHABLE_KEY, new Exception("Hypertrack SDK initialization failed."));
         }
     }
 
@@ -127,7 +127,7 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
             sdkInstance.addGeotag(rMap.toHashMap());
             promise.resolve(null);
         } catch (Exception e) {
-            promise.reject(TAG + "_ERROR", e);
+            promise.reject(RN_ERROR_GENERAL, e);
         }
     }
 
@@ -137,7 +137,7 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
             sdkInstance.setDeviceName(name);
             promise.resolve(true);
         } catch (Exception e) {
-            promise.reject(TAG + "_ERROR", e);
+            promise.reject(RN_ERROR_GENERAL, e);
         }
     }
 
@@ -147,7 +147,7 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
             sdkInstance.setDeviceMetadata(name, rMap.toHashMap());
             promise.resolve(true);
         } catch (Exception e) {
-            promise.reject(TAG + "_ERROR", e);
+            promise.reject(RN_ERROR_GENERAL, e);
         }
     }
 
