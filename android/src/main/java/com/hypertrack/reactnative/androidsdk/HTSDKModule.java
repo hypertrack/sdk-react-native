@@ -29,11 +29,12 @@ import java.util.Map;
 @ReactModule(name = HTSDKModule.NAME)
 public class HTSDKModule extends ReactContextBaseJavaModule {
 
-    private static final String TAG = HTSDKModule.class.getSimpleName();
+    private static final String TAG = "HTSDKModule";
 
     public static final String NAME = "HyperTrack";
 
     public TrackingStateObserver.OnTrackingStateChangeListener trackingStateChangeListener;
+    public HyperTrack sdkInstance;
 
     public HTSDKModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -46,23 +47,24 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void initialize(String publishableKey, Boolean startsTracking, Boolean automaticallyRequestPermissions, Promise promise) {
-        if (getReactApplicationContext().getApplicationContext() != null) {
-            HyperTrack.initialize(getReactApplicationContext().getApplicationContext(),
+        try {
+            sdk = HyperTrack.initialize(
                     publishableKey,
                     new Config.Builder()
                             .enableAutoStartTracking(startsTracking)
-                            .build());
+                            .build()
+            );
             promise.resolve(true);
-        } else {
-            Log.d(TAG, "Hypertrack SDK initialization failed while: ApplicationContext is null");
-            promise.reject(TAG + "_ERROR", new Exception("Hypertrack SDK initialization failed while: ApplicationContext is null"));
+        } catch (java.lang.Exception exception) {
+            Log.e(TAG, "Hypertrack SDK initialization failed.",  exception);
+            promise.reject(TAG + "_ERROR", new Exception("Hypertrack SDK initialization failed."));
         }
     }
 
     @ReactMethod
     public void subscribeOnEvents() {
         if (trackingStateChangeListener != null) {
-            HyperTrack.removeTrackingStateListener(trackingStateChangeListener);
+            sdkInstance.removeTrackingStateListener(trackingStateChangeListener);
             trackingStateChangeListener = null;
         }
         trackingStateChangeListener = new TrackingStateObserver.OnTrackingStateChangeListener() {
@@ -90,39 +92,39 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
                         .emit("onTrackingStopHyperTrack", null);
             }
         };
-        HyperTrack.addTrackingStateListener(trackingStateChangeListener);
+        sdkInstance.addTrackingStateListener(trackingStateChangeListener);
     }
 
     @ReactMethod
     public void getDeviceID(Promise promise) {
-        promise.resolve(HyperTrack.getDeviceId());
+        promise.resolve(sdkInstance.getDeviceId());
     }
 
     @ReactMethod
     public void isTracking(Promise promise) {
-        promise.resolve(HyperTrack.isTracking());
+        promise.resolve(sdkInstance.isTracking());
     }
 
 
     @ReactMethod
     public void startTracking() {
-        HyperTrack.startTracking();
+        sdkInstance.start();
     }
 
     @ReactMethod
     public void stopTracking() {
-        HyperTrack.stopTracking();
+        sdkInstance.stop();
     }
 
     @ReactMethod
     public void syncDeviceSettings() {
-        HyperTrack.syncDeviceSettings();
+        sdkInstance.syncDeviceSettings();
     }
 
     @ReactMethod
     public void setTripMarker(ReadableMap rMap, Promise promise) {
         try {
-            HyperTrack.tripMarker(rMap.toHashMap());
+            sdkInstance.addGeotag(rMap.toHashMap());
             promise.resolve(null);
         } catch (Exception e) {
             promise.reject(TAG + "_ERROR", e);
@@ -132,15 +134,7 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void setDeviceName(String name, Promise promise) {
         try {
-            Map<String, Object> metaData = Collections.emptyMap();
-            CoreSDKState sCoreSDKState =
-                    CoreSDKState.getInstance(new DataStore(getReactApplicationContext().getApplicationContext()));
-            String metaDataString = sCoreSDKState.getMetaData();
-            if (!TextUtils.isEmpty(metaDataString)) {
-                Type empMapType = new TypeToken<Map<String, Object>>() {}.getType();
-                metaData = StaticUtilsAdapter.getGson().fromJson(metaDataString, empMapType);
-            }
-            HyperTrack.setNameAndMetadataForDevice(name, metaData);
+            sdkInstance.setDeviceName(name);
             promise.resolve(true);
         } catch (Exception e) {
             promise.reject(TAG + "_ERROR", e);
@@ -150,10 +144,7 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void setMetadata(ReadableMap rMap, Promise promise) {
         try {
-            CoreSDKState sCoreSDKState =
-                    CoreSDKState.getInstance(new DataStore(getReactApplicationContext().getApplicationContext()));
-            String name = sCoreSDKState.getName();
-            HyperTrack.setNameAndMetadataForDevice(name, rMap.toHashMap());
+            sdkInstance.setDeviceMetadata(name, rMap.toHashMap());
             promise.resolve(true);
         } catch (Exception e) {
             promise.reject(TAG + "_ERROR", e);
@@ -170,7 +161,7 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void enableMockLocation(Boolean enable) {
         if (enable) {
-            HyperTrack.enableMockLocation();
+            sdkInstance.allowMockLocations();
         }
     }
 
