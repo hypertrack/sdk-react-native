@@ -1,6 +1,6 @@
 {
   "name": "hypertrack-sdk-react-native",
-  "version": "6.5.1",
+  "version": "6.5.2",
   "description": "React Native module for a HyperTrack SDK",
   "main": "./js/index.js",
   "author": "HyperTrack <help@hypertrack.com> (https://hypertrack.com)",
@@ -36,7 +36,7 @@
   ],
   "dependencies": {},
   "peerDependencies": {
-    "react-native": "0.59.9"
+    "react-native": "0.61.4"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",
@@ -53,7 +53,7 @@
     "flow-bin": "^0.98.0",
     "jest": "^24.8.0",
     "metro-react-native-babel-preset": "^0.54.1",
-    "react-native": "0.59.8",
+    "react-native": "0.61.4",
     "react-test-renderer": "16.8.3",
     "react": "16.8.6"
   },
