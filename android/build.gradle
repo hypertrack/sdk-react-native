@@ -15,7 +15,7 @@ def DEFAULT_COMPILE_SDK_VERSION = 28
 def DEFAULT_BUILD_TOOLS_VERSION = "28.0.3"
 def DEFAULT_MIN_SDK_VERSION = 19
 def DEFAULT_TARGET_SDK_VERSION = 29
-def DEFAULT_HYPERTRACK_SDK_VERSION = "4.5.1"
+def DEFAULT_HYPERTRACK_SDK_VERSION = "4.5.2"
 
 def HYPERTRACK_SDK_VERSION = rootProject.hasProperty('hypertrackSdkVersion') ? rootProject.hypertrackSdkVersion : DEFAULT_HYPERTRACK_SDK_VERSION
 
@@ -37,7 +37,7 @@ android {
 }
 
 dependencies {
-    api ('com.facebook.react:react-native:+') {
+    api ('com.facebook.react:react-native:0.61.4') {
         exclude group: 'com.parse.bolts'
     }
     api ("com.hypertrack:hypertrack:${HYPERTRACK_SDK_VERSION}")
@@ -51,5 +51,9 @@ repositories {
     maven {
         name 'hypertrack'
         url 'https://s3-us-west-2.amazonaws.com/m2.hypertrack.com/'
+    }
+    maven {
+        // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+        url "../node_modules/react-native/android"
     }
 }
