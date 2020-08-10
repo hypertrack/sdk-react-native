@@ -41,7 +41,7 @@ dependencies {
         exclude group: 'com.parse.bolts'
     }
     api ("com.hypertrack:hypertrack:${HYPERTRACK_SDK_VERSION}")
-    api ("com.hypertrack:hypertrack-views:0.8.5")
+    api ("com.hypertrack:hypertrack-views:0.8.7")
 
 }
 
