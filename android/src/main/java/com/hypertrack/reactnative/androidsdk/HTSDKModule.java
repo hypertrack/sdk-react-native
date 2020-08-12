@@ -12,7 +12,6 @@ import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.google.gson.reflect.TypeToken;
 import com.hypertrack.sdk.Config;
-import com.hypertrack.sdk.CoreSDKState;
 import com.hypertrack.sdk.HyperTrack;
 import com.hypertrack.sdk.TrackingError;
 import com.hypertrack.sdk.TrackingStateObserver;
@@ -30,11 +29,13 @@ import com.hypertrack.sdk.views.dao.MovementStatus;
 import com.hypertrack.sdk.views.dao.StatusUpdate;
 import com.hypertrack.sdk.views.dao.Trip;
 import androidx.annotation.NonNull;
+import java.util.Locale;
 @ReactModule(name = HTSDKModule.NAME)
 public class HTSDKModule extends ReactContextBaseJavaModule {
-    private static final String TAG = HTSDKModule.class.getSimpleName();
+    private static final String TAG = "HTSDKModule";
     public static final String NAME = "HyperTrack";
     public TrackingStateObserver.OnTrackingStateChangeListener trackingStateChangeListener;
+    public HyperTrack sdkInstance;
     public DeviceUpdatesHandler deviceUpdatesHandler;
     public HyperTrackViews mHyperTrackView;
     final Gson gson = new Gson();
@@ -48,10 +49,9 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void initialize(String publishableKey, Boolean startsTracking, Promise promise) {
         if (getReactApplicationContext().getApplicationContext() != null) {
-            HyperTrack.initialize(getReactApplicationContext().getApplicationContext(),
-                    publishableKey,
-                    new Config.Builder()
-                            .build());
+            sdkInstance = HyperTrack.getInstance(
+                    publishableKey
+            );
            mHyperTrackView= HyperTrackViews.getInstance(getReactApplicationContext().getApplicationContext() , publishableKey);
             promise.resolve(true);
         } else {
@@ -92,63 +92,55 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
     }
     @ReactMethod
     public void getDeviceID(Promise promise) {
-        promise.resolve(HyperTrack.getDeviceId());
+       promise.resolve(sdkInstance.getDeviceID());
     }
     @ReactMethod
     public void isTracking(Promise promise) {
-        promise.resolve(HyperTrack.isTracking());
+         promise.resolve(sdkInstance.isRunning());
     }
     @ReactMethod
     public void onTrackingStart() {
-        //HyperTrack.startTracking();
+        sdkInstance.start();
     }
     @ReactMethod
     public void onTrackingStop() {
-        //HyperTrack.stopTracking();
+         sdkInstance.stop();
     }
-/* @ReactMethod
+@ReactMethod
     public void syncDeviceSettings() {
-        HyperTrack.syncDeviceSettings();
-    }*/
-    @ReactMethod
+        sdkInstance.syncDeviceSettings();
+    }
+     @ReactMethod
     public void setTripMarker(ReadableMap rMap, Promise promise) {
         try {
-            HyperTrack.tripMarker(rMap.toHashMap());
+            sdkInstance.addGeotag(rMap.toHashMap());
             promise.resolve(null);
         } catch (Exception e) {
-            promise.reject(TAG + "_ERROR", e);
+            String error = String.format(Locale.ENGLISH, "%d", RN_ERROR_GENERAL);
+            promise.reject(error, e);
         }
     }
-  /*  @ReactMethod
+    @ReactMethod
     public void setDeviceName(String name, Promise promise) {
         try {
-            Map<String, Object> metaData = Collections.emptyMap();
-            CoreSDKState sCoreSDKState =
-                    CoreSDKState.getInstance(new DataStore(),getReactApplicationContext().getApplicationContext());
-            String metaDataString = sCoreSDKState.getMetaData();
-            if (!TextUtils.isEmpty(metaDataString)) {
-                Type empMapType = new TypeToken<Map<String, Object>>() {}.getType();
-                metaData = StaticUtilsAdapter.getGson().fromJson(metaDataString, empMapType);
-            }
-            HyperTrack.setNameAndMetadataForDevice(name, metaData);
+            sdkInstance.setDeviceName(name);
             promise.resolve(true);
         } catch (Exception e) {
-            promise.reject(TAG + "_ERROR", e);
+            String error = String.format(Locale.ENGLISH, "%d", RN_ERROR_GENERAL);
+            promise.reject(error, e);
         }
     }
     @ReactMethod
     public void setMetadata(ReadableMap rMap, Promise promise) {
         try {
-            CoreSDKState sCoreSDKState =
-                    CoreSDKState.getInstance(new DataStore(getReactApplicationContext().getApplicationContext()),getReactApplicationContext().getApplicationContext());
-            String name = sCoreSDKState.getName();
-            HyperTrack.setNameAndMetadataForDevice(name, rMap.toHashMap());
+            sdkInstance.setDeviceMetadata(rMap.toHashMap());
             promise.resolve(true);
         } catch (Exception e) {
-            promise.reject(TAG + "_ERROR", e);
+            String error = String.format(Locale.ENGLISH, "%d", RN_ERROR_GENERAL);
+            promise.reject(error, e);
         }
-    }*/
-    @ReactMethod
+    }
+     @ReactMethod
     public void enableDebugLogging(Boolean enable) {
         if (enable) {
             HyperTrack.enableDebugLogging();
@@ -156,9 +148,8 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
     }
     @ReactMethod
     public void enableMockLocation(Boolean enable) {
-         Log.d(TAG, "Enable:" + enable);
         if (enable) {
-            HyperTrack.enableMockLocation();
+             HyperTrack.enableMockLocation();
         }
     }
     @ReactMethod
@@ -230,6 +221,7 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
     private static final int RN_ERROR_AUTHORIZATION_FAILED = 2;
     private static final int RN_ERROR_PERMISSION_DENIED = 3;
     private int convertToRNErrorsCode(int androidSdkCode) {
+         Log.d(TAG, "RN_ERRORandroidSdkCode: " + androidSdkCode);
         switch (androidSdkCode) {
             case TrackingError.INVALID_PUBLISHABLE_KEY_ERROR:
                 return RN_ERROR_INVALID_PUBLISHABLE_KEY;
