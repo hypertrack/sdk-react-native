@@ -1,4 +1,4 @@
-#import "HyperTrack.h"
+#import "RNHyperTrack.h"
 #import <React/RCTLog.h>
 #import <React/RCTEventDispatcher.h>
 

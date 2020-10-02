@@ -36,11 +36,11 @@
   ],
   "dependencies": {},
   "peerDependencies": {
-    "react-native": "0.61.4"
+    "react-native": "0.63.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.5",
-    "@babel/runtime": "^7.4.5",
+    "@babel/core": "^7.8.4",
+    "@babel/runtime": "^7.8.4",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^24.8.0",
     "eslint-plugin-babel": "^5.2.1",
@@ -51,10 +51,10 @@
     "eslint-plugin-react": "7.6.1",
     "eslint": "5.1.0",
     "flow-bin": "^0.98.0",
-    "jest": "^24.8.0",
-    "metro-react-native-babel-preset": "^0.54.1",
-    "react-native": "0.61.4",
-    "react-test-renderer": "16.8.3",
+    "jest": "^25.1.0",
+    "metro-react-native-babel-preset": "^0.59.0",
+    "react-native": "0.63.3",
+    "react-test-renderer": "16.13.1",
     "react": "16.8.6"
   },
   "bugs": {
