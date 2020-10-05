@@ -32,7 +32,8 @@
     "ios",
     "js",
     "LICENSE.txt",
-    "README.md"
+    "README.md",
+    "hypertrack-sdk-react-native.podspec"
   ],
   "dependencies": {},
   "peerDependencies": {
