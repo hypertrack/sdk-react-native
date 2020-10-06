@@ -33,6 +33,7 @@
     "js",
     "LICENSE.txt",
     "README.md",
+    "CHANGELOG.md",
     "hypertrack-sdk-react-native.podspec"
   ],
   "dependencies": {},
