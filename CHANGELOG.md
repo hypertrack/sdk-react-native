@@ -4,14 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [7.0.1] - 2020-10-06
+## [7.0.1] - 2020-10-07
 ### Fixed
 - Added `hypertrack-sdk-react-native.podspec` to `package.json` file.
+### Changed
+- Updated iOS SDK to `4.5.1`.
 
 ## [7.0.0] - 2020-10-02
 ### Changed
 - Updated react-native to version `0.63.3`.
-- Updated to Android SDK to `4.6.0`.
+- Updated Android SDK to `4.6.0`.
 ### Removed
 - Remove startsTracking API from createInstance.
 
@@ -34,15 +36,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [6.6.0] - 2020-07-24
 ### Changed
 - Updated react-native to version `0.61.4`.
-- Updated to Android SDK to `4.5.2`.
+- Updated Android SDK to `4.5.2`.
 
 ## [6.5.1] - 2020-07-20
 ### Changed
-- Updated to Android SDK to `4.5.1`.
+- Updated Android SDK to `4.5.1`.
 
 ## [6.5.0] - 2020-07-16
 ### Changed
-- Updated to Android SDK to `4.5.0`.
+- Updated Android SDK to `4.5.0`.
 
 ## [6.4.0] - 2020-07-14
 ### Added
@@ -65,7 +67,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * @param {bool} startsTracking - Should the SDK start tracking immediately after initialization.
 + * @param {boolean} automaticallyRequestPermissions - If true, SDK automatically triggers location and motion activity permissions dialogs when tracking starts.
  */
- 
+
 - async createInstance(publishableKey, startsTracking = true): Promise<HyperTrackAPI> {
 + async createInstance(publishableKey, startsTracking = true, automaticallyRequestPermissions = true): Promise<HyperTrackAPI> {
 -  await HyperTrack.initialize(publishableKey, startsTracking);
@@ -85,7 +87,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [6.1.0] - 2019-09-30
 ### Added
 - Adding sync device settings
-- Updated to Android SDK to  `3.4.7`.
+- Updated Android SDK to  `3.4.7`.
 
 ## [6.0.0] - 2019-09-17
 ### Changed
@@ -94,7 +96,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [5.0.5] - 2019-08-29
 ### Changed
-- Updated to Android SDK to  `3.4.5`.
+- Updated Android SDK to  `3.4.5`.
 
 ## [5.0.4] - 2019-08-23
 ### Changed
@@ -167,22 +169,22 @@ Initial release.
 [7.0.1]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.0.1
 [7.0.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.0.0
 [6.6.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/6.6.0
-[6.5.1]: https://github.com/hypertrack/sdk-react-native/releases/tag/6.5.1 
-[6.5.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/6.5.0 
-[6.4.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/6.4.0 
-[6.3.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/6.3.0 
-[6.2.2]: https://github.com/hypertrack/sdk-react-native/releases/tag/6.2.2 
-[6.2.1]: https://github.com/hypertrack/sdk-react-native/releases/tag/6.2.1 
+[6.5.1]: https://github.com/hypertrack/sdk-react-native/releases/tag/6.5.1
+[6.5.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/6.5.0
+[6.4.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/6.4.0
+[6.3.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/6.3.0
+[6.2.2]: https://github.com/hypertrack/sdk-react-native/releases/tag/6.2.2
+[6.2.1]: https://github.com/hypertrack/sdk-react-native/releases/tag/6.2.1
 [6.1.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/6.1.0
 [6.0.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/6.0.0
-[5.0.5]: https://github.com/hypertrack/sdk-react-native/releases/tag/5.0.5 
-[5.0.4]: https://github.com/hypertrack/sdk-react-native/releases/tag/5.0.4 
-[5.0.3]: https://github.com/hypertrack/sdk-react-native/releases/tag/5.0.3 
-[5.0.2]: https://github.com/hypertrack/sdk-react-native/releases/tag/5.0.2 
+[5.0.5]: https://github.com/hypertrack/sdk-react-native/releases/tag/5.0.5
+[5.0.4]: https://github.com/hypertrack/sdk-react-native/releases/tag/5.0.4
+[5.0.3]: https://github.com/hypertrack/sdk-react-native/releases/tag/5.0.3
+[5.0.2]: https://github.com/hypertrack/sdk-react-native/releases/tag/5.0.2
 [5.0.1]: https://github.com/hypertrack/sdk-react-native/releases/tag/5.0.1
-[4.1.1]: https://github.com/hypertrack/sdk-react-native/releases/tag/4.1.1 
+[4.1.1]: https://github.com/hypertrack/sdk-react-native/releases/tag/4.1.1
 [4.1.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/4.1.0
-[4.0.2]: https://github.com/hypertrack/sdk-react-native/releases/tag/4.0.2 
+[4.0.2]: https://github.com/hypertrack/sdk-react-native/releases/tag/4.0.2
 [4.0.1]: https://github.com/hypertrack/sdk-react-native/releases/tag/4.0.1
 [3.0.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/3.0.0
 [2.0.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/2.0.0
