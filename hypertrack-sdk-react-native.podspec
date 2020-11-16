@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.homepage          = package['homepage']
   s.source            = { :git => 'https://github.com/hypertrack/sdk-react-native.git' }
   s.platform          = :ios, '11.0'
-  s.dependency        'React'
+  s.dependency        'React-Core'
   s.dependency        'HyperTrack/Objective-C', '4.5.1'
   s.source_files      = "ios/*.{xcodeproj}", "ios/RNHyperTrack/*.{h,m}"
 end
