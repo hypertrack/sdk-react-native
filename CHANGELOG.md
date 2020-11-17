@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.1.0] - 2020-11-17
+### Changed
+- Updated Anroid SDK to [v4.8.0](https://github.com/hypertrack/sdk-android/blob/master/CHANGELOG.md#480---2020-10-30)
+- Updated iOS SDK to [v4.6.0](https://github.com/hypertrack/sdk-ios/blob/master/CHANGELOG.md#460---2020-11-09)
+- Using React-Core on iOS (https://github.com/hypertrack/sdk-react-native/pull/19)
+
 ## [7.0.1] - 2020-10-07
 ### Fixed
 - Added `hypertrack-sdk-react-native.podspec` to `package.json` file.
@@ -166,6 +172,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Initial release.
 
 
+[7.1.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.1.0
 [7.0.1]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.0.1
 [7.0.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.0.0
 [6.6.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/6.6.0
