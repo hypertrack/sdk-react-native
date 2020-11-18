@@ -62,7 +62,7 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void subscribeOnEvents() {
         if (trackingStateChangeListener != null) {
-            HyperTrack.removeTrackingStateListener(trackingStateChangeListener);
+            sdkInstance.removeTrackingStateListener(trackingStateChangeListener);
             trackingStateChangeListener = null;
         }
         trackingStateChangeListener = new TrackingStateObserver.OnTrackingStateChangeListener() {
@@ -88,7 +88,7 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
                         .emit("onTrackingStopHyperTrack", null);
             }
         };
-        HyperTrack.addTrackingStateListener(trackingStateChangeListener);
+        sdkInstance.addTrackingStateListener(trackingStateChangeListener);
     }
     @ReactMethod
     public void getDeviceID(Promise promise) {
@@ -154,8 +154,8 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
     }
     @ReactMethod
     public void getDeviceMovementStatus(final Promise promise){
-        Log.d("getDeviceId--- ",""+HyperTrack.getDeviceId());
-    mHyperTrackView.getDeviceMovementStatus(HyperTrack.getDeviceId(),
+        Log.d("getDeviceId--- ",""+sdkInstance.getDeviceId());
+    mHyperTrackView.getDeviceMovementStatus(sdkInstance.getDeviceId(),
                 new Consumer<MovementStatus>() {
                     @Override
                     public void accept(MovementStatus movementStatus) { 
@@ -170,7 +170,7 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
              mHyperTrackView.stopAllUpdates();
             deviceUpdatesHandler = null;
         }
-    mHyperTrackView.subscribeToDeviceUpdates(HyperTrack.getDeviceId(),
+    mHyperTrackView.subscribeToDeviceUpdates(sdkInstance.getDeviceId(),
                 deviceUpdatesHandler=new DeviceUpdatesHandler() {
                     @Override
                     public void onLocationUpdateReceived(@NonNull Location location) {
