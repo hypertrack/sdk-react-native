@@ -12,11 +12,11 @@ import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.google.gson.reflect.TypeToken;
 import com.hypertrack.sdk.Config;
+import com.hypertrack.sdk.persistence.DataStore;
+import com.hypertrack.sdk.utils.StaticUtilsAdapter;
 import com.hypertrack.sdk.HyperTrack;
 import com.hypertrack.sdk.TrackingError;
 import com.hypertrack.sdk.TrackingStateObserver;
-import com.hypertrack.sdk.persistence.DataStore;
-import com.hypertrack.sdk.utils.StaticUtilsAdapter;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.Map;
@@ -30,6 +30,7 @@ import com.hypertrack.sdk.views.dao.StatusUpdate;
 import com.hypertrack.sdk.views.dao.Trip;
 import androidx.annotation.NonNull;
 import java.util.Locale;
+
 @ReactModule(name = HTSDKModule.NAME)
 public class HTSDKModule extends ReactContextBaseJavaModule {
     private static final String TAG = "HTSDKModule";
@@ -62,7 +63,7 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void subscribeOnEvents() {
         if (trackingStateChangeListener != null) {
-            sdkInstance.removeTrackingStateListener(trackingStateChangeListener);
+            sdkInstance.removeTrackingListener(trackingStateChangeListener);
             trackingStateChangeListener = null;
         }
         trackingStateChangeListener = new TrackingStateObserver.OnTrackingStateChangeListener() {
@@ -88,7 +89,7 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
                         .emit("onTrackingStopHyperTrack", null);
             }
         };
-        sdkInstance.addTrackingStateListener(trackingStateChangeListener);
+        sdkInstance.addTrackingListener(trackingStateChangeListener);
     }
     @ReactMethod
     public void getDeviceID(Promise promise) {
@@ -149,13 +150,13 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void enableMockLocation(Boolean enable) {
         if (enable) {
-             sdkInstance.enableMockLocation();
+             sdkInstance.allowMockLocations();
         }
     }
     @ReactMethod
     public void getDeviceMovementStatus(final Promise promise){
-        Log.d("getDeviceId--- ",""+sdkInstance.getDeviceId());
-    mHyperTrackView.getDeviceMovementStatus(sdkInstance.getDeviceId(),
+        Log.d("getDeviceId--- ",""+sdkInstance.getDeviceID());
+    mHyperTrackView.getDeviceMovementStatus(sdkInstance.getDeviceID(),
                 new Consumer<MovementStatus>() {
                     @Override
                     public void accept(MovementStatus movementStatus) { 
@@ -170,7 +171,7 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
              mHyperTrackView.stopAllUpdates();
             deviceUpdatesHandler = null;
         }
-    mHyperTrackView.subscribeToDeviceUpdates(sdkInstance.getDeviceId(),
+    mHyperTrackView.subscribeToDeviceUpdates(sdkInstance.getDeviceID(),
                 deviceUpdatesHandler=new DeviceUpdatesHandler() {
                     @Override
                     public void onLocationUpdateReceived(@NonNull Location location) {
