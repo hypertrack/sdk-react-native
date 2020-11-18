@@ -150,7 +150,7 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void enableMockLocation(Boolean enable) {
         if (enable) {
-             sdkInstance.allowMockLocations();
+            sdkInstance.allowMockLocations();
         }
     }
     @ReactMethod
