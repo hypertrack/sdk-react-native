@@ -143,13 +143,13 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
      @ReactMethod
     public void enableDebugLogging(Boolean enable) {
         if (enable) {
-            HyperTrack.enableDebugLogging();
+            sdkInstance.enableDebugLogging();
         }
     }
     @ReactMethod
     public void enableMockLocation(Boolean enable) {
         if (enable) {
-             HyperTrack.enableMockLocation();
+             sdkInstance.enableMockLocation();
         }
     }
     @ReactMethod
