@@ -1,7 +1,7 @@
 'use strict';
 
 import EventEmitter from './EventEmitter';
-import {Error} from './CriticalErrors';
+import {Error, GeotagError} from './CriticalErrors';
 
 const HyperTrack = require('react-native').NativeModules.HyperTrack;
 
@@ -106,7 +106,7 @@ class HyperTrackAPI {
      * value of 100 meters will be used.
      */
      addGeotag(data: Object, expectedLocation?: GeolocationCoordinates, isRestricted?: boolean): Promise<GeotagError|null> {
-        return HyperTrack.addGeotag(data, expectedLocation, isRestricted)
+        return HyperTrack.addGeotag(data, expectedLocation, isRestricted);
     }
 }
 module.exports = {
