@@ -87,6 +87,7 @@ class HyperTrackAPI {
     }
 
     /**
+     * @deprecated
      * Set a trip marker
      * @param {Object} data - Include anything that can be parsed into JSON.
      */
@@ -94,8 +95,20 @@ class HyperTrackAPI {
         HyperTrack.setTripMarker(data);
     }
 
+    /**
+     * Add geotag
+     * @param {Object} data - Include anything that can be parsed into JSON.
+     * @param {GeolocationCoordinates} expectedLocation? - optional location of a place, 
+     * where the action is supposed to happen.
+     * @param {boolean} isRestricted? - if set to true, will result in action failure if the 
+     * location of a device differs more than expectedLocation.accuracy or if location 
+     * isn't available, so no geotag will be added. If accuracy is set to 0 then default 
+     * value of 100 meters will be used.
+     */
+     addGeotag(data: Object, expectedLocation?: GeolocationCoordinates, isRestricted?: boolean): Promise<GeotagError|null> {
+        return HyperTrack.addGeotag(data, expectedLocation, isRestricted)
+    }
 }
-
 module.exports = {
     /**
      * Initialize the HyperTrack SDK

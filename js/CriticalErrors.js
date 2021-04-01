@@ -29,3 +29,13 @@ export type Error = {
      */
     message: ?string
 };
+
+// Geotags callback
+
+/** Expected location is not supported on this platform */
+export const PLATFORM_NOT_SUPPORTED = 0;
+export const LOCATION_MISMATCH = 1;
+export const LOCATION_NOT_AVAILABLE = 2;
+
+/** Interface for accessing adding geotag result. */
+export type GeotagError = { code: number }
