@@ -1,5 +1,6 @@
 package com.hypertrack.reactnative.androidsdk;
 
+import android.location.Location;
 import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
@@ -126,6 +127,71 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void addGeotag(ReadableMap rMap, ReadableMap expectedLocation, Boolean isRestricted,  Promise promise) {
+        if ( isRestricted == Boolean.TRUE ) {
+            if (expectedLocation == null) {
+                // 3 is invalid arguments. check js/CriticalErrors.js
+                fail(3, promise);
+                return;
+            }
+            Double deviation = expectedLocation.getDouble("accuracy");
+            Location expected = expectedLocationFromMap(expectedLocation);
+            if (expected == null) {
+                fail(3, promise);
+                return;
+            }
+            if (deviation == null) deviation = 100.0;
+            try {
+                sdkInstance.addRestictedGeotag(rMap.toHashMap(), expected, Double.valueOf(deviation).intValue(),
+                        new HyperTrack.ResultCallback<HyperTrack.Result>() {
+                            @Override
+                            public void onSuccess(HyperTrack.Result result) {
+                                switch (result) {
+                                    case SUCCESS:
+                                        promise.resovle(null);
+                                        break;
+                                    case LOCATION_MISMATCH:
+                                        fail(1, promise);
+                                        break;
+                                    case LOCATION_NOT_AVAILABLE:                                }
+                                        fail(2, promise);
+                            }
+                        });
+            } catch (Exception e) {
+                String error = String.format(Locale.ENGLISH, "%d", RN_ERROR_GENERAL);
+                promise.reject(error, e);
+            }
+        } else {
+            Location expected = expectedLocationFromMap(expectedLocation);
+            try {
+                sdkInstance.addGeotag(rMap.toHashMap(), expected);
+                promise.resolve(null);
+            } catch (Exception e) {
+                String error = String.format(Locale.ENGLISH, "%d", RN_ERROR_GENERAL);
+                promise.reject(error, e);
+            }
+        }
+    }
+
+    private Location expectedLocationFromMap(ReadableMap expectedLocation) {
+        Double latitude = expectedLocation.getDouble("latitude");
+        Double longitude = expectedLocation.getDouble("longitude");
+        if (latitude == null || longitude == null) return null;
+        if (longitude > 180.0 || longitude < -180.0) return null;
+        if (latitude > 90.0 || latitude < -90.0) return null;
+        Location expected = new Location("any");
+        expected.latitude = latitude;
+        expected.longitude = longitude;
+        return expected;
+    }
+
+    private void fail(int error, Promise promise) {
+        WritableMap map = Arguments.createMap();
+        map.putInt("code", error);
+        promise.resolve(map);
+    }
+
+    @ReactMethod
     public void setDeviceName(String name, Promise promise) {
         try {
             sdkInstance.setDeviceName(name);
@@ -178,4 +244,5 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
                 return RN_ERROR_GENERAL;
         }
     }
+
 }
