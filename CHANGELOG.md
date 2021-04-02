@@ -4,9 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.4.0] - 2021-04-02
+### Changed
+- Updated Android SDK to [v4.11.0](https://github.com/hypertrack/sdk-android/blob/master/CHANGELOG.md#4110---2021-03-30)
+### Fixed
+- SDK won't navigate to Settings showing "Select `Allow Always` option" snackbar on Android 11 and later.
+
 ## [7.3.0] - 2021-03-04
 ### Changed
-- Updated Android SDK to [v4.10.0](https://github.com/hypertrack/sdk-android/blob/master/CHANGELOG.md#4100---2020-02-22)
+- Updated Android SDK to [v4.10.0](https://github.com/hypertrack/sdk-android/blob/master/CHANGELOG.md#4100---2021-02-22)
 
 ## [7.2.0] - 2020-12-23
 ### Changed
