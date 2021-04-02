@@ -43,7 +43,7 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
         try {
             sdkInstance = HyperTrack.getInstance(
                     publishableKey
-            );
+            ).backgroundTrackingRequirement(false);
             if (startsTracking) {
                 sdkInstance.start();
             }
