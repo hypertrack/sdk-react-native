@@ -16,7 +16,10 @@ import com.hypertrack.sdk.HyperTrack;
 import com.hypertrack.sdk.TrackingError;
 import com.hypertrack.sdk.TrackingStateObserver;
 
+import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 
 @ReactModule(name = HTSDKModule.NAME)
@@ -25,6 +28,9 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
     private static final String TAG = "HTSDKModule";
 
     public static final String NAME = "HyperTrack";
+    public static final String LATITUDE = "latitude";
+    public static final String LONGITUDE = "longitude";
+    public static final String ACCURACY = "accuracy";
 
     public TrackingStateObserver.OnTrackingStateChangeListener trackingStateChangeListener;
     public HyperTrack sdkInstance;
@@ -127,28 +133,35 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void addGeotag(ReadableMap rMap, ReadableMap expectedLocation, Boolean isRestricted,  Promise promise) {
+    public void addGeotag(ReadableMap rMap, ReadableMap expectedLocation, Boolean isRestricted, final Promise promise) {
         if ( isRestricted == Boolean.TRUE ) {
             if (expectedLocation == null) {
                 // 3 is invalid arguments. check js/CriticalErrors.js
                 fail(3, promise);
                 return;
             }
-            Double deviation = expectedLocation.getDouble("accuracy");
+            double deviation = expectedLocation.hasKey(ACCURACY)
+                    ? expectedLocation.getDouble(ACCURACY)
+                    : 100.0;
             Location expected = expectedLocationFromMap(expectedLocation);
             if (expected == null) {
                 fail(3, promise);
                 return;
             }
-            if (deviation == null) deviation = 100.0;
             try {
-                sdkInstance.addRestictedGeotag(rMap.toHashMap(), expected, Double.valueOf(deviation).intValue(),
+                Map<String,Serializable> tagData = new HashMap<>(rMap.toHashMap().size());
+                for (Map.Entry<String, Object> entry : rMap.toHashMap().entrySet()) {
+                    if (entry.getValue() instanceof Serializable) {
+                        tagData.put(entry.getKey(), (Serializable) entry.getValue());
+                    }
+                }
+                sdkInstance.addRestrictedGeotag(tagData, expected, Double.valueOf(deviation).intValue(),
                         new HyperTrack.ResultCallback<HyperTrack.Result>() {
                             @Override
                             public void onSuccess(HyperTrack.Result result) {
                                 switch (result) {
                                     case SUCCESS:
-                                        promise.resovle(null);
+                                        promise.resolve(null);
                                         break;
                                     case LOCATION_MISMATCH:
                                         fail(1, promise);
@@ -174,15 +187,19 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
     }
 
     private Location expectedLocationFromMap(ReadableMap expectedLocation) {
-        Double latitude = expectedLocation.getDouble("latitude");
-        Double longitude = expectedLocation.getDouble("longitude");
-        if (latitude == null || longitude == null) return null;
-        if (longitude > 180.0 || longitude < -180.0) return null;
-        if (latitude > 90.0 || latitude < -90.0) return null;
-        Location expected = new Location("any");
-        expected.latitude = latitude;
-        expected.longitude = longitude;
-        return expected;
+        if (!expectedLocation.hasKey(LATITUDE) || !expectedLocation.hasKey(LONGITUDE)) return null;
+        try {
+            double latitude = expectedLocation.getDouble(LATITUDE);
+            double longitude = expectedLocation.getDouble(LONGITUDE);
+            if (longitude > 180.0 || longitude < -180.0) return null;
+            if (latitude > 90.0 || latitude < -90.0) return null;
+            Location expected = new Location("any");
+            expected.setLatitude(latitude);
+            expected.setLongitude(longitude);
+            return expected;
+        } catch (Throwable ignored) {
+            return null;
+        }
     }
 
     private void fail(int error, Promise promise) {

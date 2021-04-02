@@ -106,7 +106,7 @@ class HyperTrackAPI {
      * value of 100 meters will be used.
      */
      addGeotag(data: Object, expectedLocation?: GeolocationCoordinates, isRestricted?: boolean): Promise<GeotagError|null> {
-        return HyperTrack.addGeotag(data, expectedLocation, isRestricted);
+        return HyperTrack.addGeotag(data, expectedLocation || {}, isRestricted || false);
     }
 }
 module.exports = {
