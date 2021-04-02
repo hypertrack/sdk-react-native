@@ -187,6 +187,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2019-06-07
 Initial release.
 
+[7.4.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.4.0
 [7.3.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.3.0
 [7.2.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.2.0
 [7.1.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.1.0
