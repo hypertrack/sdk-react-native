@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.5.0] - 2021-04-26
+### Changed
+- Updated iOS SDK to [4.8.0](https://github.com/hypertrack/sdk-ios/blob/master/CHANGELOG.md#480---2021-04-22)
+- Updated Android SDK to [v4.11.1](https://github.com/hypertrack/sdk-android/blob/master/CHANGELOG.md#4111---2021-04-20)
+
 ## [7.4.0] - 2021-04-02
 ### Changed
 - Updated Android SDK to [v4.11.0](https://github.com/hypertrack/sdk-android/blob/master/CHANGELOG.md#4110---2021-03-30)
@@ -187,6 +192,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2019-06-07
 Initial release.
 
+[7.5.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.5.0
 [7.4.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.4.0
 [7.3.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.3.0
 [7.2.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.2.0
