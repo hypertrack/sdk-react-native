@@ -12,6 +12,7 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.hypertrack.sdk.GeotagResult;
 import com.hypertrack.sdk.HyperTrack;
 import com.hypertrack.sdk.TrackingError;
 import com.hypertrack.sdk.TrackingStateObserver;
@@ -133,56 +134,24 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void addGeotag(ReadableMap rMap, ReadableMap expectedLocation, Boolean isRestricted, final Promise promise) {
-        if ( isRestricted == Boolean.TRUE ) {
-            if (expectedLocation == null) {
-                // 3 is invalid arguments. check js/CriticalErrors.js
-                fail(3, promise);
-                return;
-            }
-            double deviation = expectedLocation.hasKey(ACCURACY)
-                    ? expectedLocation.getDouble(ACCURACY)
-                    : 100.0;
+    public void addGeotag(ReadableMap rMap, ReadableMap expectedLocation, final Promise promise) {
+        try {
             Location expected = expectedLocationFromMap(expectedLocation);
-            if (expected == null) {
-                fail(3, promise);
-                return;
-            }
-            try {
-                Map<String,Serializable> tagData = new HashMap<>(rMap.toHashMap().size());
-                for (Map.Entry<String, Object> entry : rMap.toHashMap().entrySet()) {
-                    if (entry.getValue() instanceof Serializable) {
-                        tagData.put(entry.getKey(), (Serializable) entry.getValue());
-                    }
-                }
-                sdkInstance.addRestrictedGeotag(tagData, expected, Double.valueOf(deviation).intValue(),
-                        new HyperTrack.ResultCallback<HyperTrack.Result>() {
-                            @Override
-                            public void onSuccess(HyperTrack.Result result) {
-                                switch (result) {
-                                    case SUCCESS:
-                                        promise.resolve(null);
-                                        break;
-                                    case LOCATION_MISMATCH:
-                                        fail(1, promise);
-                                        break;
-                                    case LOCATION_NOT_AVAILABLE:                                }
-                                        fail(2, promise);
-                            }
-                        });
-            } catch (Exception e) {
+            GeotagResult result = sdkInstance.addGeotag(rMap.toHashMap(), expected);
+            if (result instanceof GeotagResult.Success) {
+                Location deviceLocation = ((GeotagResult.Success) result).getDeviceLocation();
+                WritableMap map = Arguments.createMap();
+                map.putDouble("latitude", deviceLocation.getLatitude());
+                map.putDouble("longitude", deviceLocation.getLongitude());
+                promise.resolve(map);
+
+            } else {
                 String error = String.format(Locale.ENGLISH, "%d", RN_ERROR_GENERAL);
-                promise.reject(error, e);
+                promise.reject(error);
             }
-        } else {
-            Location expected = expectedLocationFromMap(expectedLocation);
-            try {
-                sdkInstance.addGeotag(rMap.toHashMap(), expected);
-                promise.resolve(null);
-            } catch (Exception e) {
-                String error = String.format(Locale.ENGLISH, "%d", RN_ERROR_GENERAL);
-                promise.reject(error, e);
-            }
+        } catch (Exception e) {
+            String error = String.format(Locale.ENGLISH, "%d", RN_ERROR_GENERAL);
+            promise.reject(error, e);
         }
     }
 
