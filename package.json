@@ -1,6 +1,6 @@
 {
   "name": "hypertrack-sdk-react-native",
-  "version": "7.7.0",
+  "version": "7.8.0",
   "description": "React Native module for a HyperTrack SDK",
   "main": "./js/index.js",
   "author": "HyperTrack <help@hypertrack.com> (https://hypertrack.com)",
