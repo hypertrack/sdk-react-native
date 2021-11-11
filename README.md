@@ -10,3 +10,27 @@
 React Native HyperTrack SDK is a wrapper around native iOS and Android SDKs that allows to integrate them into React Native apps.
 
 For information about how to get started with React Native SDK, please visit this [HyperTrack Guide](https://www.hypertrack.com/docs/install-sdk-react-native).
+
+## How to update Hypertrack SDK version?
+
+
+1. Update SDK constant
+
+    - android
+        - android/build.gradle
+             - DEFAULT_HYPERTRACK_SDK_VERSION 
+    - ios
+        - hypertrack-sdk-react-native.podspec
+            - s.dependency 'HyperTrack/Objective-C', '**version**'
+
+2. Increment wrapper version
+    - package.json
+        - version
+  
+3. Update changelog
+4. Update badge in README.md
+5. Create a version tag
+6. Commit and push
+7. Create a release
+    - Release title - version
+9. npm publish
