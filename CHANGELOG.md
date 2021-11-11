@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.12.1] - 2021-11-11
+### Changed
+- Updated Android SDK to [5.4.5](https://github.com/hypertrack/sdk-android/blob/master/CHANGELOG.md#545---2021-11-05)
+
 ## [7.12.0] - 2021-10-29
 ### Changed
 - Updated Android SDK to [5.4.4](https://github.com/hypertrack/sdk-android/blob/master/CHANGELOG.md#544---2021-10-29)
