@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.14.0] - 2022-03-24
+### Changed
+- Updated HyperTrack Android SDK to [6.0.2](https://github.com/hypertrack/sdk-android/blob/master/CHANGELOG.md#602---2022-03-18)
+
 ## [7.13.0] - 2022-01-05
 ### Changed
 - Updated iOS SDK to [4.9.0](https://github.com/hypertrack/sdk-ios/blob/master/CHANGELOG.md#490---2022-01-05)
