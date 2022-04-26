@@ -12,8 +12,11 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.hypertrack.sdk.AsyncResultReceiver;
 import com.hypertrack.sdk.GeotagResult;
 import com.hypertrack.sdk.HyperTrack;
+import com.hypertrack.sdk.OutageReason;
+import com.hypertrack.sdk.Result;
 import com.hypertrack.sdk.TrackingError;
 import com.hypertrack.sdk.TrackingStateObserver;
 
@@ -27,6 +30,10 @@ import java.util.Map;
 public class HTSDKModule extends ReactContextBaseJavaModule {
 
     private static final String TAG = "HTSDKModule";
+
+    private static final String KEY_LOCATION = "location";
+    private static final String KEY_ERROR = "error";
+    private static final String KEY_OUTAGE_NAME = "name";
 
     public static final String NAME = "HyperTrack";
     public static final String LATITUDE = "latitude";
@@ -211,6 +218,38 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
         if (enable) {
             sdkInstance.allowMockLocations();
         }
+    }
+
+    @ReactMethod
+    public void getLatestLocation(Promise promise) {
+        promise.resolve(locationResultToMap(sdkInstance.getLatestLocation()));
+    }
+
+    @ReactMethod
+    public void getCurrentLocation(final Promise promise) {
+        sdkInstance.getCurrentLocation(new AsyncResultReceiver<Location, OutageReason>() {
+            @Override
+            public void onResult(Result<Location, OutageReason> result) {
+                promise.resolve(locationResultToMap(result));
+            }
+        });
+    }
+
+    private WritableMap locationResultToMap(Result<Location, OutageReason> result) {
+        WritableMap resultMap = Arguments.createMap();
+        if(result.isSuccess()) {
+            Location location = result.getValue();
+            WritableMap locationMap = Arguments.createMap();
+            locationMap.putDouble(LATITUDE, location.getLatitude());
+            locationMap.putDouble(LONGITUDE, location.getLongitude());
+            resultMap.putMap(KEY_LOCATION, locationMap);
+        } else {
+            OutageReason outage = result.getError();
+            WritableMap errorMap = Arguments.createMap();
+            errorMap.putString(KEY_OUTAGE_NAME, outage.name());
+            resultMap.putMap(KEY_ERROR, errorMap);
+        }
+        return resultMap;
     }
 
     private static final int RN_ERROR_GENERAL = 0;
