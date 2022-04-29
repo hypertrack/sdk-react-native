@@ -221,7 +221,7 @@ public class HTSDKModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getLatestLocation(Promise promise) {
+    public void getLocation(Promise promise) {
         promise.resolve(locationResultToMap(sdkInstance.getLatestLocation()));
     }
 
