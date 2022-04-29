@@ -1,7 +1,7 @@
 'use strict';
 
 import EventEmitter from './EventEmitter';
-import {Error, GeotagError} from './CriticalErrors';
+import {Error, GeotagError, LocationError} from './CriticalErrors';
 
 const HyperTrack = require('react-native').NativeModules.HyperTrack;
 
@@ -41,6 +41,11 @@ class HyperTrackAPI {
      */
     stopTracking() {
         HyperTrack.stopTracking();
+    }
+
+    /// The current location of the user or an outage reason.
+    getLocation(): Promise<LocationError|GeolocationCoordinates> {
+        return HyperTrack.getLocation();
     }
 
     /**

@@ -153,6 +153,61 @@ RCT_EXPORT_METHOD(isTracking:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromis
     resolve([NSNumber numberWithBool:[self.hyperTrack isRunning]]);
 }
 
+RCT_EXPORT_METHOD(getLocation:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  HTLocationResult *locationResult = self.hyperTrack.location;
+
+  switch (locationResult.error) {
+    case HTLocationErrorNoError:
+      resolve(@{ @"location":  @{ @"latitude": [NSNumber numberWithDouble:locationResult.location.latitude], @"longitude": [NSNumber numberWithDouble:locationResult.location.longitude] } });
+      break;
+    case HTLocationErrorLocationPermissionsNotDetermined:
+      resolve(@{ @"error":  @{ @"code": @"location_permissions_not_determined" } });
+      break;
+    case HTLocationErrorLocationPermissionsCantBeAskedInBackground:
+      resolve(@{ @"error":  @{ @"code": @"location_permissions_cant_be_asked_in_background" } });
+      break;
+    case HTLocationErrorLocationPermissionsInsufficientForBackground:
+      resolve(@{ @"error":  @{ @"code": @"location_permissions_insufficient_for_background" } });
+      break;
+    case HTLocationErrorLocationPermissionsRestricted:
+      resolve(@{ @"error":  @{ @"code": @"location_permissions_restricted" } });
+      break;
+    case HTLocationErrorLocationPermissionsReducedAccuracy:
+      resolve(@{ @"error":  @{ @"code": @"location_permissions_reduced_accuracy" } });
+      break;
+    case HTLocationErrorLocationPermissionsDenied:
+      resolve(@{ @"error":  @{ @"code": @"location_permissions_denied" } });
+      break;
+    case HTLocationErrorLocationServicesDisabled:
+      resolve(@{ @"error":  @{ @"code": @"location_services_disabled" } });
+      break;
+    case HTLocationErrorMotionActivityPermissionsNotDetermined:
+      resolve(@{ @"error":  @{ @"code": @"motion_activity_permissions_not_determined" } });
+      break;
+    case HTLocationErrorMotionActivityPermissionsCantBeAskedInBackground:
+      resolve(@{ @"error":  @{ @"code": @"motion_activity_permissions_cant_be_asked_in_background" } });
+      break;
+    case HTLocationErrorMotionActivityPermissionsDenied:
+      resolve(@{ @"error":  @{ @"code": @"motion_activity_permissions_denied" } });
+      break;
+    case HTLocationErrorMotionActivityServicesDisabled:
+      resolve(@{ @"error":  @{ @"code": @"motion_activity_services_disabled" } });
+      break;
+    case HTLocationErrorNotRunning:
+      resolve(@{ @"error":  @{ @"code": @"not_running" } });
+      break;
+    case HTLocationErrorGpsSignalLost:
+      resolve(@{ @"error":  @{ @"code": @"gps_signal_lost" } });
+      break;
+    case HTLocationErrorStarting:
+      resolve(@{ @"error":  @{ @"code": @"starting" } });
+      break;
+    case HTLocationErrorLocationMocked:
+      resolve(@{ @"error":  @{ @"code": @"location_mocked" } });
+      break;
+  }
+}
+
 RCT_EXPORT_METHOD(getDeviceID:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     resolve(self.hyperTrack.deviceID);
 }
