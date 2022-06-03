@@ -1,5 +1,8 @@
+#import <React/RCTEventEmitter.h>
 #import <React/RCTBridgeModule.h>
 
-@interface HyperTrackSdk : NSObject <RCTBridgeModule>
+@import HyperTrack;
+
+@interface HyperTrackSdk : RCTEventEmitter <RCTBridgeModule>
 
 @end
