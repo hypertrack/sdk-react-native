@@ -1,11 +1,15 @@
-#import "HyperTrackSdk.h"
+#import <Foundation/Foundation.h>
+#import <React/RCTBridgeModule.h>
+#import <React/RCTEventEmitter.h>
+#import <React/RCTLog.h>
+#import <React/RCTEventDispatcher.h>
 
-@implementation HyperTrackSdk
+@interface RCT_EXTERN_MODULE(HyperTrackSdk,RCTEventEmitter)
 
-RCT_EXPORT_MODULE()
+RCT_EXTERN_METHOD(increment: (RCTPromiseResolveBlock)resolve reject: (RCTPromiseRejectBlock)reject)
 
-// Example method
-// See // https://reactnative.dev/docs/native-modules-ios
+RCT_EXTERN_METHOD(decrement: (RCTPromiseResolveBlock)resolve reject: (RCTPromiseRejectBlock)reject)
+
 RCT_REMAP_METHOD(multiply,
                  multiplyWithA:(nonnull NSNumber*)a withB:(nonnull NSNumber*)b
                  withResolver:(RCTPromiseResolveBlock)resolve
@@ -17,3 +21,4 @@ RCT_REMAP_METHOD(multiply,
 }
 
 @end
+

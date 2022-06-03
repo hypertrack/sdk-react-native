@@ -7,9 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-
-		5E555C0D2413F4C50049A1A2 /* HyperTrackSdk.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* HyperTrackSdk.m */; };
-
+		1290D2B02849F86800CBBBCD /* HyperTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1290D2AF2849F86800CBBBCD /* HyperTrack.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,11 +23,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1290D2AC2849F0BD00CBBBCD /* HyperTrackSdk-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HyperTrackSdk-Bridging-Header.h"; sourceTree = "<group>"; };
+		1290D2AF2849F86800CBBBCD /* HyperTrack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HyperTrack.swift; sourceTree = "<group>"; };
 		134814201AA4EA6300B7C361 /* libHyperTrackSdk.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libHyperTrackSdk.a; sourceTree = BUILT_PRODUCTS_DIR; };
-
 		B3E7B5881CC2AC0600A0062D /* HyperTrackSdk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HyperTrackSdk.h; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* HyperTrackSdk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HyperTrackSdk.m; sourceTree = "<group>"; };
-
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,11 +52,11 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-
+				1290D2AF2849F86800CBBBCD /* HyperTrack.swift */,
 				B3E7B5881CC2AC0600A0062D /* HyperTrackSdk.h */,
 				B3E7B5891CC2AC0600A0062D /* HyperTrackSdk.m */,
-
 				134814211AA4EA7D00B7C361 /* Products */,
+				1290D2AC2849F0BD00CBBBCD /* HyperTrackSdk-Bridging-Header.h */,
 			);
 			sourceTree = "<group>";
 		};
@@ -93,6 +91,7 @@
 				TargetAttributes = {
 					58B511DA1A9E6C8500147676 = {
 						CreatedOnToolsVersion = 6.1.1;
+						LastSwiftMigration = 1340;
 					};
 				};
 			};
@@ -119,9 +118,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-
-				B3E7B58A1CC2AC0600A0062D /* HyperTrackSdk.m in Sources */,
-
+				1290D2B02849F86800CBBBCD /* HyperTrack.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -224,34 +221,41 @@
 		58B511F01A9E6C8500147676 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
 				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = HyperTrackSdk;
 				SKIP_INSTALL = YES;
-
+				SWIFT_OBJC_BRIDGING_HEADER = "HyperTrackSdk-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
 		58B511F11A9E6C8500147676 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
 				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = HyperTrackSdk;
 				SKIP_INSTALL = YES;
-
+				SWIFT_OBJC_BRIDGING_HEADER = "HyperTrackSdk-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
