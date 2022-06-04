@@ -6,6 +6,7 @@ class HyperTrackSdk: RCTEventEmitter{
 
     private var hasListeners = false;
     private var count = 0;
+let hyperTrack = try! HyperTrack(publishableKey: .init(Bundle.main.object(forInfoDictionaryKey: "HyperTrackPublishableKey") as! String)!)
 
     override init(){
         super.init()
@@ -36,6 +37,11 @@ class HyperTrackSdk: RCTEventEmitter{
         hasListeners = false;
 
         // remove listeners
+    }
+
+    @objc
+    func getDeviceID(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        resolve(HyperTrack.deviceID);
     }
 
     @objc

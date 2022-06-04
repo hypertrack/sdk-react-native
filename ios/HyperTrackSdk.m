@@ -10,6 +10,8 @@ RCT_EXTERN_METHOD(increment: (RCTPromiseResolveBlock)resolve reject: (RCTPromise
 
 RCT_EXTERN_METHOD(decrement: (RCTPromiseResolveBlock)resolve reject: (RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(getDeviceID: (RCTPromiseResolveBlock)resolve reject: (RCTPromiseRejectBlock)reject)
+
 RCT_REMAP_METHOD(multiply,
                  multiplyWithA:(nonnull NSNumber*)a withB:(nonnull NSNumber*)b
                  withResolver:(RCTPromiseResolveBlock)resolve
