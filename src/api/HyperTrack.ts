@@ -92,14 +92,14 @@ export default class HyperTrack {
   /**
    * Expresses an intent to start location tracking
    */
-  startTracking(): Promise<void> {
+  static async startTracking(): Promise<void> {
     return HyperTrackSdk.startTracking();
   }
 
   /**
    * Expresses an intent to stop location tracking
    */
-  stopTracking(): Promise<void> {
+  static async stopTracking(): Promise<void> {
     return HyperTrackSdk.stopTracking();
   }
 
