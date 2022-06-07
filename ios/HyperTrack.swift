@@ -80,17 +80,58 @@ class HyperTrackSdk: RCTEventEmitter{
 
     @objc
     func getLocation(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) -> Void {
-        let a = hyperTrack.location
-
-        switch a {
+        switch hyperTrack.location {
             case .success(let location):
             resolve(["latitude": location.latitude, "longitude": location.longitude])
             case .failure(let error):
-
-            // switch or return error.localizedDescription
-            let err = NSError(domain: "", code: 200, userInfo: nil )
-            reject("LOCATION ERROR", "error description", err)
+            switch error {
+            case .gpsSignalLost:
+                let err = NSError(domain: "", code: 200, userInfo: nil )
+                reject("LOCATION ERROR", "gpsSignalLost", err)
+            case .locationMocked:
+                let err = NSError(domain: "", code: 200, userInfo: nil )
+                reject("LOCATION ERROR", "locationMocked", err)
+            case .locationPermissionsCantBeAskedInBackground:
+                let err = NSError(domain: "", code: 200, userInfo: nil )
+                reject("LOCATION ERROR", "locationPermissionsCantBeAskedInBackground", err)
+            case .locationPermissionsDenied:
+                let err = NSError(domain: "", code: 200, userInfo: nil )
+                reject("LOCATION ERROR", "locationPermissionsDenied", err)
+            case .locationPermissionsInsufficientForBackground:
+                let err = NSError(domain: "", code: 200, userInfo: nil )
+                reject("LOCATION ERROR", "locationPermissionsInsufficientForBackground", err)
+            case .locationPermissionsNotDetermined:
+                let err = NSError(domain: "", code: 200, userInfo: nil )
+                reject("LOCATION ERROR", "locationPermissionsNotDetermined", err)
+            case .locationPermissionsReducedAccuracy:
+                let err = NSError(domain: "", code: 200, userInfo: nil )
+                reject("LOCATION ERROR", "locationPermissionsReducedAccuracy", err)
+            case .locationPermissionsRestricted:
+                let err = NSError(domain: "", code: 200, userInfo: nil )
+                reject("LOCATION ERROR", "locationPermissionsRestricted", err)
+            case .locationServicesDisabled:
+                let err = NSError(domain: "", code: 200, userInfo: nil )
+                reject("LOCATION ERROR", "locationServicesDisabled", err)
+            case .motionActivityPermissionsCantBeAskedInBackground:
+                let err = NSError(domain: "", code: 200, userInfo: nil )
+                reject("LOCATION ERROR", "motionActivityPermissionsCantBeAskedInBackground", err)
+            case .motionActivityPermissionsDenied:
+                let err = NSError(domain: "", code: 200, userInfo: nil )
+                reject("LOCATION ERROR", "motionActivityPermissionsDenied", err)
+            case .motionActivityPermissionsNotDetermined:
+                let err = NSError(domain: "", code: 200, userInfo: nil )
+                reject("LOCATION ERROR", "motionActivityPermissionsNotDetermined", err)
+            case .motionActivityServicesDisabled:
+                let err = NSError(domain: "", code: 200, userInfo: nil )
+                reject("LOCATION ERROR", "motionActivityServicesDisabled", err)
+            case .notRunning:
+                let err = NSError(domain: "", code: 200, userInfo: nil )
+                reject("LOCATION ERROR", "notRunning", err)
+            case .starting:
+                let err = NSError(domain: "", code: 200, userInfo: nil )
+                reject("LOCATION ERROR", "starting", err)
             }
+        }
     }
     @objc
     func isTracking(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) -> Void {
