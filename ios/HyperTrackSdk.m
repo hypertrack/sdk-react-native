@@ -12,6 +12,22 @@ RCT_EXTERN_METHOD(decrement: (RCTPromiseResolveBlock)resolve reject: (RCTPromise
 
 RCT_EXTERN_METHOD(getDeviceID: (RCTPromiseResolveBlock)resolve reject: (RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(startTracking: (RCTPromiseResolveBlock)resolve reject: (RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(stopTracking: (RCTPromiseResolveBlock)resolve reject: (RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(getLocation: (RCTPromiseResolveBlock)resolve reject: (RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(isTracking: (RCTPromiseResolveBlock)resolve reject: (RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(isRunning: (RCTPromiseResolveBlock)resolve reject: (RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(availability: (RCTPromiseResolveBlock)resolve reject: (RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(setDeviceName:(NSString *)deviceName
+                  resolve: (RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
 RCT_REMAP_METHOD(multiply,
                  multiplyWithA:(nonnull NSNumber*)a withB:(nonnull NSNumber*)b
                  withResolver:(RCTPromiseResolveBlock)resolve

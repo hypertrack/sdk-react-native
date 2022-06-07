@@ -6,7 +6,8 @@ class HyperTrackSdk: RCTEventEmitter{
 
     private var hasListeners = false;
     private var count = 0;
-let hyperTrack = try! HyperTrack(publishableKey: .init(Bundle.main.object(forInfoDictionaryKey: "HyperTrackPublishableKey") as! String)!)
+
+    let hyperTrack = try! HyperTrack(publishableKey: .init(Bundle.main.object(forInfoDictionaryKey: "HyperTrackPublishableKey") as! String)!)
 
     override init(){
         super.init()
@@ -40,8 +41,8 @@ let hyperTrack = try! HyperTrack(publishableKey: .init(Bundle.main.object(forInf
     }
 
     @objc
-    func getDeviceID(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        resolve(HyperTrack.deviceID);
+    func getDeviceID(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        resolve(hyperTrack.deviceID);
     }
 
     @objc
@@ -64,4 +65,70 @@ let hyperTrack = try! HyperTrack(publishableKey: .init(Bundle.main.object(forInf
             sendEvent(withName: "onDecrement", body: ["count decreased", count])
         }
     }
+
+    @objc
+    func startTracking(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) -> Void {
+        hyperTrack.start()
+        resolve("Tracking started")
+    }
+
+    @objc
+    func stopTracking(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) -> Void {
+        hyperTrack.stop()
+        resolve("Tracking stopped")
+    }
+
+    @objc
+    func getLocation(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) -> Void {
+        let a = hyperTrack.location
+
+        switch a {
+            case .success(let location):
+            resolve(["latitude": location.latitude, "longitude": location.longitude])
+            case .failure(let error):
+
+            // switch or return error.localizedDescription
+            let err = NSError(domain: "", code: 200, userInfo: nil )
+            reject("LOCATION ERROR", "error description", err)
+            }
+    }
+    @objc
+    func isTracking(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) -> Void {
+        resolve(hyperTrack.isTracking)
+    }
+
+    @objc
+    func isRunning(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) -> Void {
+        resolve(hyperTrack.isRunning)
+    }
+
+    @objc
+    func availability(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) -> Void {
+        let availability = hyperTrack.availability
+
+        switch availability {
+        case .available:
+            resolve(true)
+        case .unavailable:
+            resolve(false)
+        default:
+            resolve(false)
+        }
+
+    }
+
+
+    @objc
+    func setDeviceName(_ deviceName: String, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
+        hyperTrack.setDeviceName(deviceName)
+        resolve("Device name set")
+    }
+
+
+//    @objc
+//    func setMetadata(_ deviceName: String, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
+//        hyperTrack.setDeviceMetadata(deviceName)
+//        resolve("Device name set")
+//    }
+
 }
