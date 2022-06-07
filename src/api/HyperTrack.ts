@@ -77,7 +77,7 @@ export default class HyperTrack {
    * @returns current latitude and longitude or location error
    */
   static async getLocation(): Promise<LocationType | LocationErrorType> {
-    return HyperTrackSdk.getDeviceID();
+    return HyperTrackSdk.getLocation();
   }
 
   /**
