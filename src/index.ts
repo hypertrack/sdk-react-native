@@ -1,2 +1,2 @@
-import HyperTrack from './api/HyperTrack'
-export default HyperTrack
+import HyperTrack from './api/HyperTrack';
+export default HyperTrack;

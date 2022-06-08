@@ -7,12 +7,12 @@ export enum TrackingState {
   STARTED = 'started',
 }
 
-export type LocationType = {
+export type Location = {
   latitude: number;
   longitude: number;
 };
 
-export enum LocationErrorType {
+export enum LocationError {
   // GPS satellites are not in view.
   GPS_SIGNAL_LOST = 'gpsSignalLost',
   // The user enabled mock location app while mocking locations is prohibited.
