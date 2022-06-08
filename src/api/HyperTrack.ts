@@ -1,5 +1,5 @@
 import { NativeModules, Platform, NativeEventEmitter } from 'react-native';
-import type { Location, TrackingState } from '../types';
+import type { Location, LocationError, TrackingState } from '../types';
 
 const LINKING_ERROR =
   `The package 'react-native-hypertrack-sdk' doesn't seem to be linked. Make sure: \n\n` +
@@ -74,10 +74,9 @@ export default class HyperTrack {
 
   /**
    *
-   * @returns current latitude and longitude or location error
-   * @throws LocationError
+   * @returns current latitude and longitude or location error or LocationError
    */
-  static async getLocation(): Promise<Location> {
+  static async getLocation(): Promise<Location | LocationError> {
     return HyperTrackSdk.getLocation();
   }
 
