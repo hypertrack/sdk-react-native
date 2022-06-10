@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.18.0] - 2022-06-09
+### Changed
+- Updated HyperTrack Android SDK to 6.1.2 and iOS SDK to 4.12.0
+
 ## [7.17.0] - 2022-06-03
 ### Changed
 - Updated HyperTrack Android SDK to 6.1.1
@@ -252,6 +256,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2019-06-07
 Initial release.
 
+
+[7.18.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.18.0
+[7.17.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.17.0
+[7.16.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.16.0
 [7.15.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.15.0
 [7.14.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.14.0
 [7.13.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.13.0

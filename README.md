@@ -2,8 +2,8 @@
 
 ![GitHub](https://img.shields.io/github/license/hypertrack/sdk-react-native.svg)
 ![npm](https://img.shields.io/npm/v/hypertrack-sdk-react-native.svg)
-[![iOS SDK](https://img.shields.io/badge/iOS%20SDK-4.11.1-brightgreen.svg)](https://cocoapods.org/pods/HyperTrack)
-![Android SDK](https://img.shields.io/badge/Android%20SDK-6.1.1-brightgreen.svg)
+[![iOS SDK](https://img.shields.io/badge/iOS%20SDK-4.12.0-brightgreen.svg)](https://cocoapods.org/pods/HyperTrack)
+![Android SDK](https://img.shields.io/badge/Android%20SDK-6.1.2-brightgreen.svg)
 
 [HyperTrack](https://www.hypertrack.com) lets you add live location tracking to your mobile app. Live location is made available along with ongoing activity, tracking controls and tracking outage with reasons.
 
@@ -18,7 +18,7 @@ For information about how to get started with React Native SDK, please visit thi
 
     - android
         - android/build.gradle
-             - DEFAULT_HYPERTRACK_SDK_VERSION 
+             - DEFAULT_HYPERTRACK_SDK_VERSION
     - ios
         - hypertrack-sdk-react-native.podspec
             - s.dependency 'HyperTrack/Objective-C', '**version**'
@@ -26,7 +26,7 @@ For information about how to get started with React Native SDK, please visit thi
 2. Increment wrapper version
     - package.json
         - version
-  
+
 3. Update changelog
 4. Update badge in README.md
 5. Create a version tag
