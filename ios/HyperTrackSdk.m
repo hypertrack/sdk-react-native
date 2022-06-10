@@ -24,6 +24,10 @@ RCT_EXTERN_METHOD(isRunning: (RCTPromiseResolveBlock)resolve reject: (RCTPromise
 
 RCT_EXTERN_METHOD(availability: (RCTPromiseResolveBlock)resolve reject: (RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(isLoggingEnabled: (RCTPromiseResolveBlock)resolve reject: (RCTPromiseRejectBlock)reject)
+
+// RCT_EXTERN_METHOD(subscribeToLocation: (RCTPromiseResolveBlock)resolve reject: (RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(setDeviceName:(NSString *)deviceName
                   resolve: (RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)

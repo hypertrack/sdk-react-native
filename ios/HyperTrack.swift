@@ -146,12 +146,24 @@ class HyperTrackSdk: RCTEventEmitter{
 
     }
 
+    @objc
+    func isLoggingEnabled(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) -> Void {
+        resolve(hyperTrack.isRunning)
+    }
 
     @objc
     func setDeviceName(_ deviceName: String, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
         hyperTrack.setDeviceName(deviceName)
         resolve("Device name set")
     }
+
+    // @objc
+    // func subscribeToLocation(_ deviceName: String, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
+    //     let loc = hyperTrack.subscribeToLocation
+    //     print("Subscribed to location \(loc)")
+
+    //     resolve("Device name set")
+    // }
 
 
 //    @objc

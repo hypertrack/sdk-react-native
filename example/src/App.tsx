@@ -90,6 +90,24 @@ export default function App() {
     }
   };
 
+  const isLoggingEnabled = async () => {
+    try {
+      const response = await HyperTrack.isLoggingEnabled();
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // const subscribeToLocation = async () => {
+  //   try {
+  //     const response = await HyperTrack.subscribeToLocation();
+  //     console.log(response);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   return (
     <>
       <StatusBar barStyle={'dark-content'} />
@@ -101,6 +119,8 @@ export default function App() {
         <Button title="isRunning" onPress={isRunning} />
         <Button title="availability" onPress={availability} />
         <Button title="device name" onPress={setDeviceName} />
+        <Button title="isLoggingEnabled" onPress={isLoggingEnabled} />
+        {/* <Button title="subscribeToLocation" onPress={subscribeToLocation} /> */}
       </View>
     </>
   );

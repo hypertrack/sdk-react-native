@@ -124,6 +124,24 @@ export default class HyperTrack {
   /**
    *
    *
+   * @returns
+   */
+  static async isLoggingEnabled(): Promise<boolean> {
+    return HyperTrackSdk.isLoggingEnabled();
+  }
+
+  // /**
+  //  *
+  //  *
+  //  * @returns
+  //  */
+  // static async subscribeToLocation(): Promise<boolean> {
+  //   return HyperTrackSdk.subscribeToLocation();
+  // }
+
+  /**
+   *
+   *
    * @param  deviceName A device name to be shown in dashboard
    */
   static async setDeviceName(deviceName: string): Promise<void> {
