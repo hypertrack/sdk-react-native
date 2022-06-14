@@ -6,5 +6,8 @@
   "hideGenerator": true,
   "githubPages": false,
   "hideBreadcrumbs": true,
+  "disableSources": true,
+  "name": "HyperTrack SDK API",
+  "includeVersion": true,
   "readme": "./DOCS_README.md"
 }
