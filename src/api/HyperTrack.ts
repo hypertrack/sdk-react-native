@@ -20,6 +20,14 @@ const HyperTrackSdk = NativeModules.HyperTrackSdk
 
 const EventEmitter = new NativeEventEmitter(HyperTrackSdk);
 
+/**
+ * A root class of the HyperTrack SDK. It is the default export of this library.
+ *
+ * @example
+ * ```js
+ * import HyperTrack from 'react-native-hypertrack-sdk'
+ * ```
+ */
 export default class HyperTrack {
   /**
    * Listen for changes of the Tracking State.

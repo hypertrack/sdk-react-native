@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { StyleSheet, View, Text, Button, StatusBar } from 'react-native';
+import { Button, StatusBar } from 'react-native';
 import HyperTrack from 'react-native-hypertrack-sdk';
 
 export default function App() {
@@ -111,30 +111,15 @@ export default function App() {
   return (
     <>
       <StatusBar barStyle={'dark-content'} />
-      <View style={styles.container}>
-        <Button title="Start" onPress={startTracking} />
-        <Button title="Stop" onPress={stopTracking} />
-        <Button title="getlocation" onPress={getLocation} />
-        <Button title="isTracking" onPress={isTracking} />
-        <Button title="isRunning" onPress={isRunning} />
-        <Button title="availability" onPress={availability} />
-        <Button title="device name" onPress={setDeviceName} />
-        <Button title="isLoggingEnabled" onPress={isLoggingEnabled} />
-        {/* <Button title="subscribeToLocation" onPress={subscribeToLocation} /> */}
-      </View>
+      <Button title="Start" onPress={startTracking} />
+      <Button title="Stop" onPress={stopTracking} />
+      <Button title="getlocation" onPress={getLocation} />
+      <Button title="isTracking" onPress={isTracking} />
+      <Button title="isRunning" onPress={isRunning} />
+      <Button title="availability" onPress={availability} />
+      <Button title="device name" onPress={setDeviceName} />
+      <Button title="isLoggingEnabled" onPress={isLoggingEnabled} />
+      {/* <Button title="subscribeToLocation" onPress={subscribeToLocation} /> */}
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
-  },
-});
