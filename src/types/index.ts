@@ -7,10 +7,10 @@ export enum TrackingState {
   STARTED = 'started',
 }
 
-export type Location = {
+export interface Location {
   latitude: number;
   longitude: number;
-};
+}
 
 export enum LocationError {
   // GPS satellites are not in view.
