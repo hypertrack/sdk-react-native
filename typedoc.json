@@ -9,5 +9,5 @@
   "name": "HyperTrack SDK API",
   "includeVersion": true,
   "readme": "none",
-  "sort": "required-first"
+  "sort": "source-order"
 }
