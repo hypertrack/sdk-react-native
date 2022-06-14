@@ -1,4 +1,4 @@
-# react-native-hypertrack-sdk
+# HyperTrack SDK API - v7.18.2
 
 ## Table of contents
 

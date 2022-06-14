@@ -48,10 +48,6 @@ import HyperTrack from 'react-native-hypertrack-sdk'
 
 `Promise`<`number`\>
 
-#### Defined in
-
-[api/HyperTrack.ts:71](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/api/HyperTrack.ts#L71)
-
 ___
 
 ### getDeviceID
@@ -63,10 +59,6 @@ ___
 `Promise`<`string`\>
 
 A string used to identify a device uniquely
-
-#### Defined in
-
-[api/HyperTrack.ts:79](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/api/HyperTrack.ts#L79)
 
 ___
 
@@ -80,10 +72,6 @@ ___
 
 current latitude and longitude or location error or LocationError
 
-#### Defined in
-
-[api/HyperTrack.ts:87](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/api/HyperTrack.ts#L87)
-
 ___
 
 ### increase
@@ -93,10 +81,6 @@ ___
 #### Returns
 
 `Promise`<`number`\>
-
-#### Defined in
-
-[api/HyperTrack.ts:68](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/api/HyperTrack.ts#L68)
 
 ___
 
@@ -112,10 +96,6 @@ Device's availability for nearby search
 
 true when is available or false when unavailable
 
-#### Defined in
-
-[api/HyperTrack.ts:96](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/api/HyperTrack.ts#L96)
-
 ___
 
 ### isLoggingEnabled
@@ -125,10 +105,6 @@ ___
 #### Returns
 
 `Promise`<`boolean`\>
-
-#### Defined in
-
-[api/HyperTrack.ts:137](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/api/HyperTrack.ts#L137)
 
 ___
 
@@ -140,10 +116,6 @@ ___
 
 `Promise`<`boolean`\>
 
-#### Defined in
-
-[api/HyperTrack.ts:128](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/api/HyperTrack.ts#L128)
-
 ___
 
 ### isTracking
@@ -153,10 +125,6 @@ ___
 #### Returns
 
 `Promise`<`boolean`\>
-
-#### Defined in
-
-[api/HyperTrack.ts:119](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/api/HyperTrack.ts#L119)
 
 ___
 
@@ -174,10 +142,6 @@ ___
 
 `EmitterSubscription`
 
-#### Defined in
-
-[api/HyperTrack.ts:62](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/api/HyperTrack.ts#L62)
-
 ___
 
 ### onIncrementIncreasedChanged
@@ -193,10 +157,6 @@ ___
 #### Returns
 
 `EmitterSubscription`
-
-#### Defined in
-
-[api/HyperTrack.ts:56](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/api/HyperTrack.ts#L56)
 
 ___
 
@@ -228,10 +188,6 @@ subscription.remove()
 
 `EmitterSubscription`
 
-#### Defined in
-
-[api/HyperTrack.ts:47](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/api/HyperTrack.ts#L47)
-
 ___
 
 ### setDeviceName
@@ -248,10 +204,6 @@ ___
 
 `Promise`<`void`\>
 
-#### Defined in
-
-[api/HyperTrack.ts:155](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/api/HyperTrack.ts#L155)
-
 ___
 
 ### startTracking
@@ -264,10 +216,6 @@ Expresses an intent to start location tracking
 
 `Promise`<`void`\>
 
-#### Defined in
-
-[api/HyperTrack.ts:103](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/api/HyperTrack.ts#L103)
-
 ___
 
 ### stopTracking
@@ -279,7 +227,3 @@ Expresses an intent to stop location tracking
 #### Returns
 
 `Promise`<`void`\>
-
-#### Defined in
-
-[api/HyperTrack.ts:110](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/api/HyperTrack.ts#L110)

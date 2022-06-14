@@ -19,10 +19,6 @@ The possible tracking states.
 
 HyperTrack started tracking.
 
-#### Defined in
-
-[types/index.ts:7](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/types/index.ts#L7)
-
 ___
 
 ### STOPPED
@@ -30,7 +26,3 @@ ___
 • **STOPPED**
 
 HyperTrack stopped tracking.
-
-#### Defined in
-
-[types/index.ts:4](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/types/index.ts#L4)

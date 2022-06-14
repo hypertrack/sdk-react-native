@@ -23,7 +23,3 @@
 | :------ | :------ |
 | `latitude` | `number` |
 | `longitude` | `number` |
-
-#### Defined in
-
-[types/index.ts:10](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/types/index.ts#L10)
