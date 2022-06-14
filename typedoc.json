@@ -4,5 +4,7 @@
   "exclude": "example/**/*",
   "entryPointStrategy": "expand",
   "hideGenerator": true,
-  "githubPages": false
+  "githubPages": false,
+  "hideBreadcrumbs": true,
+  "readme": "./DOCS_README.md"
 }

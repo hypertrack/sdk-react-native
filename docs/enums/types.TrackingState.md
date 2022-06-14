@@ -1,5 +1,3 @@
-[react-native-hypertrack-sdk](../README.md) / [Modules](../modules.md) / [types](../modules/types.md) / TrackingState
-
 # Enumeration: TrackingState
 
 [types](../modules/types.md).TrackingState
@@ -23,7 +21,7 @@ HyperTrack started tracking.
 
 #### Defined in
 
-[types/index.ts:7](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/types/index.ts#L7)
+[types/index.ts:7](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/types/index.ts#L7)
 
 ___
 
@@ -35,4 +33,4 @@ HyperTrack stopped tracking.
 
 #### Defined in
 
-[types/index.ts:4](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/types/index.ts#L4)
+[types/index.ts:4](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/types/index.ts#L4)

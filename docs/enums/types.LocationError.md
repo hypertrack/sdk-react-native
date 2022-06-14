@@ -1,5 +1,3 @@
-[react-native-hypertrack-sdk](../README.md) / [Modules](../modules.md) / [types](../modules/types.md) / LocationError
-
 # Enumeration: LocationError
 
 [types](../modules/types.md).LocationError
@@ -32,7 +30,7 @@
 
 #### Defined in
 
-[types/index.ts:17](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/types/index.ts#L17)
+[types/index.ts:17](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/types/index.ts#L17)
 
 ___
 
@@ -42,7 +40,7 @@ ___
 
 #### Defined in
 
-[types/index.ts:19](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/types/index.ts#L19)
+[types/index.ts:19](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/types/index.ts#L19)
 
 ___
 
@@ -52,7 +50,7 @@ ___
 
 #### Defined in
 
-[types/index.ts:21](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/types/index.ts#L21)
+[types/index.ts:21](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/types/index.ts#L21)
 
 ___
 
@@ -62,7 +60,7 @@ ___
 
 #### Defined in
 
-[types/index.ts:25](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/types/index.ts#L25)
+[types/index.ts:25](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/types/index.ts#L25)
 
 ___
 
@@ -72,7 +70,7 @@ ___
 
 #### Defined in
 
-[types/index.ts:27](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/types/index.ts#L27)
+[types/index.ts:27](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/types/index.ts#L27)
 
 ___
 
@@ -82,7 +80,7 @@ ___
 
 #### Defined in
 
-[types/index.ts:29](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/types/index.ts#L29)
+[types/index.ts:29](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/types/index.ts#L29)
 
 ___
 
@@ -92,7 +90,7 @@ ___
 
 #### Defined in
 
-[types/index.ts:31](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/types/index.ts#L31)
+[types/index.ts:31](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/types/index.ts#L31)
 
 ___
 
@@ -102,7 +100,7 @@ ___
 
 #### Defined in
 
-[types/index.ts:23](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/types/index.ts#L23)
+[types/index.ts:23](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/types/index.ts#L23)
 
 ___
 
@@ -112,7 +110,7 @@ ___
 
 #### Defined in
 
-[types/index.ts:33](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/types/index.ts#L33)
+[types/index.ts:33](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/types/index.ts#L33)
 
 ___
 
@@ -122,7 +120,7 @@ ___
 
 #### Defined in
 
-[types/index.ts:35](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/types/index.ts#L35)
+[types/index.ts:35](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/types/index.ts#L35)
 
 ___
 
@@ -132,7 +130,7 @@ ___
 
 #### Defined in
 
-[types/index.ts:37](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/types/index.ts#L37)
+[types/index.ts:37](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/types/index.ts#L37)
 
 ___
 
@@ -142,7 +140,7 @@ ___
 
 #### Defined in
 
-[types/index.ts:39](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/types/index.ts#L39)
+[types/index.ts:39](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/types/index.ts#L39)
 
 ___
 
@@ -152,7 +150,7 @@ ___
 
 #### Defined in
 
-[types/index.ts:41](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/types/index.ts#L41)
+[types/index.ts:41](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/types/index.ts#L41)
 
 ___
 
@@ -162,7 +160,7 @@ ___
 
 #### Defined in
 
-[types/index.ts:43](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/types/index.ts#L43)
+[types/index.ts:43](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/types/index.ts#L43)
 
 ___
 
@@ -172,4 +170,4 @@ ___
 
 #### Defined in
 
-[types/index.ts:45](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/types/index.ts#L45)
+[types/index.ts:45](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/types/index.ts#L45)

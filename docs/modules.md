@@ -1,5 +1,3 @@
-[react-native-hypertrack-sdk](README.md) / Modules
-
 # react-native-hypertrack-sdk
 
 ## Table of contents

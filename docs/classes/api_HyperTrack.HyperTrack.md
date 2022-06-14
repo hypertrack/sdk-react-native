@@ -1,5 +1,3 @@
-[react-native-hypertrack-sdk](../README.md) / [Modules](../modules.md) / [api/HyperTrack](../modules/api_HyperTrack.md) / HyperTrack
-
 # Class: HyperTrack
 
 [api/HyperTrack](../modules/api_HyperTrack.md).HyperTrack
@@ -52,7 +50,7 @@ import HyperTrack from 'react-native-hypertrack-sdk'
 
 #### Defined in
 
-[api/HyperTrack.ts:71](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/api/HyperTrack.ts#L71)
+[api/HyperTrack.ts:71](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/api/HyperTrack.ts#L71)
 
 ___
 
@@ -68,7 +66,7 @@ A string used to identify a device uniquely
 
 #### Defined in
 
-[api/HyperTrack.ts:79](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/api/HyperTrack.ts#L79)
+[api/HyperTrack.ts:79](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/api/HyperTrack.ts#L79)
 
 ___
 
@@ -84,7 +82,7 @@ current latitude and longitude or location error or LocationError
 
 #### Defined in
 
-[api/HyperTrack.ts:87](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/api/HyperTrack.ts#L87)
+[api/HyperTrack.ts:87](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/api/HyperTrack.ts#L87)
 
 ___
 
@@ -98,7 +96,7 @@ ___
 
 #### Defined in
 
-[api/HyperTrack.ts:68](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/api/HyperTrack.ts#L68)
+[api/HyperTrack.ts:68](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/api/HyperTrack.ts#L68)
 
 ___
 
@@ -116,7 +114,7 @@ true when is available or false when unavailable
 
 #### Defined in
 
-[api/HyperTrack.ts:96](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/api/HyperTrack.ts#L96)
+[api/HyperTrack.ts:96](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/api/HyperTrack.ts#L96)
 
 ___
 
@@ -130,7 +128,7 @@ ___
 
 #### Defined in
 
-[api/HyperTrack.ts:137](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/api/HyperTrack.ts#L137)
+[api/HyperTrack.ts:137](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/api/HyperTrack.ts#L137)
 
 ___
 
@@ -144,7 +142,7 @@ ___
 
 #### Defined in
 
-[api/HyperTrack.ts:128](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/api/HyperTrack.ts#L128)
+[api/HyperTrack.ts:128](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/api/HyperTrack.ts#L128)
 
 ___
 
@@ -158,7 +156,7 @@ ___
 
 #### Defined in
 
-[api/HyperTrack.ts:119](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/api/HyperTrack.ts#L119)
+[api/HyperTrack.ts:119](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/api/HyperTrack.ts#L119)
 
 ___
 
@@ -178,7 +176,7 @@ ___
 
 #### Defined in
 
-[api/HyperTrack.ts:62](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/api/HyperTrack.ts#L62)
+[api/HyperTrack.ts:62](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/api/HyperTrack.ts#L62)
 
 ___
 
@@ -198,7 +196,7 @@ ___
 
 #### Defined in
 
-[api/HyperTrack.ts:56](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/api/HyperTrack.ts#L56)
+[api/HyperTrack.ts:56](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/api/HyperTrack.ts#L56)
 
 ___
 
@@ -232,7 +230,7 @@ subscription.remove()
 
 #### Defined in
 
-[api/HyperTrack.ts:47](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/api/HyperTrack.ts#L47)
+[api/HyperTrack.ts:47](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/api/HyperTrack.ts#L47)
 
 ___
 
@@ -252,7 +250,7 @@ ___
 
 #### Defined in
 
-[api/HyperTrack.ts:155](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/api/HyperTrack.ts#L155)
+[api/HyperTrack.ts:155](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/api/HyperTrack.ts#L155)
 
 ___
 
@@ -268,7 +266,7 @@ Expresses an intent to start location tracking
 
 #### Defined in
 
-[api/HyperTrack.ts:103](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/api/HyperTrack.ts#L103)
+[api/HyperTrack.ts:103](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/api/HyperTrack.ts#L103)
 
 ___
 
@@ -284,4 +282,4 @@ Expresses an intent to stop location tracking
 
 #### Defined in
 
-[api/HyperTrack.ts:110](https://github.com/poterstar/sdk-react-native/blob/67a92c1/src/api/HyperTrack.ts#L110)
+[api/HyperTrack.ts:110](https://github.com/poterstar/sdk-react-native/blob/4b5259f/src/api/HyperTrack.ts#L110)
