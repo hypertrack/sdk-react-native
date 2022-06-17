@@ -1,6 +1,6 @@
 {
  "git": {
-    "changelog": "auto-changelog --stdout --commit-limit false -u --template https://raw.githubusercontent.com/release-it/release-it/master/templates/changelog-compact.hbs",
+    "changelog": "auto-changelog --stdout --commit-limit false -u --template https://raw.githubusercontent.com/release-it/release-it/master/templates/keepachangelog.hbs",
     "commitMessage": "Release ${version}",
     "requireCleanWorkingDir": false,
     "tagName": "${version}"
@@ -9,7 +9,6 @@
     "release": true
   },
   "hooks": {
-    "before:init": "echo After git push, before github release",
     "after:bump": "auto-changelog -p"
   },
   "npm": {

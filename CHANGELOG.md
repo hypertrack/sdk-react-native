@@ -1,314 +1,323 @@
-# Changelog
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-## [7.18.2] - 2022-06-13
-### Changed
-- Updated HyperTrack iOS SDK to 4.12.3
-
-## [7.18.1] - 2022-06-10
-### Changed
-- Updated HyperTrack iOS SDK to 4.12.1 to fix a regression in tracking listener
-
-## [7.18.0] - 2022-06-09
-### Changed
-- Updated HyperTrack Android SDK to 6.1.2 and iOS SDK to 4.12.0
-
-## [7.17.0] - 2022-06-03
-### Changed
-- Updated HyperTrack Android SDK to 6.1.1
-
-## [7.16.0] - 2022-05-03
-### Changed
-- Updated HyperTrack Android SDK to [6.0.4](https://github.com/hypertrack/sdk-android/blob/master/CHANGELOG.md#604---2022-04-29)
-
-## [7.16.0] - 2022-05-03
-### Changed
-- Updated HyperTrack Android SDK to [6.0.4](https://github.com/hypertrack/sdk-android/blob/master/CHANGELOG.md#604---2022-04-29)
-
-## [7.15.0] - 2022-04-29
-### Added
-- Current location getter returns either the current location of the device or an outage reason for why current location is unavailable.
-
-## [7.14.0] - 2022-03-24
-### Changed
-- Updated HyperTrack Android SDK to [6.0.2](https://github.com/hypertrack/sdk-android/blob/master/CHANGELOG.md#602---2022-03-18)
-
-## [7.13.0] - 2022-01-05
-### Changed
-- Updated iOS SDK to [4.9.0](https://github.com/hypertrack/sdk-ios/blob/master/CHANGELOG.md#490---2022-01-05)
-
-## [7.12.1] - 2021-11-11
-### Changed
-- Updated Android SDK to [5.4.5](https://github.com/hypertrack/sdk-android/blob/master/CHANGELOG.md#545---2021-11-05)
-
-## [7.12.0] - 2021-10-29
-### Changed
-- Updated Android SDK to [5.4.4](https://github.com/hypertrack/sdk-android/blob/master/CHANGELOG.md#544---2021-10-29)
-
-## [7.11.0] - 2021-10-28
-### Changed
-- Updated Android SDK to [5.4.3](https://github.com/hypertrack/sdk-android/blob/master/CHANGELOG.md#543---2021-09-01)
-
-## [7.10.0] - 2021-08-04
-### Changed
-- Updated Android SDK to [5.4.0](https://github.com/hypertrack/sdk-android/blob/master/CHANGELOG.md#540---2021-08-04)
-
-## [7.9.0] - 2021-07-07
-### Changed
-- Updated Android SDK to [v5.2.5](https://github.com/hypertrack/sdk-android/blob/master/CHANGELOG.md#525---2021-07-02)
-
-## [7.8.1] - 2021-06-11
-### Fixed
-- Accidently removed import added back.
-
-## [7.8.0] - 2021-06-11
-### Changed
-- Updated Android SDK to [v5.2.2](https://github.com/hypertrack/sdk-android/blob/master/CHANGELOG.md#522---2021-06-11)
-
-## [7.7.0] - 2021-05-29
-### Changed
-- Updated Android SDK to [v5.1.0](https://github.com/hypertrack/sdk-android/blob/master/CHANGELOG.md#510---2021-05-28)
-
-## [7.6.0] - 2021-05-07
-### Changed
-- Updated Android SDK to [v4.12.0](https://github.com/hypertrack/sdk-android/blob/master/CHANGELOG.md#4120---2021-05-07)
-
-## [7.5.0] - 2021-04-26
-### Changed
-- Updated iOS SDK to [4.8.0](https://github.com/hypertrack/sdk-ios/blob/master/CHANGELOG.md#480---2021-04-22)
-- Updated Android SDK to [v4.11.1](https://github.com/hypertrack/sdk-android/blob/master/CHANGELOG.md#4111---2021-04-20)
-
-## [7.4.0] - 2021-04-02
-### Changed
-- Updated Android SDK to [v4.11.0](https://github.com/hypertrack/sdk-android/blob/master/CHANGELOG.md#4110---2021-03-30)
-### Fixed
-- SDK won't navigate to Settings showing "Select `Allow Always` option" snackbar on Android 11 and later.
-
-## [7.3.0] - 2021-03-04
-### Changed
-- Updated Android SDK to [v4.10.0](https://github.com/hypertrack/sdk-android/blob/master/CHANGELOG.md#4100---2021-02-22)
-
-## [7.2.0] - 2020-12-23
-### Changed
-- Updated iOS SDK to [v4.7.0](https://github.com/hypertrack/sdk-ios/blob/master/CHANGELOG.md#470---2020-12-23)
-### Fixed
-- iOS plugin runtime error notification.
-
-## [7.1.0] - 2020-11-17
-### Changed
-- Updated Anroid SDK to [v4.8.0](https://github.com/hypertrack/sdk-android/blob/master/CHANGELOG.md#480---2020-10-30)
-- Updated iOS SDK to [v4.6.0](https://github.com/hypertrack/sdk-ios/blob/master/CHANGELOG.md#460---2020-11-09)
-- Using React-Core on iOS (https://github.com/hypertrack/sdk-react-native/pull/19)
-
-## [7.0.1] - 2020-10-07
-### Fixed
-- Added `hypertrack-sdk-react-native.podspec` to `package.json` file.
-### Changed
-- Updated iOS SDK to `4.5.1`.
-
-## [7.0.0] - 2020-10-02
-### Changed
-- Updated react-native to version `0.63.3`.
-- Updated Android SDK to `4.6.0`.
-### Removed
-- Remove startsTracking API from createInstance.
-
-### API Diff
-```diff
-/**
- * Initialize the HyperTrack SDK
- * @param {string} publishableKey - A unique String that is used to identify your account with HyperTrack.
-- * @param {boolean} startsTracking - Should the SDK start tracking immediately after initialization.
- * @param {boolean} automaticallyRequestPermissions - If true, SDK automatically triggers location and motion activity permissions dialogs when tracking starts.
- */
-- async createInstance(publishableKey, startsTracking = true, automaticallyRequestPermissions = true): Promise<HyperTrackAPI> {
--    await HyperTrack.initialize(publishableKey, startsTracking, automaticallyRequestPermissions);
-+ async createInstance(publishableKey, automaticallyRequestPermissions = true): Promise<HyperTrackAPI> {
-+    await HyperTrack.initialize(publishableKey, false, automaticallyRequestPermissions);
-    return new HyperTrackAPI();
-},
-```
-
-## [6.6.0] - 2020-07-24
-### Changed
-- Updated react-native to version `0.61.4`.
-- Updated Android SDK to `4.5.2`.
-
-## [6.5.1] - 2020-07-20
-### Changed
-- Updated Android SDK to `4.5.1`.
-
-## [6.5.0] - 2020-07-16
-### Changed
-- Updated Android SDK to `4.5.0`.
-
-## [6.4.0] - 2020-07-14
-### Added
-- Only send events when there are listeners in iOS wrapper.
-### Changed
-- Reject promise properly and with error code during iOS initialization.
-### Fixed
-- Fixed regression where syncDeviceSettings was removed from iOS SDK wrapper.
-
-## [6.3.0] - 2020-07-13
-### Changed
-- Control permission dialogs on iOS.
-
-### API Diff
-
-```diff
-/**
- * Initialize the HyperTrack SDK
- * @param {string} publishableKey - A unique String that is used to identify your account with HyperTrack.
- * @param {bool} startsTracking - Should the SDK start tracking immediately after initialization.
-+ * @param {boolean} automaticallyRequestPermissions - If true, SDK automatically triggers location and motion activity permissions dialogs when tracking starts.
- */
-
-- async createInstance(publishableKey, startsTracking = true): Promise<HyperTrackAPI> {
-+ async createInstance(publishableKey, startsTracking = true, automaticallyRequestPermissions = true): Promise<HyperTrackAPI> {
--  await HyperTrack.initialize(publishableKey, startsTracking);
-+  await HyperTrack.initialize(publishableKey, startsTracking, automaticallyRequestPermissions);
-   return new HyperTrackAPI();
- },
-```
-
-## [6.2.2] - 2020-04-14
-### Changed
-- Updated Android dependency repos.
-
-## [6.2.1] - 2020-01-08
-### Added
-- RN SDK wrapper now supports native iOS `4.0.x` SDK.
-
-## [6.1.0] - 2019-09-30
-### Added
-- Adding sync device settings
-- Updated Android SDK to  `3.4.7`.
-
-## [6.0.0] - 2019-09-17
-### Changed
-- Updated interface with promises and split name and metadata
-- Updated react-native to version `0.59.9`.
-
-## [5.0.5] - 2019-08-29
-### Changed
-- Updated Android SDK to  `3.4.5`.
-
-## [5.0.4] - 2019-08-23
-### Changed
-- Updated Android SDK to `3.3.4` and stop tracking events.
-
-## [5.0.3] - 2019-08-22
-### Added
-- Make deviceID change with publishable key.
-
-## [5.0.2] - 2019-08-15
-### Fixed
-- Fixed Android wrapper permissions handling in initialize and startTracking.
-
-## [5.0.1] - 2019-08-15
-### Added
-- Expose critical errors and update the integration.
-
-## [4.1.1] - 2019-08-08
-### Changed
-- Bump Android SDK version to `3.3.1`.
-
-## [4.1.0] - 2019-08-07
-### Changed
-- Make `getDeviceID` consistent between Android and iOS wrappers.
-
-## [4.0.2] - 2019-08-06
-### Fixed
-- Fixed null context exception in Android wrapper.
-
-## [4.0.1] - 2019-07-29
-### Added
-- Added an option to start tracking right after initialization.
-
-### API Diff
-
-```diff
-/**
- * Initialize the HyperTrack SDK
- * @param {string} publishableKey - A unique String that is used to identify your account with HyperTrack.
-+ * @param {bool} startsTracking - Should the SDK start tracking immediately after initialization
- */
- initialize(publishableKey) {
--  RNHyperTrack.initialize(publishableKey);
-+  RNHyperTrack.initialize(publishableKey, startsTracking);
- },
-```
-
-## [3.0.0] - 2019-07-23
-### Added
-- Backups key for Android SDK
-### Changed
-- Bump Android SDK version to 3.3.0 and switch to trip markers for native calls.
-
-## [2.0.0] - 2019-07-17
-### Deprecated
-- `sendCustomEvent` was renamed to `setTripMarker`.
-
-## [1.0.2] - 2019-07-04
-### Added
-- Added silent push notifications.
-
-## [1.0.1] - 2019-06-26
-### Added
-- Added HyperTrack repository to repos list.
-
-## [1.0.0] - 2019-06-07
-Initial release.
 
 
-[7.18.2]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.18.2
-[7.18.1]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.18.1
-[7.18.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.18.0
-[7.17.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.17.0
-[7.16.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.16.0
-[7.15.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.15.0
-[7.14.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.14.0
-[7.13.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.13.0
-[7.12.1]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.12.1
-[7.12.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.12.0
-[7.11.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.11.0
-[7.10.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.10.0
-[7.9.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.9.0
-[7.8.1]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.8.1
-[7.8.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.8.0
-[7.7.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.7.0
-[7.6.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.6.0
-[7.5.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.5.0
-[7.4.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.4.0
-[7.3.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.3.0
-[7.2.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.2.0
-[7.1.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.1.0
-[7.0.1]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.0.1
-[7.0.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/7.0.0
-[6.6.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/6.6.0
-[6.5.1]: https://github.com/hypertrack/sdk-react-native/releases/tag/6.5.1
-[6.5.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/6.5.0
-[6.4.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/6.4.0
-[6.3.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/6.3.0
-[6.2.2]: https://github.com/hypertrack/sdk-react-native/releases/tag/6.2.2
-[6.2.1]: https://github.com/hypertrack/sdk-react-native/releases/tag/6.2.1
-[6.1.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/6.1.0
-[6.0.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/6.0.0
-[5.0.5]: https://github.com/hypertrack/sdk-react-native/releases/tag/5.0.5
-[5.0.4]: https://github.com/hypertrack/sdk-react-native/releases/tag/5.0.4
-[5.0.3]: https://github.com/hypertrack/sdk-react-native/releases/tag/5.0.3
-[5.0.2]: https://github.com/hypertrack/sdk-react-native/releases/tag/5.0.2
-[5.0.1]: https://github.com/hypertrack/sdk-react-native/releases/tag/5.0.1
-[4.1.1]: https://github.com/hypertrack/sdk-react-native/releases/tag/4.1.1
-[4.1.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/4.1.0
-[4.0.2]: https://github.com/hypertrack/sdk-react-native/releases/tag/4.0.2
-[4.0.1]: https://github.com/hypertrack/sdk-react-native/releases/tag/4.0.1
-[3.0.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/3.0.0
-[2.0.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/2.0.0
-[1.0.2]: https://github.com/hypertrack/sdk-react-native/releases/tag/1.0.2
-[1.0.1]: https://github.com/hypertrack/sdk-react-native/releases/tag/1.0.1
-[1.0.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/1.0.0
+## [7.18.3](https://github.com/hypertrack/sdk-react-native/compare/7.17.0...7.18.3) (2022-06-17)
+
+### Changelog
+
+All notable changes to this project will be documented in this file. Dates are displayed in UTC.
+
+Generated by [`auto-changelog`](https://github.com/CookPete/auto-changelog).
+
+#### [7.18.3](https://github.com/poterstar/sdk-react-native/compare/7.17.0...7.18.3)
+
+- added release-it package [`d9ff399`](https://github.com/poterstar/sdk-react-native/commit/d9ff3995b4f0b0250b0b9d6a32343e99b11f10ab)
+- added yarn lock and increased deployment target version to 11 [`5298637`](https://github.com/poterstar/sdk-react-native/commit/52986371b44635739fbbc1c662f4d94865c34f5e)
+- init react-native-libriary [`7c07b33`](https://github.com/poterstar/sdk-react-native/commit/7c07b336ef246ded04d06bb02808c5f580a98682)
+
+#### [7.17.0](https://github.com/poterstar/sdk-react-native/compare/7.16.0...7.17.0)
+
+> 3 June 2022
+
+- Release 7.17.0 with Android SDK 6.1.1 [`83beb29`](https://github.com/poterstar/sdk-react-native/commit/83beb295d7ce4a7628cab00291060e12348df0d1)
+
+#### [7.16.0](https://github.com/poterstar/sdk-react-native/compare/7.15.0...7.16.0)
+
+> 3 May 2022
+
+- Release 7.16.0 with HyperTrack Android SDK updated to 6.0.4 [`39b98aa`](https://github.com/poterstar/sdk-react-native/commit/39b98aa421acc1072f592572308f12cc02f8d411)
+- Update CHANGELOG.md [`2900928`](https://github.com/poterstar/sdk-react-native/commit/290092863061ab7076330e198e20168ad604e967)
+
+#### [7.15.0](https://github.com/poterstar/sdk-react-native/compare/7.14.0...7.15.0)
+
+> 29 April 2022
+
+- Add current location getter [`68af808`](https://github.com/poterstar/sdk-react-native/commit/68af808942487fb00bf29039fea02ee8cb3806f7)
+
+#### [7.14.0](https://github.com/poterstar/sdk-react-native/compare/7.13.0...7.14.0)
+
+> 24 March 2022
+
+- Release 7.14.0 with HyperTrack Android SDK updated to 6.0.2 [`39c1971`](https://github.com/poterstar/sdk-react-native/commit/39c19711fa3f809c8d5945816d5ae23ade39d3a6)
+
+#### [7.13.0](https://github.com/poterstar/sdk-react-native/compare/7.12.1...7.13.0)
+
+> 5 January 2022
+
+- Add SDK update instructions to README [`ee2971d`](https://github.com/poterstar/sdk-react-native/commit/ee2971d0578bb443a80090c99cf9eff9c34d8532)
+- Release 7.13.0 with iOS SDK updated to 4.9.0 [`8f6cc19`](https://github.com/poterstar/sdk-react-native/commit/8f6cc197cd57737eea2b1c34e94c9e56d52bf8cc)
+
+#### [7.12.1](https://github.com/poterstar/sdk-react-native/compare/7.11.0...7.12.1)
+
+> 11 November 2021
+
+- Release 7.12.0 with Android SDK 5.4.4 [`3892653`](https://github.com/poterstar/sdk-react-native/commit/389265352498b1fcdbf7c36eaf31ac407ddc4ec8)
+- Release 7.12.1 with Hypertrack SDK updated to 5.4.5 [`fb84676`](https://github.com/poterstar/sdk-react-native/commit/fb8467693236fb4a36cae7b9b0f2ac8fc02cc80a)
+
+#### [7.11.0](https://github.com/poterstar/sdk-react-native/compare/7.10.0...7.11.0)
+
+> 28 October 2021
+
+- Update Android SDK to 5.4.3 [`ecfcf27`](https://github.com/poterstar/sdk-react-native/commit/ecfcf2705e5778638439c628e9a20eb65a67cec1)
+- Update Android SDK to 5.4.0 [`e20a3bc`](https://github.com/poterstar/sdk-react-native/commit/e20a3bce903aba30e0b6fe72ba496d897b125408)
+
+#### [7.10.0](https://github.com/poterstar/sdk-react-native/compare/7.9.0...7.10.0)
+
+> 7 July 2021
+
+- Broken link fixed [`5fe0c46`](https://github.com/poterstar/sdk-react-native/commit/5fe0c46c5d34eaff3d2be7446b5031fcb2d7a637)
+
+#### [7.9.0](https://github.com/poterstar/sdk-react-native/compare/7.8.1...7.9.0)
+
+> 7 July 2021
+
+- Release/v7.8.1 [`#28`](https://github.com/poterstar/sdk-react-native/pull/28)
+- Version updated in docs [`9658d8f`](https://github.com/poterstar/sdk-react-native/commit/9658d8fa9eff9910c2f9bc132864a2877d70b303)
+- Version bump [`edfa056`](https://github.com/poterstar/sdk-react-native/commit/edfa0563415f8abbe383ff4dfe3ba995f9803be5)
+- Updated to Android SDK v5.2.5 [`33937a5`](https://github.com/poterstar/sdk-react-native/commit/33937a5f47d93a17d9176bc65134234c9815ce6a)
+
+#### [7.8.1](https://github.com/poterstar/sdk-react-native/compare/7.8.0...7.8.1)
+
+> 11 June 2021
+
+- Release/7.8.0 [`#27`](https://github.com/poterstar/sdk-react-native/pull/27)
+- Release v7.8.1 [`7f11b4b`](https://github.com/poterstar/sdk-react-native/commit/7f11b4b38b3fa740fadc797f1f9a324b35ede30b)
+- Accidently deleted import added back [`66a56e2`](https://github.com/poterstar/sdk-react-native/commit/66a56e241ace144417c63f1d07c5e00ec1d6ee37)
+
+#### [7.8.0](https://github.com/poterstar/sdk-react-native/compare/7.7.0...7.8.0)
+
+> 11 June 2021
+
+- Changelog record was added [`613d416`](https://github.com/poterstar/sdk-react-native/commit/613d4169b2a24e916c88636f8e14c03ecd82d5fc)
+- Updated Android SDK to v5.2.2 [`568045c`](https://github.com/poterstar/sdk-react-native/commit/568045cf042e6e1b876fa18816978d910187095b)
+- Version bump [`3260b98`](https://github.com/poterstar/sdk-react-native/commit/3260b98f1e2cee61f9999a3a2f0c523097f38933)
+
+#### [7.7.0](https://github.com/poterstar/sdk-react-native/compare/7.6.0...7.7.0)
+
+> 28 May 2021
+
+- Feature/android sdk v5.1.0 [`#26`](https://github.com/poterstar/sdk-react-native/pull/26)
+
+#### [7.6.0](https://github.com/poterstar/sdk-react-native/compare/7.5.0...7.6.0)
+
+> 7 May 2021
+
+- Anroid SDK updated to v4.12.0 [`#25`](https://github.com/poterstar/sdk-react-native/pull/25)
+- Update iOS SDK to 4.8.0, Android SDK to 4.11.1, release 7.5.0 [`f01f436`](https://github.com/poterstar/sdk-react-native/commit/f01f4364bcd067fd8823cca7a5851ca45a80fc0b)
+
+#### [7.5.0](https://github.com/poterstar/sdk-react-native/compare/7.4.0...7.5.0)
+
+> 2 April 2021
+
+#### [7.4.0](https://github.com/poterstar/sdk-react-native/compare/7.3.0...7.4.0)
+
+> 2 April 2021
+
+- Android implementation was added [`46944d5`](https://github.com/poterstar/sdk-react-native/commit/46944d52b3eae245fcb447406a7cac1c9fcd893d)
+- Typos and incorrect method invocations were fixed [`af21bd0`](https://github.com/poterstar/sdk-react-native/commit/af21bd0da7db10017e34760182597c82a3828ece)
+- Background location permission prompt suppressed [`2bbcea9`](https://github.com/poterstar/sdk-react-native/commit/2bbcea9453fc338af29a1e4198a38b2a68f73da3)
+
+#### [7.3.0](https://github.com/poterstar/sdk-react-native/compare/7.2.0...7.3.0)
+
+> 4 March 2021
+
+-  HyperTrack Android SDK updated to v4.10.0 [`#22`](https://github.com/poterstar/sdk-react-native/pull/22)
+- Release v7.3.0 [`db6af68`](https://github.com/poterstar/sdk-react-native/commit/db6af6871b9bf1e533dfae39fb1ddec26eb33502)
+
+#### [7.2.0](https://github.com/poterstar/sdk-react-native/compare/7.1.0...7.2.0)
+
+> 23 December 2020
+
+- Update iOS SDK to 4.7.0 [`1f4dcb7`](https://github.com/poterstar/sdk-react-native/commit/1f4dcb7c729d02e31acae410a16e8a9d135a0b21)
+
+#### [7.1.0](https://github.com/poterstar/sdk-react-native/compare/7.0.1...7.1.0)
+
+> 17 November 2020
+
+- Fix: Xcode 12 builds [`#19`](https://github.com/poterstar/sdk-react-native/pull/19)
+- Update Android SDK to 4.8.0 and iOS SDK to 4.6.0 [`bfdbc9e`](https://github.com/poterstar/sdk-react-native/commit/bfdbc9e2c0e9d0ea23557b6b431e05ac4316e570)
+- Update iOS SDK supported version to 4.5.1 [`ca56110`](https://github.com/poterstar/sdk-react-native/commit/ca561103f075c26dbb478ff3ec745e4e2f894e4a)
+
+#### [7.0.1](https://github.com/poterstar/sdk-react-native/compare/7.0.0...7.0.1)
+
+> 7 October 2020
+
+- Created CHANGELOG.md [`b94f84f`](https://github.com/poterstar/sdk-react-native/commit/b94f84f23f06fab888b6500a370d8d87b6f26e1b)
+- Release 7.0.1 [`83ed688`](https://github.com/poterstar/sdk-react-native/commit/83ed688e77f1a3c6e6aece63e0488f3f8f1c51a7)
+- Add podspec to file patterns in package.json [`6f3e8cf`](https://github.com/poterstar/sdk-react-native/commit/6f3e8cf7d131a326fa46f3bb7b195ddb53eb2a36)
+
+### [7.0.0](https://github.com/poterstar/sdk-react-native/compare/6.6.0...7.0.0)
+
+> 2 October 2020
+
+- Update RN version to 0.63.3 [`9c9167a`](https://github.com/poterstar/sdk-react-native/commit/9c9167a3b836cd6c7d6dfe5c01ede9e2e8630315)
+- Update Android SDK to 4.6.0 [`d70110e`](https://github.com/poterstar/sdk-react-native/commit/d70110e1a9c1804bce82e116fa87504f59b5d67f)
+- Remove startsTracking API from createInstance [`759b3e9`](https://github.com/poterstar/sdk-react-native/commit/759b3e93384a3aced08ab5207c55aeecdbd2e282)
+
+#### [6.6.0](https://github.com/poterstar/sdk-react-native/compare/6.5.1...6.6.0)
+
+> 24 July 2020
+
+- Update React Native to 0.61.4 [`c38a7b8`](https://github.com/poterstar/sdk-react-native/commit/c38a7b8bbe02e383c6f26112bfaf7f81581088b7)
+- Release 6.6.0 [`a4f788c`](https://github.com/poterstar/sdk-react-native/commit/a4f788cfd5ad5365a1b6b74c2ae368e8b27259cd)
+
+#### [6.5.1](https://github.com/poterstar/sdk-react-native/compare/6.5.0...6.5.1)
+
+> 20 July 2020
+
+- Update to iOS SDK 4.2.2 and Android SDK 4.5.1 [`1b6eb22`](https://github.com/poterstar/sdk-react-native/commit/1b6eb22d3cdc9ea898579210ade3192acb191fe2)
+- Release 6.5.1 [`c4f1ad1`](https://github.com/poterstar/sdk-react-native/commit/c4f1ad146dc194e578638816056b440b79978283)
+
+#### [6.5.0](https://github.com/poterstar/sdk-react-native/compare/6.4.0...6.5.0)
+
+> 16 July 2020
+
+- Updated to Android SDK v4.5.0 [`#10`](https://github.com/poterstar/sdk-react-native/pull/10)
+- Update README.md [`872a4a8`](https://github.com/poterstar/sdk-react-native/commit/872a4a808ddd5d0e28921152c72df976ac2659bb)
+- Release 6.5.0 [`7fd1495`](https://github.com/poterstar/sdk-react-native/commit/7fd14951a5316cc397d5812ebf3f8473813a0a4c)
+
+#### [6.4.0](https://github.com/poterstar/sdk-react-native/compare/6.3.0...6.4.0)
+
+> 14 July 2020
+
+- Reject promise properly and with error code during iOS initialization [`3b275d8`](https://github.com/poterstar/sdk-react-native/commit/3b275d8f3d685d37bc78cd0d02aa408aaa34ec95)
+- Only send events when there are listeners in iOS wrapper [`738360d`](https://github.com/poterstar/sdk-react-native/commit/738360dc4720bffee2e703f28ec8722aa5ad95ec)
+- Fix regression where syncDeviceSettings was removed from iOS SDK wrapper [`a403dae`](https://github.com/poterstar/sdk-react-native/commit/a403dae3c696be32afe8d2e07ff8ab65efe5e8bc)
+
+#### [6.3.0](https://github.com/poterstar/sdk-react-native/compare/6.2.2...6.3.0)
+
+> 13 July 2020
+
+- Control permission dialogs on iOS [`28a32e9`](https://github.com/poterstar/sdk-react-native/commit/28a32e94970ba118a3461abf442ffb3fec449e10)
+- Release 6.3.0 [`6289a36`](https://github.com/poterstar/sdk-react-native/commit/6289a36c878e01f0ec251812deddcae0130bc8e1)
+
+#### [6.2.2](https://github.com/poterstar/sdk-react-native/compare/6.2.1...6.2.2)
+
+> 14 April 2020
+
+- Update link [`#7`](https://github.com/poterstar/sdk-react-native/pull/7)
+- Moved README content to Guides  (https://www.hypertrack.com/docs/install-sdk-react) [`e3bac15`](https://github.com/poterstar/sdk-react-native/commit/e3bac15762b57a47050e0411091eee748771b1ae)
+- Update Android dependency repos [`bd0852c`](https://github.com/poterstar/sdk-react-native/commit/bd0852c79f00221e5934a744b2fb9de64e831d04)
+- Update links [`30a2468`](https://github.com/poterstar/sdk-react-native/commit/30a2468def1ff14319693b92f9ed8c20a974ce33)
+
+#### [6.2.1](https://github.com/poterstar/sdk-react-native/compare/6.1.0...6.2.1)
+
+> 8 January 2020
+
+- Add iOS SDK 4.0.x support [`e040ea1`](https://github.com/poterstar/sdk-react-native/commit/e040ea1c479929f962c2e43d358517b437481d0e)
+- Release 6.2.1 with updated readme [`6e0a4c1`](https://github.com/poterstar/sdk-react-native/commit/6e0a4c1ca2082e7da1dfd09b3ae7dfba13609028)
+- Release 6.2.0 [`c972713`](https://github.com/poterstar/sdk-react-native/commit/c9727133954ef2941e07a77608a75425a360945b)
+
+#### [6.1.0](https://github.com/poterstar/sdk-react-native/compare/6.0.0...6.1.0)
+
+> 30 September 2019
+
+- Adding sync device settings [`#20`](https://github.com/poterstar/sdk-react-native/pull/20)
+- Update README [`d7de7f5`](https://github.com/poterstar/sdk-react-native/commit/d7de7f51af6553f5a8ee26f3a69f94f012878cd1)
+- Release 6.1.0 [`fa1872a`](https://github.com/poterstar/sdk-react-native/commit/fa1872a6efb755ffe9e309c50dcd503286a3c4ea)
+
+### [6.0.0](https://github.com/poterstar/sdk-react-native/compare/5.0.5...6.0.0)
+
+> 17 September 2019
+
+- Update README [`b8f8ec7`](https://github.com/poterstar/sdk-react-native/commit/b8f8ec7efb46f655d9dbf3ede726427636785eb9)
+- Update interface with promises and split name and metadata [`0f5f3ff`](https://github.com/poterstar/sdk-react-native/commit/0f5f3ff637e4faae9e601a4d0dc50d46c4f6b713)
+- Release 6.0.0 [`08c1974`](https://github.com/poterstar/sdk-react-native/commit/08c19746ece2abf9deb56418bd821664f348219f)
+
+#### [5.0.5](https://github.com/poterstar/sdk-react-native/compare/5.0.4...5.0.5)
+
+> 29 August 2019
+
+- Update to Android SDK 3.4.5 [`2bd92ed`](https://github.com/poterstar/sdk-react-native/commit/2bd92ed1b77601196bfdc256af59ad793be044e8)
+- Release 5.0.5 [`9fae476`](https://github.com/poterstar/sdk-react-native/commit/9fae47676ce8f1aa6b9777244039e28c9a46a6e5)
+
+#### [5.0.4](https://github.com/poterstar/sdk-react-native/compare/5.0.3...5.0.4)
+
+> 23 August 2019
+
+- Update Android SDK and stop tracking events [`fccc3f3`](https://github.com/poterstar/sdk-react-native/commit/fccc3f351e70e92727743bd1d8875fef1b4b7a13)
+
+#### [5.0.3](https://github.com/poterstar/sdk-react-native/compare/5.0.2...5.0.3)
+
+> 22 August 2019
+
+- Make deviceID change with publishable key [`07b55c1`](https://github.com/poterstar/sdk-react-native/commit/07b55c1bfa7465ed8e7dacec348a49e805af386d)
+- Update example [`284a57a`](https://github.com/poterstar/sdk-react-native/commit/284a57acc3d0dcc81b594715c9b665c63a7577e5)
+- Release 5.0.3 [`aa88408`](https://github.com/poterstar/sdk-react-native/commit/aa88408024e2920bd7b2198e986aed2e88ad38f5)
+
+#### [5.0.2](https://github.com/poterstar/sdk-react-native/compare/5.0.1...5.0.2)
+
+> 15 August 2019
+
+- Fix Android wrapper permissions handling in initialize and startTracking [`8ddd986`](https://github.com/poterstar/sdk-react-native/commit/8ddd98622e141da854b9e75cafc636b417f5c6c3)
+- Release 5.0.2 [`0252603`](https://github.com/poterstar/sdk-react-native/commit/0252603be942f0afe28da505ab4ee25b60ab114e)
+
+### [5.0.1](https://github.com/poterstar/sdk-react-native/compare/4.1.1...5.0.1)
+
+> 15 August 2019
+
+- Expose critical errors and update the integration [`dcf373c`](https://github.com/poterstar/sdk-react-native/commit/dcf373c60f2c38a8d947bbb312655445d75f7242)
+- Release 5.0.1 [`37e2349`](https://github.com/poterstar/sdk-react-native/commit/37e2349af6f0f610c273e3f9f0e065537b8b66b5)
+
+#### [4.1.1](https://github.com/poterstar/sdk-react-native/compare/4.1.0...4.1.1)
+
+> 8 August 2019
+
+- Release 4.1.1 [`7a10a86`](https://github.com/poterstar/sdk-react-native/commit/7a10a8614a30981b6a11a525e82116b7a24cc601)
+- Bump Android SDK version [`81d3c02`](https://github.com/poterstar/sdk-react-native/commit/81d3c0226278069eb74589b23f7bd223d01136fa)
+
+#### [4.1.0](https://github.com/poterstar/sdk-react-native/compare/4.0.2...4.1.0)
+
+> 8 August 2019
+
+- Release 4.1.0 [`fc02ab9`](https://github.com/poterstar/sdk-react-native/commit/fc02ab90eebef9816f0ce8f8cfa659657a7df7fc)
+- Make getDeviceID consistent between Android and iOS wrappers [`1649746`](https://github.com/poterstar/sdk-react-native/commit/1649746c020235e4603645785e2d24625c5877fe)
+
+#### [4.0.2](https://github.com/poterstar/sdk-react-native/compare/4.0.1...4.0.2)
+
+> 6 August 2019
+
+- Fix null context exception in Android wrapper [`abf18cb`](https://github.com/poterstar/sdk-react-native/commit/abf18cbdcef777cc4a61b5442db0b515ac2f02d3)
+- Release 4.0.2 [`9432fd5`](https://github.com/poterstar/sdk-react-native/commit/9432fd561ab300990b06e777f770f845006e1cfb)
+
+### [4.0.1](https://github.com/poterstar/sdk-react-native/compare/3.0.0...4.0.1)
+
+> 29 July 2019
+
+- Add an option to start tracking right after initialization [`9cd4ee8`](https://github.com/poterstar/sdk-react-native/commit/9cd4ee8d3685f00bd147121e4089ae37e56691c5)
+- Release 4.0.1 [`2ee8b08`](https://github.com/poterstar/sdk-react-native/commit/2ee8b08bd161f473b318dd36406648f4a9326019)
+- Add native SDK dependencies shields [`47ca27e`](https://github.com/poterstar/sdk-react-native/commit/47ca27e5419ac2a32058c7df796c61c1dd969783)
+
+### [3.0.0](https://github.com/poterstar/sdk-react-native/compare/2.0.0...3.0.0)
+
+> 23 July 2019
+
+- Bump Android SDK version and switch to trip markers for native calls [`afb9a42`](https://github.com/poterstar/sdk-react-native/commit/afb9a42f67367b893589a1b78b58c94af238ce80)
+- Clarify backups key needed for Android SDK [`e95a1fa`](https://github.com/poterstar/sdk-react-native/commit/e95a1fae85e04908f05f1f5a3904eff40c6a69c5)
+- Release 3.0.0 [`8b2f672`](https://github.com/poterstar/sdk-react-native/commit/8b2f672827df02087774107e48fca0332115b251)
+
+### [2.0.0](https://github.com/poterstar/sdk-react-native/compare/1.0.2...2.0.0)
+
+> 17 July 2019
+
+- Update silent push notifications instructions [`f156049`](https://github.com/poterstar/sdk-react-native/commit/f156049bca8e999603e5091098fff9aac2a51899)
+- Release 2.0.0 [`c2a0b97`](https://github.com/poterstar/sdk-react-native/commit/c2a0b97c759d9b4f2e11d2f2ac5778c6fdcaaf1f)
+
+#### [1.0.2](https://github.com/poterstar/sdk-react-native/compare/1.0.1...1.0.2)
+
+> 4 July 2019
+
+- Add silent push notifications [`8a3d116`](https://github.com/poterstar/sdk-react-native/commit/8a3d116f708ac7b781e8c83dbf54c4c22e8f7c85)
+
+#### [1.0.1](https://github.com/poterstar/sdk-react-native/compare/1.0.0...1.0.1)
+
+> 26 June 2019
+
+- Add HyperTrack repository to repos list [`d54d190`](https://github.com/poterstar/sdk-react-native/commit/d54d19059e3df769f5df483e8302aadaa9d75e8f)
+
+#### 1.0.0
+
+> 7 June 2019
+
+- Initial release [`8724217`](https://github.com/poterstar/sdk-react-native/commit/8724217e94ec90219f25e07433a36fc63864fc12)
+- Release 1.0.0 [`36a2796`](https://github.com/poterstar/sdk-react-native/commit/36a2796e7a8b3f91e70285bdc5671e28cdb6cfe7)
+- Initial commit [`60be519`](https://github.com/poterstar/sdk-react-native/commit/60be5193e93387252ca41f69d44c7a913fd5fb45)
