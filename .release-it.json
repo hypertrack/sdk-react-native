@@ -1,0 +1,30 @@
+{
+ "git": {
+    "changelog": "auto-changelog --stdout --commit-limit false -u --template https://raw.githubusercontent.com/release-it/release-it/master/templates/changelog-compact.hbs",
+    "commitMessage": "Release ${version}",
+    "requireCleanWorkingDir": false,
+    "tagName": "${version}"
+  },
+  "github": {
+    "release": true
+  },
+  "hooks": {
+    "after:bump": "auto-changelog -p"
+  },
+  "npm": {
+    "publish": false
+  },
+  "plugins": {
+    "@release-it/bumper": {
+      "out": [
+        "example/package.json",
+        "example/android/app/build.gradle",
+        "example/ios/Podfile.lock",
+      ]
+    },
+    "@release-it/conventional-changelog": {
+      "preset": "angular",
+      "infile": "CHANGELOG.md"
+    }
+  }
+}
