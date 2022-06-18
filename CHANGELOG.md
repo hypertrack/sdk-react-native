@@ -1,5 +1,7 @@
 
 
+## [7.18.7](https://github.com/hypertrack/sdk-react-native/compare/7.18.6...7.18.7) (2022-06-18)
+
 ## [7.18.6](https://github.com/hypertrack/sdk-react-native/compare/7.18.5...7.18.6) (2022-06-18)
 
 ### Changelog
