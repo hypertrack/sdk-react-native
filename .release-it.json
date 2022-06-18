@@ -6,7 +6,11 @@
     "tagName": "${version}"
   },
   "github": {
-    "release": true
+    "release": true,
+    "autoGenerate": true,
+    "timeout": 10,
+    "skipChecks": true,
+    "web": true
   },
   "hooks": {
     "after:bump": "auto-changelog -p"
