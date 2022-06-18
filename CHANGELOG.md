@@ -1,8 +1,9 @@
-
-
-## [7.18.11](https://github.com/hypertrack/sdk-react-native/compare/7.18.10...7.18.11) (2022-06-18)
-
 # Changelog
+
+## [7.18.11](https://github.com/poterstar/sdk-react-native/compare/7.18.10...7.18.11) (2022-06-18)
+
+- Release 7.18.11 [`6150f9e`](https://github.com/poterstar/sdk-react-native/commit/6150f9e7436fbcd7bf9e42ff15623669fb5faac4)
+- improved after:bump [`9c44ecb`](https://github.com/poterstar/sdk-react-native/commit/9c44ecb9397e78310806f9aba98c7442854631e3)
 
 ## [7.18.10](https://github.com/poterstar/sdk-react-native/compare/7.18.9...7.18.10) (2022-06-18)
 
