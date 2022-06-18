@@ -23,11 +23,10 @@
         "example/ios/Podfile.lock"
       ]
     },
-    "@release-it/keep-a-changelog": {
-      "filename": "CHANGELOG.md",
-      "strictLatest": false,
-      "addUnreleased": false,
-      "keepUnreleased": false
+    "@release-it/conventional-changelog": {
+      "preset": "angular",
+      "infile": "CHANGELOG.md",
+      "ignoreRecommendedBump": true
     }
   }
 }
