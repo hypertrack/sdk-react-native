@@ -1876,6 +1876,14 @@
     conventional-changelog "^3.1.25"
     conventional-recommended-bump "^6.1.0"
 
+"@release-it/keep-a-changelog@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@release-it/keep-a-changelog/-/keep-a-changelog-3.0.0.tgz#60727d238a0291d829a1c19e2ecdc6a9f2fb6fc5"
+  integrity sha512-ZUWbe17/i+HsGIVKOZtEeyALRyCLBvLUzvfG3rXjb7cPetEM82+ZNIHbVpiYFmR+YZT749ftWag98/QZ8/ganQ==
+  dependencies:
+    detect-newline "^4.0.0"
+    string-template "^1.0.0"
+
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"
@@ -3863,6 +3871,11 @@ detect-newline@^3.0.0:
   version "3.1.0"
   resolved "https://registry.npmjs.org/detect-newline/-/detect-newline-3.1.0.tgz"
   integrity sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==
+
+detect-newline@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/detect-newline/-/detect-newline-4.0.0.tgz#450ac3f864d5f61112b53a524123b012c59581bc"
+  integrity sha512-1aXUEPdfGdzVPFpzGJJNgq9o81bGg1s09uxTWsqBlo9PI332uyJRQq13+LK/UN4JfxJbFdCXonUFQ9R/p7yCtw==
 
 diff-sequences@^26.6.2:
   version "26.6.2"
@@ -9189,6 +9202,11 @@ string-length@^4.0.1:
   dependencies:
     char-regex "^1.0.2"
     strip-ansi "^6.0.0"
+
+string-template@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/string-template/-/string-template-1.0.0.tgz#9e9f2233dc00f218718ec379a28a5673ecca8b96"
+  integrity sha512-SLqR3GBUXuoPP5MmYtD7ompvXiG87QjT6lzOszyXjTM86Uu7At7vNnt2xgyTLq5o9T4IxTYFyGxcULqpsmsfdg==
 
 string-width@^2.1.0:
   version "2.1.1"

@@ -22,6 +22,9 @@
         "example/android/app/build.gradle",
         "example/ios/Podfile.lock"
       ]
+    },
+    "@release-it/keep-a-changelog": {
+      "filename": "CHANGELOG.md"
     }
   }
 }
