@@ -251,7 +251,7 @@ PODS:
     - React-cxxreact (= 0.63.4)
     - React-jsi (= 0.63.4)
   - React-jsinspector (0.63.4)
-  - react-native-hypertrack-sdk (7.18.5):
+  - react-native-hypertrack-sdk (7.18.6):
     - HyperTrack (= 4.12.3)
     - React-Core
   - React-RCTActionSheet (0.63.4):
