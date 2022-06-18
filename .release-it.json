@@ -1,6 +1,6 @@
 {
  "git": {
-    "changelog": "auto-changelog --stdout --commit-limit false -u --template https://raw.githubusercontent.com/release-it/release-it/master/templates/keepachangelog.hbs",
+    "changelog": "auto-changelog --stdout --commit-limit false --unreleased --template https://raw.githubusercontent.com/release-it/release-it/master/templates/changelog-compact.hbs",
     "commitMessage": "Release ${version}",
     "requireCleanWorkingDir": false,
     "tagName": "${version}",
@@ -10,7 +10,7 @@
     "release": true
   },
   "hooks": {
-    "after:bump": "auto-changelog -p"
+    "after:bump": "auto-changelog --commit-limit false --template https://raw.githubusercontent.com/release-it/release-it/master/templates/keepachangelog.hbs"
   },
   "npm": {
     "publish": false
