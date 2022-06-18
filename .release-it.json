@@ -3,14 +3,11 @@
     "changelog": "auto-changelog --stdout --commit-limit false -u --template https://raw.githubusercontent.com/release-it/release-it/master/templates/keepachangelog.hbs",
     "commitMessage": "Release ${version}",
     "requireCleanWorkingDir": false,
-    "tagName": "${version}"
+    "tagName": "${version}",
+    "requireCommits": true
   },
   "github": {
-    "release": true,
-    "autoGenerate": true,
-    "timeout": 10,
-    "skipChecks": true,
-    "web": true
+    "release": true
   },
   "hooks": {
     "after:bump": "auto-changelog -p"
