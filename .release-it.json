@@ -1,6 +1,5 @@
 {
  "git": {
-    "changelog": "auto-changelog --stdout --commit-limit false -u --template https://raw.githubusercontent.com/release-it/release-it/master/templates/keepachangelog.hbs",
     "commitMessage": "Release ${version}",
     "requireCleanWorkingDir": false,
     "tagName": "${version}",
@@ -19,10 +18,6 @@
         "example/android/app/build.gradle",
         "example/ios/Podfile.lock"
       ]
-    },
-    "@release-it/conventional-changelog": {
-      "preset": "angular",
-      "infile": "CHANGELOG.md"
     }
   }
 }
