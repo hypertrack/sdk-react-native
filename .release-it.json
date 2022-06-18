@@ -21,11 +21,6 @@
         "example/android/app/build.gradle",
         "example/ios/Podfile.lock"
       ]
-    },
-    "@release-it/conventional-changelog": {
-      "preset": "angular",
-      "infile": "CHANGELOG.md",
-      "ignoreRecommendedBump": true
     }
   }
 }
