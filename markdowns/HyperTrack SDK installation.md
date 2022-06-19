@@ -1,4 +1,4 @@
-# React Native HyperTrack SDK
+# React Native HyperTrack SDK test
 
 ![GitHub](https://img.shields.io/github/license/hypertrack/sdk-react-native.svg) ![npm](https://img.shields.io/npm/v/hypertrack-sdk-react-native.svg) ![iOS SDK](https://img.shields.io/badge/iOS%20SDK-4.12.3-brightgreen.svg) ![Android SDK](https://img.shields.io/badge/Android%20SDK-6.1.2-brightgreen.svg)
 
@@ -23,7 +23,7 @@ Join our [Slack community](https://join.slack.com/t/hypertracksupport/shared_in
 1. Update SDK constant
     - android
         - android/build.gradle
-             - DEFAULT_HYPERTRACK_SDK_VERSION 
+             - DEFAULT_HYPERTRACK_SDK_VERSION
     - ios
         - hypertrack-sdk-react-native.podspec
             - s.dependency 'HyperTrack/Objective-C', '**version**'
