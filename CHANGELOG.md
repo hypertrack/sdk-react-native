@@ -1,7 +1,12 @@
 # Changelog
 
-## [7.18.14](https://github.com/poterstar/sdk-react-native/compare/7.18.13...7.18.14)
+## [7.18.15](https://github.com/poterstar/sdk-react-native/compare/7.18.14...7.18.15)
 
+- testing [`b49f520`](https://github.com/poterstar/sdk-react-native/commit/b49f5200c5dbfb098af1f71c172738c961d816a8)
+
+## [7.18.14](https://github.com/poterstar/sdk-react-native/compare/7.18.13...7.18.14) (2022-06-19)
+
+- Release 7.18.14 [`0384ece`](https://github.com/poterstar/sdk-react-native/commit/0384ece888821583a8aa48562f7b352ebdaac12d)
 - changed auto-changelog output [`e2ad5db`](https://github.com/poterstar/sdk-react-native/commit/e2ad5dbcc5a3157a3b4da0f41645cbb22d962508)
 
 ## [7.18.13](https://github.com/poterstar/sdk-react-native/compare/7.18.12...7.18.13) (2022-06-18)

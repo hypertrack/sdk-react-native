@@ -1,7 +1,7 @@
 {
   "name": "react-native-hypertrack-sdk-example",
   "description": "Example app for react-native-hypertrack-sdk",
-  "version": "7.18.14",
+  "version": "7.18.15",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
