@@ -1,0 +1,4 @@
+PODS:
+  - hypertrack-sdk-react-native (7.18.2):
+    - HyperTrack (= 4.12.3)
+    - React-Core
