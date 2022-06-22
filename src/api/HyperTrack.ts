@@ -35,7 +35,7 @@ export default class HyperTrack {
    * @example
    * ```js
    * const subscription = HyperTrack.onTrackingStateChanged(trackingState => {
-   *   if (trackingState === 'connected') {
+   *   if (trackingState === 'started') {
    *     // ... ready to go
    *   }
    * })
@@ -47,10 +47,17 @@ export default class HyperTrack {
   static onTrackingStateChanged(
     listener: (trackingState: TrackingState) => void
   ) {
-    return EventEmitter.addListener(
-      HyperTrackSdk.TRACKING_STATE_CHANGED,
-      listener
-    );
+    return EventEmitter.addListener('onTrackingStateChanged', listener);
+  }
+
+  static onLocationChanged(
+    listener: (location: { latitude: number; longitude: number }) => void
+  ) {
+    return EventEmitter.addListener('onLocationChanged', listener);
+  }
+
+  static onErrors(listener: (errors: any) => void) {
+    return EventEmitter.addListener('onErrors', listener);
   }
 
   static onIncrementIncreasedChanged(
@@ -125,8 +132,8 @@ export default class HyperTrack {
    *
    * @returns
    */
-  static async isRunning(): Promise<boolean> {
-    return HyperTrackSdk.isRunning();
+  static async subscribeToLocation(): Promise<boolean> {
+    return HyperTrackSdk.subscribeToLocation();
   }
 
   /**
@@ -134,18 +141,18 @@ export default class HyperTrack {
    *
    * @returns
    */
-  static async isLoggingEnabled(): Promise<boolean> {
-    return HyperTrackSdk.isLoggingEnabled();
+  static async subscribeToIsTracking(): Promise<boolean> {
+    return HyperTrackSdk.subscribeToIsTracking();
   }
 
-  // /**
-  //  *
-  //  *
-  //  * @returns
-  //  */
-  // static async subscribeToLocation(): Promise<boolean> {
-  //   return HyperTrackSdk.subscribeToLocation();
-  // }
+  /**
+   *
+   *
+   * @returns
+   */
+  static async subscribeToErrors(): Promise<boolean> {
+    return HyperTrackSdk.subscribeToErrors();
+  }
 
   /**
    *
@@ -154,5 +161,14 @@ export default class HyperTrack {
    */
   static async setDeviceName(deviceName: string): Promise<void> {
     return HyperTrackSdk.setDeviceName(deviceName);
+  }
+
+  /**
+   *
+   *
+   * @param  subscriptionName A device name to be shown in dashboard
+   */
+  static async cancelSubscription(subscriptionName: string): Promise<void> {
+    return HyperTrackSdk.cancelSubscription(subscriptionName);
   }
 }

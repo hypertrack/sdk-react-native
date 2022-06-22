@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Button, StatusBar } from 'react-native';
+import { Button, StatusBar, View } from 'react-native';
 import HyperTrack from 'react-native-hypertrack-sdk';
 
 export default function App() {
@@ -14,6 +14,13 @@ export default function App() {
   };
   React.useEffect(() => {
     getID();
+
+    const lc = HyperTrack.onTrackingStateChanged((data) => {
+      console.log('onTrackingStateChanged', data);
+    });
+    const ec = HyperTrack.onErrors((data) => {
+      console.log('onErrors', data);
+    });
     // const a = HyperTrack.onIncrementIncreasedChanged((data) => {
     //   console.log('onIncrement received', data);
     // });
@@ -21,10 +28,10 @@ export default function App() {
     //   console.log('onDecrement received', data);
     // });
 
-    // return () => {
-    //   a.remove();
-    //   b.remove();
-    // };
+    return () => {
+      lc.remove();
+      ec.remove();
+    };
   }, []);
 
   const startTracking = async () => {
@@ -63,15 +70,6 @@ export default function App() {
     }
   };
 
-  const isRunning = async () => {
-    try {
-      const response = await HyperTrack.isRunning();
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const availability = async () => {
     try {
       const response = await HyperTrack.isAvailable();
@@ -83,43 +81,84 @@ export default function App() {
 
   const setDeviceName = async () => {
     try {
-      const response = await HyperTrack.setDeviceName('My Device 1');
+      const response = await HyperTrack.setDeviceName('YHiP12');
       console.log(response);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const isLoggingEnabled = async () => {
+  const subscribeToLocation = async () => {
     try {
-      const response = await HyperTrack.isLoggingEnabled();
+      const response = await HyperTrack.subscribeToLocation();
       console.log(response);
     } catch (error) {
       console.log(error);
     }
   };
 
-  // const subscribeToLocation = async () => {
-  //   try {
-  //     const response = await HyperTrack.subscribeToLocation();
-  //     console.log(response);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  const subscribeToIsTracking = async () => {
+    try {
+      const response = await HyperTrack.subscribeToIsTracking();
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const subscribeToErrors = async () => {
+    try {
+      const response = await HyperTrack.subscribeToErrors();
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const cancelErrorSubscription = async () => {
+    try {
+      const response = await HyperTrack.cancelSubscription(
+        'unsubscribeToErrors'
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const cancelTrackingStateSubscription = async () => {
+    try {
+      const response = await HyperTrack.cancelSubscription(
+        'unsubscribeToIsTracking'
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
       <StatusBar barStyle={'dark-content'} />
-      <Button title="Start" onPress={startTracking} />
-      <Button title="Stop" onPress={stopTracking} />
-      <Button title="getlocation" onPress={getLocation} />
-      <Button title="isTracking" onPress={isTracking} />
-      <Button title="isRunning" onPress={isRunning} />
-      <Button title="availability" onPress={availability} />
-      <Button title="device name" onPress={setDeviceName} />
-      <Button title="isLoggingEnabled" onPress={isLoggingEnabled} />
-      {/* <Button title="subscribeToLocation" onPress={subscribeToLocation} /> */}
+      <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+        <Button title="Start" onPress={startTracking} />
+        <Button title="Stop" onPress={stopTracking} />
+        <Button title="getlocation" onPress={getLocation} />
+        <Button title="isTracking" onPress={isTracking} />
+        <Button title="availability" onPress={availability} />
+        <Button title="device name" onPress={setDeviceName} />
+        <Button title="subscribeToLocation" onPress={subscribeToLocation} />
+        <Button title="subscribeToIsTracking" onPress={subscribeToIsTracking} />
+        <Button title="subscribeToErrors" onPress={subscribeToErrors} />
+        <Button
+          title="cancelErrorSubscription"
+          onPress={cancelErrorSubscription}
+        />
+        <Button
+          title="cancelTrackingStateSubscription"
+          onPress={cancelTrackingStateSubscription}
+        />
+      </View>
     </>
   );
 }

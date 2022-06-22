@@ -52,6 +52,10 @@
 		<string>location</string>
 		<string>remote-notification</string>
 	</array>
+  <key>HyperTrackAllowMockLocations</key>
+  <true/>
+  <key>HyperTrackLoggingEnabled</key>
+  <true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>

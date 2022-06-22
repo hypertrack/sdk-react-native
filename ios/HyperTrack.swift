@@ -4,14 +4,14 @@ import HyperTrack
 @objc(HyperTrackSdk)
 class HyperTrackSdk: RCTEventEmitter{
 
-    private var hasListeners = false;
-    private var count = 0;
+    private var hasListeners = false
+    private var count = 0
+    private var listeners: [String: HyperTrack.Cancel] = [:]
 
-    let hyperTrack = try! HyperTrack(publishableKey: .init(Bundle.main.object(forInfoDictionaryKey: "HyperTrackPublishableKey") as! String)!)
+//    let hyperTrack = try! HyperTrack(publishableKey: .init(Bundle.main.object(forInfoDictionaryKey: "HyperTrackPublishableKey") as! String)!)
 
     override init(){
         super.init()
-
     }
 
     @objc
@@ -20,7 +20,7 @@ class HyperTrackSdk: RCTEventEmitter{
     }
 
     override func supportedEvents() -> [String]! {
-        return ["onIncrement", "onDecrement"]
+        return ["onIncrement", "onDecrement", "onLocationChanged", "onTrackingStateChanged", "onErrors"]
     }
 
     @objc
@@ -40,9 +40,14 @@ class HyperTrackSdk: RCTEventEmitter{
         // remove listeners
     }
 
+    func addListener(_ name: String, listener: @escaping HyperTrack.Cancel) {
+        if listeners.contains (where: { $0.key == name }) { return }
+        listeners[name] = listener
+    }
+
     @objc
     func getDeviceID(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        resolve(hyperTrack.deviceID);
+        resolve(HyperTrack.deviceID);
     }
 
     @objc
@@ -68,108 +73,100 @@ class HyperTrackSdk: RCTEventEmitter{
 
     @objc
     func startTracking(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) -> Void {
-        hyperTrack.start()
+        HyperTrack.startTracking()
         resolve("Tracking started")
     }
 
     @objc
     func stopTracking(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) -> Void {
-        hyperTrack.stop()
+        HyperTrack.stopTracking()
         resolve("Tracking stopped")
     }
 
     @objc
     func getLocation(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) -> Void {
-        switch hyperTrack.location {
+        switch HyperTrack.location {
             case .success(let location):
-                resolve(["latitude": location.latitude, "longitude": location.longitude])
+//          let t = try? JSONEncoder().encode(HyperTrack.JSON)
+            resolve(["latitude": location.latitude, "longitude": location.longitude])
             case .failure(let error):
-                func returnResult(value: String) {
-                  resolve(value)
-                }
-                switch error {
-                case .gpsSignalLost:
-                    returnResult(value: "gpsSignalLost")
-                case .locationMocked:
-                    returnResult(value: "locationMocked")
-                case .locationPermissionsCantBeAskedInBackground:
-                    returnResult(value: "locationPermissionsCantBeAskedInBackground")
-                case .locationPermissionsDenied:
-                    returnResult(value: "locationPermissionsDenied")
-                case .locationPermissionsInsufficientForBackground:
-                    returnResult(value: "locationPermissionsInsufficientForBackground")
-                case .locationPermissionsNotDetermined:
-                    returnResult(value: "locationPermissionsNotDetermined")
-                case .locationPermissionsReducedAccuracy:
-                    returnResult(value: "locationPermissionsReducedAccuracy")
-                case .locationPermissionsRestricted:
-                    returnResult(value: "locationPermissionsRestricted")
-                case .locationServicesDisabled:
-                    returnResult(value: "locationServicesDisabled")
-                case .motionActivityPermissionsCantBeAskedInBackground:
-                    returnResult(value: "motionActivityPermissionsCantBeAskedInBackground")
-                case .motionActivityPermissionsDenied:
-                    returnResult(value: "motionActivityPermissionsDenied")
-                case .motionActivityPermissionsNotDetermined:
-                    returnResult(value: "motionActivityPermissionsNotDetermined")
-                case .motionActivityServicesDisabled:
-                    returnResult(value: "motionActivityServicesDisabled")
+            func returnResult(value: String) {
+              resolve(value)
+            }
+            switch error {
                 case .notRunning:
                     returnResult(value: "notRunning")
                 case .starting:
                     returnResult(value: "starting")
+                case .errors(let errorsSet):
+                    resolve(errorsSet.map { $0.string })
+                default:
+                    resolve("something went wrong")
             }
         }
     }
     @objc
     func isTracking(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) -> Void {
-        resolve(hyperTrack.isTracking)
-    }
-
-    @objc
-    func isRunning(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) -> Void {
-        resolve(hyperTrack.isRunning)
+        resolve(HyperTrack.isTracking)
     }
 
     @objc
     func availability(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) -> Void {
-        let availability = hyperTrack.availability
-
-        switch availability {
-        case .available:
-            resolve(true)
-        case .unavailable:
-            resolve(false)
-        default:
-            resolve(false)
-        }
-
-    }
-
-    @objc
-    func isLoggingEnabled(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) -> Void {
-        resolve(hyperTrack.isRunning)
+        resolve(HyperTrack.isAvailable)
     }
 
     @objc
     func setDeviceName(_ deviceName: String, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
-        hyperTrack.setDeviceName(deviceName)
+        HyperTrack.name = deviceName
         resolve("Device name set")
     }
 
-    // @objc
-    // func subscribeToLocation(_ deviceName: String, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
-    //     let loc = hyperTrack.subscribeToLocation
-    //     print("Subscribed to location \(loc)")
+    @objc
+    func subscribeToLocation(_ deviceName: String, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
+        let cancel = HyperTrack.subscribeToLocation(){
+            result in
 
-    //     resolve("Device name set")
-    // }
+            switch result {
+                case .success(let location):
+                self.sendEvent(withName: "onLocationChanged", body: ["latitude": location.latitude, "longitude": location.longitude])
+                case .failure(let error):
+                print("subscribeToLocation error \(error)")
+            }
 
+        }
+        addListener("unsubscribeToLocation",  listener: cancel)
+        resolve("subscribed")
+    }
 
-//    @objc
-//    func setMetadata(_ deviceName: String, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
-//        hyperTrack.setDeviceMetadata(deviceName)
-//        resolve("Device name set")
-//    }
+    @objc
+    func subscribeToIsTracking(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        let handler: (Bool) -> Void = { (result: Bool) in
+            self.sendEvent(withName: "onTrackingStateChanged", body: result)
+        }
+        let cancel = HyperTrack.subscribeToIsTracking(completionHandler: handler)
+        addListener("unsubscribeToIsTracking", listener: cancel)
+        resolve("subscribed")
 
+    }
+
+    @objc
+    func subscribeToErrors(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        let cancel = HyperTrack.subscribeToErrors() { errorsSet in
+            self.sendEvent(withName: "onErrors", body: errorsSet.map { $0.string })
+        }
+        addListener("unsubscribeToErrors", listener: cancel)
+        resolve("subscribed")
+    }
+
+    @objc
+    func cancelSubscription(_ subscriptionName: String, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
+        if listeners.contains (where: { $0.key == subscriptionName }) {
+            let cancel = listeners[subscriptionName]
+            if (cancel != nil) {
+                listeners.removeValue(forKey: subscriptionName)
+                cancel!()
+                resolve("unsubscribed")
+            }
+        }
+    }
 }
