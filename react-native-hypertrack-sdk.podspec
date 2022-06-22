@@ -16,5 +16,5 @@ Pod::Spec.new do |s|
   s.source_files = "ios/**/*.{h,m,mm,swift}"
 
   s.dependency "React-Core"
-  s.dependency 'HyperTrack', '4.12.3'
+  s.dependency 'HyperTrack', '5.0.0-alpha.1'
 end
