@@ -87,8 +87,8 @@ class HyperTrackSdk: RCTEventEmitter{
     func getLocation(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) -> Void {
         switch HyperTrack.location {
             case .success(let location):
-//          let t = try? JSONEncoder().encode(HyperTrack.JSON)
-            resolve(["latitude": location.latitude, "longitude": location.longitude])
+              resolve(location.json.toBridge())
+
             case .failure(let error):
             func returnResult(value: String) {
               resolve(value)
@@ -169,4 +169,68 @@ class HyperTrackSdk: RCTEventEmitter{
             }
         }
     }
+}
+
+// MARK: - Bridge helpers
+
+// source: https://github.com/launchdarkly/react-native-client-sdk/blob/517f8205ba9a610da08fff9e75cd4321bd42623e/ios/LaunchdarklyReactNativeClient.swift#L324-L356
+extension HyperTrack.JSON {
+  static func fromBridge(_ value: Any) -> HyperTrack.JSON {
+    guard !(value is NSNull) else { return .null }
+    if let nsNumValue = value as? NSNumber {
+        // Because we accept `LDValue` in contexts that can receive anything, the value is a
+        // reference type in Objective-C. Because of that, RN bridges the type as a `NSNumber`,
+        // so we must determine whether that `NSNumber` was originally created from a `BOOL`.
+        // Adapted from https://stackoverflow.com/a/30223989
+        let boolTypeId = CFBooleanGetTypeID()
+        if CFGetTypeID(nsNumValue) == boolTypeId {
+            return .bool(nsNumValue.boolValue)
+        } else {
+            return .number(Double(truncating: nsNumValue))
+        }
+    }
+    if let stringValue = value as? String { return .string(stringValue) }
+    if let arrayValue = value as? [Any] { return .array(arrayValue.map { fromBridge($0) }) }
+    if let dictValue = value as? [String: Any] { return .object(dictValue.mapValues { fromBridge($0) }) }
+    return .null
+  }
+
+  func toBridge() -> Any {
+    switch self {
+    case .null: return NSNull()
+    case .bool(let boolValue): return boolValue
+    case .number(let numValue): return numValue
+    case .string(let stringValue): return stringValue
+    case .array(let arrayValue): return arrayValue.map { $0.toBridge() }
+    case .object(let objectValue): return objectValue.mapValues { $0.toBridge() }
+    @unknown default: fatalError("unhandled case")
+    }
+  }
+}
+
+// MARK: Bridged Data Types
+
+extension HyperTrack.Location {
+  var json: HyperTrack.JSON {
+    .object(["latitude": .number(latitude), "longitude": .number(longitude)])
+  }
+}
+
+extension HyperTrack.LocationError {
+  var json: HyperTrack.JSON {
+    switch self {
+    case .notRunning, .starting:
+      return .string(String(describing: self))
+    case .errors(let errors):
+      return .array(errors.map(\.json))
+    @unknown default:
+      fatalError("unhandled location error")
+    }
+  }
+}
+
+extension HyperTrack.HyperTrackError {
+  var json: HyperTrack.JSON {
+    .string("HyperTrackError: \(string)")
+  }
 }
