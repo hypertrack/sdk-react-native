@@ -15,22 +15,24 @@ export default function App() {
   React.useEffect(() => {
     getID();
 
-    const lc = HyperTrack.onTrackingStateChanged((data) => {
+    const locationSubscription = HyperTrack.subscribeToLocation((data) => {
+      console.log('onLocationChanged', data);
+    });
+    const availabilitySubscription = HyperTrack.subscribeToAvailability((data) => {
+      console.log('onAvailableStateChanged', data);
+    });
+    const trackingSubscription = HyperTrack.subscribeToTracking((data) => {
       console.log('onTrackingStateChanged', data);
     });
-    const ec = HyperTrack.onErrors((data) => {
+    const errorsSubscriptions = HyperTrack.subscribeToErrors((data) => {
       console.log('onErrors', data);
     });
-    // const a = HyperTrack.onIncrementIncreasedChanged((data) => {
-    //   console.log('onIncrement received', data);
-    // });
-    // const b = HyperTrack.onIncrementDecreasedChanged((data) => {
-    //   console.log('onDecrement received', data);
-    // });
 
     return () => {
-      lc.remove();
-      ec.remove();
+      HyperTrack.clearSubscriptionToLocation(locationSubscription);
+      HyperTrack.clearSubscriptionToAvailability(availabilitySubscription);
+      HyperTrack.clearSubscriptionToTracking(trackingSubscription);
+      HyperTrack.clearSubscriptionToErrors(errorsSubscriptions);
     };
   }, []);
 
@@ -81,45 +83,28 @@ export default function App() {
 
   const setDeviceName = async () => {
     try {
-      const response = await HyperTrack.setDeviceName('YHiP12');
+      const response = await HyperTrack.setName('YHiP12');
       console.log(response);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const subscribeToLocation = async () => {
+  const getMetadata = async () => {
     try {
-      const response = await HyperTrack.subscribeToLocation();
+      const response = await HyperTrack.getMetadata();
       console.log(response);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const subscribeToIsTracking = async () => {
+  const setMetadata = async () => {
     try {
-      const response = await HyperTrack.subscribeToIsTracking();
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const subscribeToErrors = async () => {
-    try {
-      const response = await HyperTrack.subscribeToErrors();
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const cancelErrorSubscription = async () => {
-    try {
-      const response = await HyperTrack.cancelSubscription(
-        'unsubscribeToErrors'
-      );
+      const response = await HyperTrack.setMetadata({
+        vehicle_type: 'scooter',
+        group_id: 1,
+      });
       console.log(response);
     } catch (error) {
       console.log(error);
@@ -129,7 +114,7 @@ export default function App() {
   const cancelTrackingStateSubscription = async () => {
     try {
       const response = await HyperTrack.cancelSubscription(
-        'unsubscribeToIsTracking'
+        'unsubscribeToTracking'
       );
       console.log(response);
     } catch (error) {
@@ -147,13 +132,8 @@ export default function App() {
         <Button title="isTracking" onPress={isTracking} />
         <Button title="availability" onPress={availability} />
         <Button title="device name" onPress={setDeviceName} />
-        <Button title="subscribeToLocation" onPress={subscribeToLocation} />
-        <Button title="subscribeToIsTracking" onPress={subscribeToIsTracking} />
-        <Button title="subscribeToErrors" onPress={subscribeToErrors} />
-        <Button
-          title="cancelErrorSubscription"
-          onPress={cancelErrorSubscription}
-        />
+        <Button title="get metadata" onPress={getMetadata} />
+        <Button title="set metadata" onPress={setMetadata} />
         <Button
           title="cancelTrackingStateSubscription"
           onPress={cancelTrackingStateSubscription}
