@@ -53,7 +53,7 @@ export default class HyperTrack {
    *
    * @returns device name
    */
-  static async getName(): Promise<void> {
+  static async getName(): Promise<string> {
     return HyperTrackSdk.getName();
   }
 

@@ -87,7 +87,7 @@ class HyperTrackSdk: RCTEventEmitter{
     }
 
     @objc
-    func setAvailability(_ availability: Bool, resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) -> Void {
+    func setAvailability(_ availability: Bool, resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) -> Void {
         HyperTrack.isAvailable = availability
         resolve("Availability has been set to \(availability)")
     }
