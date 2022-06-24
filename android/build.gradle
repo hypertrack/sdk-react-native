@@ -18,11 +18,18 @@ def safeExtGet(prop, fallback) {
     rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
 }
 
+def DEFAULT_COMPILE_SDK_VERSION = 30
+def DEFAULT_BUILD_TOOLS_VERSION = "30.0.2"
+def DEFAULT_MIN_SDK_VERSION = 21
+def DEFAULT_TARGET_SDK_VERSION = 30
+def DEFAULT_HYPERTRACK_SDK_VERSION = "6.1.4"
+
 android {
-    compileSdkVersion safeExtGet('HyperTrackSdk_compileSdkVersion', 29)
+    compileSdkVersion safeExtGet('HyperTrackSdk_compileSdkVersion', DEFAULT_COMPILE_SDK_VERSION)
+    buildToolsVersion safeExtGet('HyperTrackSdk_buildToolsVersion', DEFAULT_BUILD_TOOLS_VERSION)
     defaultConfig {
-        minSdkVersion safeExtGet('HyperTrackSdk_minSdkVersion', 16)
-        targetSdkVersion safeExtGet('HyperTrackSdk_targetSdkVersion', 29)
+        minSdkVersion safeExtGet('HyperTrackSdk_minSdkVersion', DEFAULT_MIN_SDK_VERSION)
+        targetSdkVersion safeExtGet('HyperTrackSdk_targetSdkVersion', DEFAULT_TARGET_SDK_VERSION)
         versionCode 1
         versionName "1.0"
 
@@ -51,9 +58,14 @@ repositories {
     google()
     mavenCentral()
     jcenter()
+    maven {
+        name 'hypertrack'
+        url 'https://s3-us-west-2.amazonaws.com/m2.hypertrack.com/'
+    }
 }
 
 dependencies {
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation ("com.hypertrack:hypertrack:${safeExtGet('HyperTrackSdk_compileSdkVersion', DEFAULT_HYPERTRACK_SDK_VERSION)}")
 }
