@@ -1,4 +1,4 @@
-package com.example.reactnativeHyperTrackSdk;
+package com.example.reactnativehypertracksdk;
 
 import com.facebook.react.ReactActivity;
 

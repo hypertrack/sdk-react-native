@@ -1,4 +1,4 @@
-package com.reactnativeHyperTrackSdk;
+package com.reactnativehypertracksdk;
 
 import androidx.annotation.NonNull;
 
