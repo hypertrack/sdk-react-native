@@ -3,7 +3,7 @@ export interface Location {
   longitude: number;
 }
 
-enum LocationRunningError {
+export enum LocationRunningError {
   NOT_RUNNING = 'notRunning', // The SDK is not collecting locations because it’s either not tracking or is unavailable.
   STARTING = 'starting', // The SDK started collecting locations and is waiting for OS location services to respond.
 }

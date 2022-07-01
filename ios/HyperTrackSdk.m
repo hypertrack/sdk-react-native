@@ -1,4 +1,3 @@
-#import <Foundation/Foundation.h>
 #import <React/RCTBridgeModule.h>
 #import <React/RCTEventEmitter.h>
 #import <React/RCTLog.h>
@@ -57,4 +56,5 @@ RCT_EXTERN_METHOD(cancelSubscription:(NSString *)subscriptionName
 RCT_EXTERN_METHOD(cancelAllSubscriptions: (RCTPromiseResolveBlock)resolve reject: (RCTPromiseRejectBlock)reject)
 
 @end
+
 
