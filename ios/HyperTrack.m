@@ -133,8 +133,9 @@ RCT_EXPORT_METHOD(isAvailable:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromi
     resolve([NSNumber numberWithBool:[self.hyperTrack availability]]);
 }
 
-RCT_EXPORT_METHOD(setAvailability:(BOOL)availability :(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-    // TODO: change availability
+RCT_EXPORT_METHOD(setAvailability:(BOOL)availability:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+    [self.hyperTrack setAvailability: availability ? HTAvailabilityAvailable : HTAvailabilityUnavailable];
+    resolve([NSNumber numberWithBool:[self.hyperTrack availability]]);
 }
 
 RCT_EXPORT_METHOD(startTracking) {
@@ -153,12 +154,12 @@ RCT_EXPORT_METHOD(subscribeOnEvents) {
 
 }
 
-RCT_EXPORT_METHOD(enableDebugLogging:(BOOL)isEnable) {
-
+RCT_EXPORT_METHOD(enableDebugLogging:(BOOL)isEnabled) {
+    [HTSDK setIsLoggingEnabled:isEnabled];
 }
 
-RCT_EXPORT_METHOD(enableMockLocation:(BOOL)isEnable) {
-
+RCT_EXPORT_METHOD(enableMockLocation:(BOOL)isAllowed) {
+    [self.hyperTrack setMockLocationsAllowed:isAllowed];
 }
 
 RCT_EXPORT_METHOD(isTracking:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
