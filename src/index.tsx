@@ -1,3 +1,3 @@
-import HyperTrack from './api/HyperTrack';
+import HyperTrack from './legacy/HyperTrack';
 export default HyperTrack;
 export { HyperTrack };
