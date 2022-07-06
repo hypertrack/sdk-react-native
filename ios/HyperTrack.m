@@ -61,7 +61,7 @@ RCT_EXPORT_METHOD(initialize:(NSString *)publishableKey startsTracking:(BOOL)sta
             resolve(nil);
         } else {
             switch ([result.error code]) {
-
+                    
                 case HTFatalErrorDevelopmentPublishableKeyIsEmpty:
                 {
                     NSError *error = [NSError errorWithDomain: result.error.domain
@@ -70,7 +70,7 @@ RCT_EXPORT_METHOD(initialize:(NSString *)publishableKey startsTracking:(BOOL)sta
                     reject([NSString stringWithFormat:@"%d", (int)error.code], error.localizedDescription, error);
                 }
                     break;
-
+                    
                 case HTFatalErrorDevelopmentMissingLocationUpdatesBackgroundModeCapability:
                 {
                     NSError *error = [NSError errorWithDomain: result.error.domain
@@ -79,7 +79,7 @@ RCT_EXPORT_METHOD(initialize:(NSString *)publishableKey startsTracking:(BOOL)sta
                     reject([NSString stringWithFormat:@"%d", (int)error.code], error.localizedDescription, error);
                 }
                     break;
-
+                    
                 case HTFatalErrorDevelopmentRunningOnSimulatorUnsupported:
                 {
                     NSError *error = [NSError errorWithDomain: result.error.domain
@@ -88,7 +88,7 @@ RCT_EXPORT_METHOD(initialize:(NSString *)publishableKey startsTracking:(BOOL)sta
                     reject([NSString stringWithFormat:@"%d", (int)error.code], error.localizedDescription, error);
                 }
                     break;
-
+                    
                 case HTFatalErrorProductionLocationServicesUnavalible:
                 {
                     NSError *error = [NSError errorWithDomain: result.error.domain
@@ -97,7 +97,7 @@ RCT_EXPORT_METHOD(initialize:(NSString *)publishableKey startsTracking:(BOOL)sta
                     reject([NSString stringWithFormat:@"%d", (int)error.code], error.localizedDescription, error);
                 }
                     break;
-
+                    
                 case HTFatalErrorProductionMotionActivityServicesUnavalible:
                 {
                     NSError *error = [NSError errorWithDomain: result.error.domain
@@ -106,7 +106,7 @@ RCT_EXPORT_METHOD(initialize:(NSString *)publishableKey startsTracking:(BOOL)sta
                     reject([NSString stringWithFormat:@"%d", (int)error.code], error.localizedDescription, error);
                 }
                     break;
-
+                    
                 case HTFatalErrorProductionMotionActivityPermissionsDenied:
                 {
                     NSError *error = [NSError errorWithDomain: result.error.domain
@@ -115,7 +115,7 @@ RCT_EXPORT_METHOD(initialize:(NSString *)publishableKey startsTracking:(BOOL)sta
                     reject([NSString stringWithFormat:@"%d", (int)error.code], error.localizedDescription, error);
                 }
                     break;
-
+                    
                 default:
                 {
                     NSError *error = [NSError errorWithDomain: result.error.domain
@@ -130,12 +130,15 @@ RCT_EXPORT_METHOD(initialize:(NSString *)publishableKey startsTracking:(BOOL)sta
 }
 
 RCT_EXPORT_METHOD(isAvailable:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-    resolve([NSNumber numberWithBool:[self.hyperTrack availability]]);
+    if ( [self.hyperTrack availability] == HTAvailabilityAvailable) {
+        resolve([NSNumber numberWithBool:1]);
+    } else {
+        resolve([NSNumber numberWithBool:0]);
+    }
 }
 
 RCT_EXPORT_METHOD(setAvailability:(BOOL)availability:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     [self.hyperTrack setAvailability: availability ? HTAvailabilityAvailable : HTAvailabilityUnavailable];
-    resolve([NSNumber numberWithBool:[self.hyperTrack availability]]);
 }
 
 RCT_EXPORT_METHOD(startTracking) {
@@ -151,7 +154,7 @@ RCT_EXPORT_METHOD(syncDeviceSettings) {
 }
 
 RCT_EXPORT_METHOD(subscribeOnEvents) {
-
+    
 }
 
 RCT_EXPORT_METHOD(enableDebugLogging:(BOOL)isEnabled) {
@@ -168,7 +171,7 @@ RCT_EXPORT_METHOD(isTracking:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromis
 
 RCT_EXPORT_METHOD(getLocation:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     HTLocationResult *locationResult = self.hyperTrack.location;
-
+    
     switch (locationResult.error) {
         case HTLocationErrorNoError:
             resolve(@{ @"location":  @{ @"latitude": [NSNumber numberWithDouble:locationResult.location.latitude], @"longitude": [NSNumber numberWithDouble:locationResult.location.longitude] } });
