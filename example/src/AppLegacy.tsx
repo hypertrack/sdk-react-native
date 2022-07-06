@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Button } from 'react-native';
+import { View, Button, StyleSheet } from 'react-native';
 
 // Import HyperTrack SDK API
 // You can also use CriticalErrors to react to different kind of errors preventing tracking (ex: permissions deined)
@@ -15,14 +15,14 @@ import HyperTrack from 'react-native-hypertrack-sdk';
 const App = () => {
   const hyperTrack = useRef<HyperTrack | null>(null);
   const [enableListeners, setEnableListeners] = useState(false);
-
+  const [availability, setAvailability] = useState(true);
   const init = async () => {
     // (Optional) This turns on logging for underlying native SDKs. Placed on top so SDKs start logging immediately
     // HyperTrack.enableDebugLogging(true);
 
     try {
       const h = await HyperTrack.initialize(
-        '',
+        '5lKJLpoO8beSzvxQ2XpwiBf_KDI3GHmd03vO4zRejbuwP07sE9201LEpOPDDr_73yenWW9MxcXQQvHnFkZB4kg',
         false
       );
       if (h instanceof HyperTrack) {
@@ -36,11 +36,11 @@ const App = () => {
       console.log('ID', ID);
 
       // (Optional) Set the device name to display in dashboard (for ex. user name)
-      hyperTrack.current?.setDeviceName('RN Quickstart');
+      hyperTrack.current?.setDeviceName('RN Legacy');
 
       // (Optional) Attach any JSON metadata to this device to see in HyperTrack's API responses
       hyperTrack.current?.setMetadata({
-        driver_id: '83B3X5',
+        driver_id: '111',
         state: 'IN_PROGRESS',
       });
       setEnableListeners(true);
@@ -55,18 +55,18 @@ const App = () => {
 
   useEffect(() => {
     // if (enableListeners) {
-      const er = hyperTrack.current?.subscribeToErrors((error) => {
-        console.log("Subsc", error);
-      });
+    const er = hyperTrack.current?.subscribeToErrors((error) => {
+      console.log('Subsc', error);
+    });
 
-      const isr = hyperTrack.current?.subscribeToTracking((isTracking) => {
-        console.log('isTracking', isTracking);
-      });
+    const isr = hyperTrack.current?.subscribeToTracking((isTracking) => {
+      console.log('isTracking', isTracking);
+    });
 
-      return () => {
-        er?.remove();
-        isr?.remove();
-      };
+    return () => {
+      er?.remove();
+      isr?.remove();
+    };
     // }
   }, [enableListeners]);
 
@@ -76,17 +76,23 @@ const App = () => {
   };
 
   const addGeoTag = async () => {
-    const geotag = await hyperTrack.current?.addGeotag({ shop: "apple" });
+    const geotag = await hyperTrack.current?.addGeotag({ shop: 'apple' });
     console.log('geotag', geotag);
   };
 
   const isAvailable = async () => {
-    const available = await hyperTrack.current?.isAvailable()
-    console.log('avail', available)
-  }
+    const available = await hyperTrack.current?.isAvailable();
+    setAvailability(available ?? false);
+    console.log('avail', available);
+  };
+
+  const changeAvailability = async () => {
+    const a = await hyperTrack.current?.setAvailability(!availability);
+    console.log('a', a);
+  };
 
   return (
-    <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+    <View style={styles.wrapper}>
       <Button
         title="Start"
         onPress={() => hyperTrack.current?.startTracking()}
@@ -95,11 +101,16 @@ const App = () => {
       <Button title="Get location" onPress={getLocation} />
       <Button title="Add geotag" onPress={addGeoTag} />
       <Button title="isAvailable" onPress={isAvailable} />
+      <Button title="changeAvailability" onPress={changeAvailability} />
     </View>
   );
 };
 
 export default App;
+
+const styles = StyleSheet.create({
+  wrapper: { justifyContent: 'center', alignItems: 'center', flex: 1 },
+});
 
 // export default class HyperTrackQuickstart extends Component {
 

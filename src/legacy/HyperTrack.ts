@@ -152,6 +152,15 @@ export default class HyperTrack {
   }
 
   /**
+   * Allows you to set device availability for nearby search
+   *
+   * @param availability true when is available or false when unavailable
+   */
+  async setAvailability(availability: Boolean): Promise<void> {
+    return HyperTrackSdk.setAvailability(availability);
+  }
+
+  /**
    * Determine whether the SDK is tracking the movement of the user.
    * @return {boolean} Whether the user's movement data is getting tracked or not.
    */

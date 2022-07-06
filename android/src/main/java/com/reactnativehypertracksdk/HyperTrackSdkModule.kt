@@ -10,7 +10,7 @@ import com.hypertrack.sdk.HyperTrack
 import java.util.*
 
 
-class HypertrackSdkModule(reactContext: ReactApplicationContext) :
+class HyperTrackSdkModule(reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
 
   override fun getName(): String {
