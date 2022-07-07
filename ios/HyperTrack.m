@@ -174,7 +174,7 @@ RCT_EXPORT_METHOD(getLocation:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromi
 
     switch (locationResult.error) {
         case HTLocationErrorNoError:
-            resolve(@{ @"latitude": [NSNumber numberWithDouble:locationResult.location.latitude], @"longitude": [NSNumber numberWithDouble:locationResult.location.longitude] } );
+            resolve(@{ @"location":  @{ @"latitude": [NSNumber numberWithDouble:locationResult.location.latitude], @"longitude": [NSNumber numberWithDouble:locationResult.location.longitude] } });
             break;
         case HTLocationErrorLocationPermissionsNotDetermined:
             resolve(@{ @"error":  @{ @"code": @"location_permissions_not_determined" } });

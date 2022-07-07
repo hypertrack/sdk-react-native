@@ -61,8 +61,10 @@ enum GeotagError {
 }
 
 export interface Location {
-  latitude: number;
-  longitude: number;
+  location: {
+    latitude: number;
+    longitude: number;
+  };
 }
 
 export enum LocationError {
