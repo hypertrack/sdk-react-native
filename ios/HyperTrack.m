@@ -131,14 +131,20 @@ RCT_EXPORT_METHOD(initialize:(NSString *)publishableKey startsTracking:(BOOL)sta
 
 RCT_EXPORT_METHOD(isAvailable:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     if ( [self.hyperTrack availability] == HTAvailabilityAvailable) {
-        resolve([NSNumber numberWithBool:1]);
+        resolve(@YES);
     } else {
-        resolve([NSNumber numberWithBool:0]);
+        resolve(@NO);
     }
 }
 
 RCT_EXPORT_METHOD(setAvailability:(BOOL)availability:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     [self.hyperTrack setAvailability: availability ? HTAvailabilityAvailable : HTAvailabilityUnavailable];
+    NSLog(@"testBool = %ld", [self.hyperTrack availability]);
+    if ( [self.hyperTrack availability] == HTAvailabilityAvailable) {
+        resolve(@YES);
+    } else {
+        resolve(@NO);
+    }
 }
 
 RCT_EXPORT_METHOD(startTracking) {

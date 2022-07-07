@@ -111,8 +111,9 @@ const App = () => {
   };
 
   const changeAvailability = async () => {
-    hyperTrackRef.current?.setAvailability(!availability);
-    Alert.alert("Press 'Get availability' to fetch new result");
+    const res = await hyperTrackRef.current?.setAvailability(!availability);
+    console.log(res);
+    setAvailability(res ?? false);
   };
 
   const startTracking = async () => {
