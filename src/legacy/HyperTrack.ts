@@ -232,7 +232,7 @@ export default class HyperTrack {
    * subscription.remove()
    * ```
    */
-  subscribeToTracking(listener: (isTracking: { isTracking: boolean }) => void) {
+  subscribeToTracking(listener: (isTracking: boolean) => void) {
     return EventEmitter.addListener('onTrackingStateChanged', listener);
   }
 
