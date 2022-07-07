@@ -41,7 +41,7 @@ enum SDKError {
 /**
  * A base interface for errors in SDK.
  */
-type Error = {
+export type Error = {
   code: SDKError;
   message?: string;
 };
@@ -60,7 +60,7 @@ enum GeotagError {
   INVALID_ARGUMENTS = 3,
 }
 
-interface Location {
+export interface Location {
   latitude: number;
   longitude: number;
 }

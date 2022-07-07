@@ -23,7 +23,7 @@ const App = () => {
     try {
       const h = await HyperTrack.initialize(
         '5lKJLpoO8beSzvxQ2XpwiBf_KDI3GHmd03vO4zRejbuwP07sE9201LEpOPDDr_73yenWW9MxcXQQvHnFkZB4kg',
-        false
+        true
       );
       if (h instanceof HyperTrack) {
         hyperTrack.current = h;
