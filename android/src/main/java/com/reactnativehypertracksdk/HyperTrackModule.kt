@@ -70,13 +70,13 @@ class HTSDKModule(reactContext: ReactApplicationContext?) :
       override fun onTrackingStart() {
         reactApplicationContext
           .getJSModule(RCTDeviceEventEmitter::class.java)
-          .emit("onTrackingStateChanged", sdkInstance!!.isRunning)
+          .emit("onTrackingStateChanged", sdkInstance!!.isTracking)
       }
 
       override fun onTrackingStop() {
         reactApplicationContext
           .getJSModule(RCTDeviceEventEmitter::class.java)
-          .emit("onTrackingStateChanged", sdkInstance!!.isRunning)
+          .emit("onTrackingStateChanged", sdkInstance!!.isTracking)
       }
     }
     sdkInstance!!.addTrackingListener(trackingStateChangeListener)
@@ -89,7 +89,7 @@ class HTSDKModule(reactContext: ReactApplicationContext?) :
 
   @ReactMethod
   fun isTracking(promise: Promise) {
-    promise.resolve(sdkInstance!!.isRunning)
+    promise.resolve(sdkInstance!!.isTracking)
   }
 
   @ReactMethod

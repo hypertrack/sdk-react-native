@@ -166,7 +166,7 @@ RCT_EXPORT_METHOD(enableMockLocation:(BOOL)isAllowed) {
 }
 
 RCT_EXPORT_METHOD(isTracking:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-    resolve([NSNumber numberWithBool:[self.hyperTrack isRunning]]);
+    resolve([NSNumber numberWithBool:[self.hyperTrack isTracking]]);
 }
 
 RCT_EXPORT_METHOD(getLocation:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
@@ -338,7 +338,7 @@ RCT_EXPORT_METHOD(addGeotag:(NSDictionary<NSString*, id>*)metadata :(RCTPromiseR
         return;
     }
     if (hasListeners) {
-        [self sendEventWithName: eventName body: @{@"isTracking": @([self.hyperTrack isRunning])}];
+        [self sendEventWithName: eventName body: @([self.hyperTrack isTracking])];
     }
 }
 
