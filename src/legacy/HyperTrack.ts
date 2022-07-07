@@ -19,7 +19,7 @@ const HyperTrackSdk = NativeModules.HyperTrack
 
 const EventEmitter = new NativeEventEmitter(HyperTrackSdk);
 
-enum SDKError {
+export enum SDKError {
   /**
    * An error that we couldn't recognize.
    */
@@ -49,7 +49,7 @@ export type Error = {
 /**
  * Interface for accessing adding geotag result.
  */
-enum GeotagError {
+export enum GeotagError {
   /** Expected location is not supported on this platform */
   PLATFORM_NOT_SUPPORTED = 0,
   /** Expected vs actual location difference is greater then required */
