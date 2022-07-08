@@ -9,12 +9,22 @@ import {
   SafeAreaView,
 } from 'react-native';
 
-import HyperTrack from 'react-native-hypertrack-sdk';
-import type { Location, LocationError } from 'src/legacy/HyperTrack';
+import HyperTrack, {
+  Location,
+  LocationError,
+} from 'react-native-hypertrack-sdk';
 
 const Button = ({ title, onPress }: { title: string; onPress: () => void }) => (
-  <Pressable style={styles.button} onPress={onPress}>
-    <Text style={styles.text}>{title}</Text>
+  <Pressable
+    style={({ pressed }) => [
+      {
+        backgroundColor: pressed ? 'rgba(60, 105, 246, 0.3)' : '#3C69F6',
+      },
+      styles.button,
+    ]}
+    onPress={onPress}
+  >
+    <Text style={styles.buttonText}>{title}</Text>
   </Pressable>
 );
 
@@ -22,6 +32,8 @@ interface LocationType {
   latitude: number;
   longitude: number;
 }
+
+const PUBLISHABLE_KEY = 'Paste_your_publishable_key_here';
 
 const App = () => {
   const hyperTrackRef = useRef<HyperTrack | null>(null);
@@ -41,7 +53,7 @@ const App = () => {
       }
 
       try {
-        const hyperTrack = await HyperTrack.initialize('', true);
+        const hyperTrack = await HyperTrack.initialize(PUBLISHABLE_KEY, true);
         hyperTrackRef.current = hyperTrack;
 
         const ID = await hyperTrackRef.current?.getDeviceID();
@@ -100,8 +112,15 @@ const App = () => {
   };
 
   const addGeoTag = async () => {
-    const geoTag = await hyperTrackRef.current?.addGeotag({ parking: 'test' });
-    console.log('geoTag added to: ', geoTag);
+    try {
+      const geoTag = await hyperTrackRef.current?.addGeotag({
+        parking: 'test',
+      });
+      console.log('geoTag added to: ', geoTag);
+      Alert.alert('successfully added');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const isAvailable = async () => {
@@ -130,7 +149,7 @@ const App = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.wrapper}>
-        <Text style={styles.titleText}>'Device ID: (long press to copy)'</Text>
+        <Text style={styles.titleText}>Device ID:</Text>
         <Text selectable style={styles.text}>
           {deviceID}
         </Text>
@@ -145,7 +164,7 @@ const App = () => {
         <View style={styles.buttonWrapper}>
           <Button title="Get location" onPress={getLocation} />
         </View>
-        <Text style={styles.text}>location:</Text>
+        <Text style={styles.titleText}>Location:</Text>
         <Text style={styles.text}>latitude: {location?.latitude}</Text>
         <Text style={styles.text}>longitude: {location?.longitude}</Text>
         <View style={styles.buttonWrapper}>
@@ -170,20 +189,27 @@ export default App;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'gray',
+    backgroundColor: 'rgb(238, 241, 246)',
   },
   wrapper: {
-    backgroundColor: 'gray',
+    backgroundColor: 'rgb(238, 241, 246)',
   },
   titleText: {
     textAlign: 'center',
     width: '100%',
-    color: '#fff',
+    color: '#000',
     fontWeight: 'bold',
     padding: 2,
     fontSize: 20,
   },
   text: {
+    textAlign: 'center',
+    width: '100%',
+    color: '#000',
+    padding: 5,
+    fontSize: 18,
+  },
+  buttonText: {
     textAlign: 'center',
     width: '100%',
     color: '#fff',
@@ -198,10 +224,8 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   button: {
-    borderWidth: 1,
-    padding: 10,
-    borderColor: '#fff',
-    backgroundColor: '#85C88A',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
     borderRadius: 5,
   },
 });
