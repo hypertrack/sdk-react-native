@@ -7,6 +7,7 @@ import {
   Alert,
   ScrollView,
   SafeAreaView,
+  StatusBar,
 } from 'react-native';
 
 import HyperTrack, {
@@ -69,6 +70,9 @@ const App = () => {
           state: 'IN_PROGRESS',
         });
         setEnableListeners(true);
+
+        const available = await hyperTrackRef.current?.isAvailable();
+        setAvailability(available ?? false);
       } catch (error) {
         console.log(error);
       }
@@ -148,6 +152,7 @@ const App = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle={'dark-content'} />
       <ScrollView style={styles.wrapper}>
         <Text style={styles.titleText}>Device ID:</Text>
         <Text selectable style={styles.text}>
