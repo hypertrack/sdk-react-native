@@ -14,6 +14,10 @@
     "ios",
     "cpp",
     "hypertrack-sdk-react-native.podspec",
+    "LICENSE.txt",
+    "README.md",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
     "!lib/typescript/example",
     "!android/build",
     "!ios/build",
@@ -34,7 +38,10 @@
   "keywords": [
     "react-native",
     "ios",
-    "android"
+    "android",
+    "hypertrack",
+    "location",
+    "tracking"
   ],
   "repository": "https://github.com/hypertrack/sdk-react-native",
   "author": "HyperTrack <help@hypertrack.com> (https://hypertrack.com)",
