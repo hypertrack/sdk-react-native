@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 
 import HyperTrack, {
+  GeotagError,
   Location,
   LocationError,
 } from 'hypertrack-sdk-react-native';
@@ -116,14 +117,19 @@ const App = () => {
   };
 
   const addGeoTag = async () => {
-    try {
+    function isLocation(loc: GeotagError | Location): loc is Location {
+      return (loc as Location).location !== undefined;
+    }
+    if (hyperTrackRef.current !== null) {
       const geoTag = await hyperTrackRef.current?.addGeotag({
         parking: 'test',
       });
-      console.log('geoTag added to: ', geoTag);
-      Alert.alert('successfully added');
-    } catch (error) {
-      console.log(error);
+      if (isLocation(geoTag)) {
+        console.log('geoTag added to: ', geoTag);
+        Alert.alert('successfully added');
+      } else {
+        Alert.alert(JSON.stringify(geoTag));
+      }
     }
   };
 
