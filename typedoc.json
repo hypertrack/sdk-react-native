@@ -1,5 +1,5 @@
 {
-  "entryPoints": ["src/legacy/HyperTrack.ts"],
+  "entryPoints": ["src/HyperTrack/HyperTrack.ts"],
   "out": "docs",
   "exclude": "example/**/*",
   "entryPointStrategy": "expand",

@@ -1,4 +1,4 @@
-import HyperTrack from './legacy/HyperTrack';
+import HyperTrack from './HyperTrack/HyperTrack';
 export default HyperTrack;
 export { HyperTrack };
 
@@ -8,4 +8,4 @@ export {
   SDKError,
   GeotagError,
   LocationError,
-} from './legacy/HyperTrack';
+} from './HyperTrack/HyperTrack';

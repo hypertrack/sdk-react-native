@@ -62,7 +62,7 @@ const App = () => {
         console.log('ID', ID);
 
         // (Optional) Set the device name to display in dashboard (for ex. user name)
-        hyperTrackRef.current?.setDeviceName('RN Legacy');
+        hyperTrackRef.current?.setDeviceName('RN Driver');
 
         // (Optional) Attach any JSON metadata to this device to see in HyperTrack's API responses
         hyperTrackRef.current?.setMetadata({
