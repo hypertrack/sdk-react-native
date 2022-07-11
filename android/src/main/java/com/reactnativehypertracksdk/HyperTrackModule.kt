@@ -131,6 +131,7 @@ class HTSDKModule(reactContext: ReactApplicationContext?) :
     } else {
       sdkInstance!!.availability = Availability.UNAVAILABLE
     }
+    promise.resolve(sdkInstance!!.availability.equals(Availability.AVAILABLE))
   }
 
 //  @ReactMethod
