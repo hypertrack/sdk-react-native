@@ -266,10 +266,8 @@ export default class HyperTrack {
   /**
    * Add geotag
    * @param {Object} data - Include anything that can be parsed into JSON.
-   * @param {GeolocationCoordinates} expectedLocation? - optional location of a place,
-   * where the action is supposed to happen.
    */
-  addGeotag(data: Object): Promise<GeotagError | Location> {
+  addGeotag(data: Object): Promise<LocationError | Location> {
     return HyperTrackSdk.addGeotag(data);
   }
 }
