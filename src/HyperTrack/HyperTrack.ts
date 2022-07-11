@@ -113,7 +113,7 @@ export default class HyperTrack {
     return this;
   }
 
-  static async initialize(
+  static async createInstance(
     publishableKey: string,
     automaticallyRequestPermissions = true
   ) {
@@ -174,7 +174,7 @@ export default class HyperTrack {
    * Update device state from server.
    */
   syncDeviceSettings() {
-    return HyperTrackSdk.syncDeviceSettings();
+    HyperTrackSdk.syncDeviceSettings();
   }
 
   /**

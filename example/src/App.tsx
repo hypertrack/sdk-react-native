@@ -55,7 +55,10 @@ const App = () => {
       }
 
       try {
-        const hyperTrack = await HyperTrack.initialize(PUBLISHABLE_KEY, true);
+        const hyperTrack = await HyperTrack.createInstance(
+          PUBLISHABLE_KEY,
+          true
+        );
         hyperTrackRef.current = hyperTrack;
 
         const ID = await hyperTrackRef.current?.getDeviceID();
