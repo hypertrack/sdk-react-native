@@ -13,7 +13,7 @@ import {
 import HyperTrack, {
   Location,
   LocationError,
-} from 'react-native-hypertrack-sdk';
+} from 'hypertrack-sdk-react-native';
 
 const Button = ({ title, onPress }: { title: string; onPress: () => void }) => (
   <Pressable

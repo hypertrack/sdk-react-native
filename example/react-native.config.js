@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   dependencies: {
-    'react-native-hypertrack-sdk': {
+    'hypertrack-sdk-react-native': {
       root: path.join(__dirname, '..'),
     },
   },

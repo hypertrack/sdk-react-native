@@ -1,5 +1,5 @@
 {
-  "name": "react-native-hypertrack-sdk",
+  "name": "hypertrack-sdk-react-native",
   "version": "7.18.4",
   "description": "test",
   "main": "lib/commonjs/index",
@@ -13,7 +13,7 @@
     "android",
     "ios",
     "cpp",
-    "react-native-hypertrack-sdk.podspec",
+    "hypertrack-sdk-react-native.podspec",
     "!lib/typescript/example",
     "!android/build",
     "!ios/build",
