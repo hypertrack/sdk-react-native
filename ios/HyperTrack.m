@@ -139,7 +139,6 @@ RCT_EXPORT_METHOD(isAvailable:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromi
 
 RCT_EXPORT_METHOD(setAvailability:(BOOL)availability:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     [self.hyperTrack setAvailability: availability ? HTAvailabilityAvailable : HTAvailabilityUnavailable];
-    NSLog(@"testBool = %ld", [self.hyperTrack availability]);
     if ( [self.hyperTrack availability] == HTAvailabilityAvailable) {
         resolve(@YES);
     } else {
