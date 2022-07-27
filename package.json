@@ -1,6 +1,6 @@
 {
   "name": "hypertrack-sdk-react-native",
-  "version": "7.19.0",
+  "version": "7.19.1",
   "description": "test",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
