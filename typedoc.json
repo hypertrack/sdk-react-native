@@ -1,7 +1,8 @@
 {
-  "entryPoints": ["src/HyperTrack/HyperTrack.ts"],
+  "entryPoints": [
+    "src/HyperTrack/HyperTrack.ts"
+  ],
   "out": "docs",
-  "exclude": "example/**/*",
   "entryPointStrategy": "expand",
   "hideGenerator": true,
   "githubPages": false,

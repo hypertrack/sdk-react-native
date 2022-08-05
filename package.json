@@ -31,9 +31,8 @@
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "prepare": "bob build",
     "release": "release-it",
-    "example": "yarn --cwd example",
     "docs": "typedoc --options typedoc.json",
-    "bootstrap": "yarn example && yarn && yarn example pods && yarn docs"
+    "bootstrap": "yarn && yarn docs"
   },
   "keywords": [
     "react-native",
@@ -90,7 +89,6 @@
   "jest": {
     "preset": "react-native",
     "modulePathIgnorePatterns": [
-      "<rootDir>/example/node_modules",
       "<rootDir>/lib/"
     ]
   },
@@ -115,15 +113,6 @@
     },
     "npm": {
       "publish": true
-    },
-    "plugins": {
-      "@release-it/bumper": {
-        "out": [
-          "example/package.json",
-          "example/android/app/build.gradle",
-          "example/ios/Podfile.lock"
-        ]
-      }
     }
   },
   "eslintConfig": {
