@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+## [8.0.0] - 2022-08-05
+### Added
+- New interface for listeners.
+- Reference documentation.
+- TypeScript support.
+### Changed
+- Updated React Native from 0.63.3 to 0.69.1
+
 ## [7.19.1] - 2022-07-27
 ### Fixed
 - Fixed React Native C++ incompatibility issue with Android SDK 6.2.0
