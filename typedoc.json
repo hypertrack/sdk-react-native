@@ -1,0 +1,14 @@
+{
+  "entryPoints": [
+    "src/HyperTrack/HyperTrack.ts"
+  ],
+  "out": "docs",
+  "entryPointStrategy": "expand",
+  "hideGenerator": true,
+  "githubPages": false,
+  "disableSources": true,
+  "name": "HyperTrack SDK API",
+  "includeVersion": true,
+  "readme": "none",
+  "sort": "source-order"
+}
