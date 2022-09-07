@@ -43,3 +43,18 @@ Join our [Slack community](https://join.slack.com/t/hypertracksupport/shared_in
 7. Create a release
    - Release title should be the current version tag
 8. npm publish
+
+### How to change build config
+
+Change Android build config in `android/gradle.properties`
+
+### Old React Native versions specifics:
+
+#### Android
+
+- Gradle version should be 6.7.1 or higher
+- compileSdkVersion should be 31 or higher
+
+#### iOS
+
+- Platform version should be 12.4 or higher
