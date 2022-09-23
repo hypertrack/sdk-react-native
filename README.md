@@ -28,7 +28,6 @@ Join our [Slack community](https://join.slack.com/t/hypertracksupport/shared_in
 
    - android
      - android/gradle.properties - HyperTrackSdk_HyperTrackSDKVersion
-       -
    - ios
      - hypertrack-sdk-react-native.podspec
        - s.dependency 'HyperTrack/Objective-C', '**version**'
