@@ -27,7 +27,7 @@ Join our [Slack community](https://join.slack.com/t/hypertracksupport/shared_in
 1. Update SDK constant
 
    - android
-     - android/build.gradle
+     - android/gradle.properties - HyperTrackSdk_HyperTrackSDKVersion
        -
    - ios
      - hypertrack-sdk-react-native.podspec
