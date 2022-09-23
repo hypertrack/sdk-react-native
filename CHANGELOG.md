@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [8.2.0] - 2022-09-23
+### Changed
+- Updated Android SDK to 6.3.0 and iOS SDK to 4.13.0
+- When the Android app is uninstalled completely from the device and then installed back, the device_id will change. This improves the stability of the data coming from the SDK. Now this behavior is the same between Android SDK and iOS SDK.
+- If the user simulates locations when it's prohibited, the SDK still passes real locations through if there are any.
+- Decreased the time sensitivity for first location detection. Results in fewer `location_unavailable` outages when tracking starts on Android.
+
+### Fixed
+- Now, all logs in Android SDK are disabled by default and can be enabled by enableDebugLogging()
 
 ## [8.1.0] - 2022-08-30
 ### Changed

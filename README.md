@@ -1,6 +1,6 @@
 # React Native HyperTrack SDK
 
-![GitHub](https://img.shields.io/github/license/hypertrack/sdk-react-native.svg) ![npm](https://img.shields.io/npm/v/hypertrack-sdk-react-native.svg) ![iOS SDK](https://img.shields.io/badge/iOS%20SDK-4.12.4-brightgreen.svg) ![Android SDK](https://img.shields.io/badge/Android%20SDK-6.2.2-brightgreen.svg)
+![GitHub](https://img.shields.io/github/license/hypertrack/sdk-react-native.svg) ![npm](https://img.shields.io/npm/v/hypertrack-sdk-react-native.svg) ![iOS SDK](https://img.shields.io/badge/iOS%20SDK-4.13.0-brightgreen.svg) ![Android SDK](https://img.shields.io/badge/Android%20SDK-6.3.0-brightgreen.svg)
 
 [HyperTrack](https://www.hypertrack.com) lets you add live location tracking to your mobile app. Live location is made available along with ongoing activity, tracking controls and tracking outage with reasons.
 
@@ -28,7 +28,7 @@ Join our [Slack community](https://join.slack.com/t/hypertracksupport/shared_in
 
    - android
      - android/build.gradle
-       - DEFAULT_HYPERTRACK_SDK_VERSION
+       -
    - ios
      - hypertrack-sdk-react-native.podspec
        - s.dependency 'HyperTrack/Objective-C', '**version**'
