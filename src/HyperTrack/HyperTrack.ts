@@ -134,7 +134,7 @@ export default class HyperTrack {
    * production build.
    */
   static enableDebugLogging(enable: boolean) {
-    HyperTrack.enableDebugLogging(enable);
+    HyperTrackSdk.enableDebugLogging(enable);
   }
 
   /**
