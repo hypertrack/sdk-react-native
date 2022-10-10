@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [8.2.2] - 2022-10-10
+### Fixed
+- Deployment target for iOS changed to 11, to comply with native iOS SDK.
+
 ## [8.2.1] - 2022-09-27
 ### Fixed
 - enableDebugLogging() now doesn't cause an infinite loop when called.
@@ -307,6 +311,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Initial release.
 
 
+[8.2.2]: https://github.com/hypertrack/sdk-react-native/releases/tag/8.2.2
 [8.2.1]: https://github.com/hypertrack/sdk-react-native/releases/tag/8.2.1
 [8.2.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/8.2.0
 [8.1.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/8.1.0
