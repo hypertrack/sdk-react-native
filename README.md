@@ -1,59 +1,39 @@
 # React Native HyperTrack SDK
 
-![GitHub](https://img.shields.io/github/license/hypertrack/sdk-react-native.svg) ![npm](https://img.shields.io/npm/v/hypertrack-sdk-react-native.svg) ![iOS SDK](https://img.shields.io/badge/iOS%20SDK-4.13.0-brightgreen.svg) ![Android SDK](https://img.shields.io/badge/Android%20SDK-6.3.0-brightgreen.svg)
+![GitHub](https://img.shields.io/github/license/hypertrack/sdk-react-native.svg) 
+![npm](https://img.shields.io/npm/v/hypertrack-sdk-react-native.svg) 
+![iOS SDK](https://img.shields.io/badge/iOS%20SDK-4.14.0-brightgreen.svg) 
+![Android SDK](https://img.shields.io/badge/Android%20SDK-6.4.0-brightgreen.svg)
 
 [HyperTrack](https://www.hypertrack.com) lets you add live location tracking to your mobile app. Live location is made available along with ongoing activity, tracking controls and tracking outage with reasons.
 
-React Native HyperTrack SDK is a wrapper around native iOS and Android SDKs that allows to integrate them into React Native apps.
+React Native HyperTrack SDK is a wrapper around native iOS and Android SDKs that allows to integrate HyperTrack into React Native apps.
+
+For information about how to get started with React Native HyperTrack SDK, please check this [Guide](https://www.hypertrack.com/docs/install-sdk-react-native).
 
 ## Installation
 
-For information about how to get started with React Native SDK, please visit this [HyperTrack Guide](https://www.hypertrack.com/docs/install-sdk-react-native).
+[Install from NPM](https://www.npmjs.com/package/hypertrack-sdk-react-native)
 
-## Documentation
+## Sample code
 
-[https://hypertrack.github.io/sdk-react-native/](https://hypertrack.github.io/sdk-react-native/)
+[Quickstart React Native app](https://github.com/hypertrack/quickstart-react-native)
 
-## FAQ
+## Wrapper API Documentation
 
-link to FAQ
+[Wrapper API Documentation](https://hypertrack.github.io/sdk-react-native/)
 
-## Support
+## Requirements
 
-Join our [Slack community](https://join.slack.com/t/hypertracksupport/shared_invite/enQtNDA0MDYxMzY1MDMxLTdmNDQ1ZDA1MTQxOTU2NTgwZTNiMzUyZDk0OThlMmJkNmE0ZGI2NGY2ZGRhYjY0Yzc0NTJlZWY2ZmE5ZTA2NjI) for instant responses. You can also email us at help@hypertrack.com.
+### Android
 
-#### How to update the HyperTrack SDK version?
+- Gradle version 6.7.1+
+- compileSdkVersion 31+
 
-1. Update SDK constant
+### iOS
 
-   - android
-     - android/gradle.properties - HyperTrackSdk_HyperTrackSDKVersion
-   - ios
-     - hypertrack-sdk-react-native.podspec
-       - s.dependency 'HyperTrack/Objective-C', '**version**'
+- iOS version 12.4+
 
-2. Increment wrapper version
-   - package.json
-     - version
-3. Update changelog
-4. Update badge in README.md
-5. Create a version tag
-6. Commit and push
-7. Create a release
-   - Release title should be the current version tag
-8. npm publish
+## Contributing
 
-### How to change build config
-
-Change Android build config in `android/gradle.properties`
-
-### Old React Native versions specifics:
-
-#### Android
-
-- Gradle version should be 6.7.1 or higher
-- compileSdkVersion should be 31 or higher
-
-#### iOS
-
-- Platform version should be 12.4 or higher
+If you want to contribute check [CONTRIBUTING.md](CONTRIBUTING.md)
