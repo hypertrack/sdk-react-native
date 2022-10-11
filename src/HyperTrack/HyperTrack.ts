@@ -1,4 +1,10 @@
 import { NativeModules, Platform, NativeEventEmitter } from 'react-native';
+import type { Location } from './Location';
+import type { LocationError } from './LocationError';
+
+const EVENT_TRACKING = "onTrackingChanged"
+const EVENT_AVAILABILITY = "onAvailabilityChanged"
+const EVENT_ERROR = "onError"
 
 const LINKING_ERROR =
   `The package 'hypertrack-sdk-react-native' doesn't seem to be linked. Make sure: \n\n` +
@@ -18,95 +24,6 @@ const HyperTrackSdk = NativeModules.HyperTrack
     );
 
 const EventEmitter = new NativeEventEmitter(HyperTrackSdk);
-
-export enum SDKError {
-  /**
-   * An error that we couldn't recognize.
-   */
-  GENERAL = 0,
-  /**
-   * Publishable key is invalid. Check your key on hypertrack dashboard setup.
-   */
-  INVALID_PUBLISHABLE_KEY = 1,
-  /**
-   * Your free trial ended or account was not renewed. Check your account on hypertrack dashboard.
-   */
-  AUTHORIZATION_FAILED = 2,
-  /**
-   * Tracking won't start due to denied (or absent) permission.
-   */
-  PERMISSION_DENIED = 3,
-}
-
-/**
- * A base interface for errors in SDK.
- */
-export type Error = {
-  code: SDKError;
-  message?: string;
-};
-
-/**
- * Interface for accessing adding geotag result.
- */
-export enum GeotagError {
-  /** Expected location is not supported on this platform */
-  PLATFORM_NOT_SUPPORTED = 0,
-  /** Expected vs actual location difference is greater then required */
-  LOCATION_MISMATCH = 1,
-  /** SDK can't get actual location from OS sensors */
-  LOCATION_NOT_AVAILABLE = 2,
-  /** Invalid arguments  */
-  INVALID_ARGUMENTS = 3,
-}
-
-export interface Location {
-  location: {
-    latitude: number;
-    longitude: number;
-  };
-}
-
-export enum LocationError {
-  // The user has not chosen whether the app can use location services.
-  // SDK automatically asked for permissions.
-  LOCATION_PERMISSIONS_NOT_DETERMINED = 'location_permissions_not_determined',
-  // The user has not chosen whether the app can use location services.
-  // SDK can't ask for permissions in background.
-  LOCATION_PERMISSIONS_CANT_BE_ASKED_IN_BACKGROUND = 'location_permissions_cant_be_asked_in_background',
-  // Can't start tracking in background with When In Use location
-  // permissions. SDK will automatically start tracking when app will return
-  // to foreground.
-  LOCATION_PERMISSIONS_INSUFFICIENT_FOR_BACKGROUND = 'location_permissions_insufficient_for_background',
-  // The app is not authorized to use location services.
-  LOCATION_PERMISSIONS_RESTRICTED = 'location_permissions_restricted',
-  // The user didn't grant precise location permissions or downgraded permissions to imprecise.
-  LOCATION_PERMISSIONS_REDUCED_ACCURACY = 'location_permissions_reduced_accuracy',
-  // The user denied location permissions.
-  LOCATION_PERMISSIONS_DENIED = 'location_permissions_denied',
-  // The user disabled location services systemwide.
-  LOCATION_SERVICES_DISABLED = 'location_services_disabled',
-  // The user has not chosen whether the app can use motion activity
-  // services. SDK automatically asked for permissions.
-  MOTION_ACTIVITY_PERMISSIONS_NOT_DETERMINED = 'motion_activity_permissions_not_determined',
-  // The user has not chosen whether the app can use motion activity
-  // services. SDK can't ask for permissions in background.
-  MOTION_ACTIVITY_PERMISSIONS_CANT_BE_ASKED_IN_BACKGROUND = 'motion_activity_permissions_cant_be_asked_in_background',
-  // Motion activity permissions denied after SDK's initialization. Granting
-  // them will restart the app, so in effect, they are denied during this app's
-  // session.
-  MOTION_ACTIVITY_PERMISSIONS_DENIED = 'motion_activity_permissions_denied',
-  // The user disabled motion services systemwide.
-  MOTION_ACTIVITY_SERVICES_DISABLED = 'motion_activity_services_disabled',
-  // The SDK is not collecting locations because it's either not tracking or is unavailable.
-  NOT_RUNNING = 'not_running',
-  // GPS satellites are not in view.
-  GPS_SIGNAL_LOST = 'gps_signal_lost',
-  // The SDK started collecting locations and is waiting for OS location services to respond.
-  STARTING = 'starting',
-  // The user enabled mock location app while mocking locations is prohibited.
-  LOCATION_MOCKED = 'location_mocked',
-}
 
 export default class HyperTrack {
   constructor() {
@@ -133,7 +50,7 @@ export default class HyperTrack {
    * Enables debug log output. This is very verbose, so you shouldn't use this for
    * production build.
    */
-  static enableDebugLogging(enable: boolean) {
+  static setLoggingEnabled(enable: boolean) {
     HyperTrackSdk.enableDebugLogging(enable);
   }
 
@@ -158,8 +75,8 @@ export default class HyperTrack {
    *
    * @param availability true when is available or false when unavailable
    */
-  async setAvailability(availability: Boolean): Promise<void> {
-    return HyperTrackSdk.setAvailability(availability);
+  setAvailability(availability: Boolean) {
+     HyperTrackSdk.setAvailability(availability);
   }
 
   /**
@@ -173,7 +90,7 @@ export default class HyperTrack {
   /**
    * Update device state from server.
    */
-  syncDeviceSettings() {
+  sync() {
     HyperTrackSdk.syncDeviceSettings();
   }
 
@@ -193,7 +110,9 @@ export default class HyperTrack {
 
   /// The current location of the user or an outage reason.
   getLocation(): Promise<LocationError | Location> {
-    return HyperTrackSdk.getLocation();
+    return HyperTrackSdk.getLocation().then((locationResponse) => {
+      deserializeLocationResponse(locationResponse)
+    });
   }
 
   /**
@@ -213,8 +132,8 @@ export default class HyperTrack {
    * subscription.remove()
    * ```
    */
-  subscribeToErrors(listener: (errors: Error) => void) {
-    return EventEmitter.addListener('onTrackingErrorHyperTrack', listener);
+  subscribeToErrors(listener: (errors: HyperTrackError) => void) {
+    return EventEmitter.addListener(EVENT_ERROR, listener);
   }
 
   /**
@@ -235,14 +154,22 @@ export default class HyperTrack {
    * ```
    */
   subscribeToTracking(listener: (isTracking: boolean) => void) {
-    return EventEmitter.addListener('onTrackingStateChanged', listener);
+    return EventEmitter.addListener(EVENT_TRACKING, (isTrackingResponse) => { 
+      listener(deserializeTracking(isTrackingResponse))
+    });
+  }
+
+  subscribeToAvailability(listener: (isAvailable: boolean) => void) {
+    return EventEmitter.addListener(EVENT_AVAILABILITY, (isAvailableResponse) => { 
+      listener(deserializeAvailability(isAvailableResponse))
+    });
   }
 
   /**
    * Send device name to HyperTrack
    * @param {string} name - Device name you want to see in the Dashboard.
    */
-  setDeviceName(name: string) {
+  setName(name: string) {
     HyperTrackSdk.setDeviceName(name);
   }
 
@@ -255,19 +182,12 @@ export default class HyperTrack {
   }
 
   /**
-   * @deprecated
-   * Set a trip marker
-   * @param {Object} _data - Include anything that can be parsed into JSON.
-   */
-  setTripMarker(_data: Object) {
-    throw new Error('Deprecated');
-  }
-
-  /**
    * Add geotag
    * @param {Object} data - Include anything that can be parsed into JSON.
    */
   addGeotag(data: Object): Promise<LocationError | Location> {
-    return HyperTrackSdk.addGeotag(data);
+    return HyperTrackSdk.addGeotag(data).then((locationResponse) => {
+      deserializeLocationResponse(locationResponse)
+    });
   }
 }
