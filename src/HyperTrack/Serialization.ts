@@ -1,4 +1,4 @@
-function deserializeTracking(isTracking: Map<String, Object>): boolean {
+function deserializeTracking(isTracking: Object): boolean {
     if(isTracking.get("type")! == "isTracking") {
         return isTracking.get("value") as boolean
     } else {
@@ -6,7 +6,7 @@ function deserializeTracking(isTracking: Map<String, Object>): boolean {
     }
 }
 
-function deserializeAvailability(isAvailable: Map<String, Object>): boolean {
+function deserializeAvailability(isAvailable: Object): boolean {
     if(isAvailable.get("type")! == "isAvailable") {
         return isAvailable.get("value") as boolean
     } else {
@@ -14,6 +14,6 @@ function deserializeAvailability(isAvailable: Map<String, Object>): boolean {
     }
 }
 
-function deserializeLocationResponse(response: Map<String, Object>): (LocationError | Location) {
+function deserializeLocationResponse(response: Object): (LocationError | Location) {
     throw Error("not implemented")
 }
