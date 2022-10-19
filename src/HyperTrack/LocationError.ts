@@ -1,10 +1,12 @@
-export interface LocationError {}
-export class NotRunning implements LocationError {}
-export class Starting implements LocationError {}
-export class Errors implements LocationError {
-    errors: Set<HyperTrackError>;
- 
-    constructor(errors: Set<HyperTrackError>) {
-      this.errors = errors;
-    }
+type NotRunning = {
+  type: "notRunning"
 }
+type Starting = {
+  type: "starting"
+}
+type Errors = {
+  type: "errors"
+  errors: HyperTrackError[]
+};
+
+type LocationError = NotRunning | Starting | Errors

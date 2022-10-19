@@ -1,6 +1,3 @@
-import type { Location } from "./Location"
-import type { LocationError } from "./LocationError"
-
 function deserializeTracking(isTracking: Map<String, Object>): boolean {
     if(isTracking.get("type")! == "isTracking") {
         return isTracking.get("value") as boolean

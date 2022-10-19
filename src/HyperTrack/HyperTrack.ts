@@ -1,6 +1,4 @@
 import { NativeModules, Platform, NativeEventEmitter } from 'react-native';
-import type { Location } from './Location';
-import type { LocationError } from './LocationError';
 
 const EVENT_TRACKING = "onTrackingChanged"
 const EVENT_AVAILABILITY = "onAvailabilityChanged"
