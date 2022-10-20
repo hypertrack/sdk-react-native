@@ -1,8 +1,26 @@
 import { NativeModules, Platform, NativeEventEmitter } from 'react-native';
+import type {
+  HyperTrackError,
+  Location,
+  LocationError,
+  SDKDeviceID,
+  SDKErrors,
+  SDKIsAvailable,
+  SDKIsTracking,
+  SDKLocation,
+  SDKLocationError,
+} from 'src/types';
+import {
+  deserializeAvailability,
+  deserializeDeviceID,
+  deserializeHyperTrackErrorsResponse,
+  deserializeIsTracking,
+  deserializeLocationResponse,
+} from './Serialization';
 
-const EVENT_TRACKING = "onTrackingChanged"
-const EVENT_AVAILABILITY = "onAvailabilityChanged"
-const EVENT_ERROR = "onError"
+const EVENT_TRACKING = 'onTrackingChanged';
+const EVENT_AVAILABILITY = 'onAvailabilityChanged';
+const EVENT_ERROR = 'onError';
 
 const LINKING_ERROR =
   `The package 'hypertrack-sdk-react-native' doesn't seem to be linked. Make sure: \n\n` +
@@ -56,7 +74,9 @@ export default class HyperTrack {
    * Returns a string which is used by HyperTrack to uniquely identify the user.
    */
   async getDeviceID(): Promise<string> {
-    return HyperTrackSdk.getDeviceID();
+    return HyperTrackSdk.getDeviceID().then((deviceIDResponse: SDKDeviceID) =>
+      deserializeDeviceID(deviceIDResponse)
+    );
   }
 
   /**
@@ -65,7 +85,10 @@ export default class HyperTrack {
    * @returns true when is available or false when unavailable
    */
   isAvailable(): Promise<boolean> {
-    return HyperTrackSdk.isAvailable();
+    return HyperTrackSdk.isAvailable().then(
+      (isAvailableResponse: SDKIsAvailable) =>
+        deserializeAvailability(isAvailableResponse)
+    );
   }
 
   /**
@@ -74,7 +97,7 @@ export default class HyperTrack {
    * @param availability true when is available or false when unavailable
    */
   setAvailability(availability: Boolean) {
-     HyperTrackSdk.setAvailability(availability);
+    HyperTrackSdk.setAvailability(availability);
   }
 
   /**
@@ -82,7 +105,10 @@ export default class HyperTrack {
    * @return {boolean} Whether the user's movement data is getting tracked or not.
    */
   isTracking(): Promise<boolean> {
-    return HyperTrackSdk.isTracking();
+    return HyperTrackSdk.isTracking().then(
+      (isTrackingResponse: SDKIsTracking) =>
+        deserializeIsTracking(isTrackingResponse)
+    );
   }
 
   /**
@@ -108,9 +134,11 @@ export default class HyperTrack {
 
   /// The current location of the user or an outage reason.
   getLocation(): Promise<LocationError | Location> {
-    return HyperTrackSdk.getLocation().then((locationResponse) => {
-      deserializeLocationResponse(locationResponse)
-    });
+    return HyperTrackSdk.getLocation().then(
+      (locationResponse: SDKLocationError | SDKLocation) => {
+        deserializeLocationResponse(locationResponse);
+      }
+    );
   }
 
   /**
@@ -130,8 +158,10 @@ export default class HyperTrack {
    * subscription.remove()
    * ```
    */
-  subscribeToErrors(listener: (errors: HyperTrackError) => void) {
-    return EventEmitter.addListener(EVENT_ERROR, listener);
+  subscribeToErrors(listener: (errors: HyperTrackError[]) => void) {
+    return EventEmitter.addListener(EVENT_ERROR, (errorsResponse: SDKErrors) =>
+      listener(deserializeHyperTrackErrorsResponse(errorsResponse))
+    );
   }
 
   /**
@@ -152,15 +182,21 @@ export default class HyperTrack {
    * ```
    */
   subscribeToTracking(listener: (isTracking: boolean) => void) {
-    return EventEmitter.addListener(EVENT_TRACKING, (isTrackingResponse) => { 
-      listener(deserializeTracking(isTrackingResponse))
-    });
+    return EventEmitter.addListener(
+      EVENT_TRACKING,
+      (isTrackingResponse: SDKIsTracking) => {
+        listener(deserializeIsTracking(isTrackingResponse));
+      }
+    );
   }
 
   subscribeToAvailability(listener: (isAvailable: boolean) => void) {
-    return EventEmitter.addListener(EVENT_AVAILABILITY, (isAvailableResponse) => { 
-      listener(deserializeAvailability(isAvailableResponse))
-    });
+    return EventEmitter.addListener(
+      EVENT_AVAILABILITY,
+      (isAvailableResponse) => {
+        listener(deserializeAvailability(isAvailableResponse));
+      }
+    );
   }
 
   /**
@@ -184,8 +220,10 @@ export default class HyperTrack {
    * @param {Object} data - Include anything that can be parsed into JSON.
    */
   addGeotag(data: Object): Promise<LocationError | Location> {
-    return HyperTrackSdk.addGeotag(data).then((locationResponse) => {
-      deserializeLocationResponse(locationResponse)
-    });
+    return HyperTrackSdk.addGeotag(data).then(
+      (locationResponse: SDKLocation) => {
+        deserializeLocationResponse(locationResponse);
+      }
+    );
   }
 }
