@@ -13,13 +13,13 @@ const LINKING_ERROR =
 const HyperTrackSdk = NativeModules.HyperTrack
   ? NativeModules.HyperTrack
   : new Proxy(
-      {},
-      {
-        get() {
-          throw new Error(LINKING_ERROR);
-        },
-      }
-    );
+    {},
+    {
+      get() {
+        throw new Error(LINKING_ERROR);
+      },
+    }
+  );
 
 const EventEmitter = new NativeEventEmitter(HyperTrackSdk);
 
@@ -74,7 +74,7 @@ export default class HyperTrack {
    * @param availability true when is available or false when unavailable
    */
   setAvailability(availability: Boolean) {
-     HyperTrackSdk.setAvailability(availability);
+    HyperTrackSdk.setAvailability(availability);
   }
 
   /**
@@ -108,8 +108,8 @@ export default class HyperTrack {
 
   /// The current location of the user or an outage reason.
   getLocation(): Promise<LocationError | Location> {
-    return HyperTrackSdk.getLocation().then((locationResponse) => {
-      deserializeLocationResponse(locationResponse)
+    return HyperTrackSdk.getLocation().then((locationResponse: LocationResponse) => {
+      locationResponse.value
     });
   }
 
@@ -152,14 +152,14 @@ export default class HyperTrack {
    * ```
    */
   subscribeToTracking(listener: (isTracking: boolean) => void) {
-    return EventEmitter.addListener(EVENT_TRACKING, (isTrackingResponse) => { 
-      listener(deserializeTracking(isTrackingResponse))
+    return EventEmitter.addListener(EVENT_TRACKING, (isTracking: IsTracking) => {
+      listener(isTracking.value)
     });
   }
 
   subscribeToAvailability(listener: (isAvailable: boolean) => void) {
-    return EventEmitter.addListener(EVENT_AVAILABILITY, (isAvailableResponse) => { 
-      listener(deserializeAvailability(isAvailableResponse))
+    return EventEmitter.addListener(EVENT_AVAILABILITY, (isAvailable: IsAvailable) => {
+      listener(isAvailable.value)
     });
   }
 
@@ -184,8 +184,8 @@ export default class HyperTrack {
    * @param {Object} data - Include anything that can be parsed into JSON.
    */
   addGeotag(data: Object): Promise<LocationError | Location> {
-    return HyperTrackSdk.addGeotag(data).then((locationResponse) => {
-      deserializeLocationResponse(locationResponse)
+    return HyperTrackSdk.addGeotag(data).then((locationResponse: LocationResponse) => {
+      locationResponse.value
     });
   }
 }

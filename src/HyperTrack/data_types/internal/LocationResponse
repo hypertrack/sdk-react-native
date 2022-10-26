@@ -1,0 +1,11 @@
+type LocationSuccess = {
+    type: "success"
+    value: Location
+}
+
+type LocationFailure = {
+    type: "success"
+    value: Location
+}
+
+export type LocationResponse = LocationSuccess | LocationFailure
