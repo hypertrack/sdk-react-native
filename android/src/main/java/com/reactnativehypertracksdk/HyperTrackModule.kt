@@ -60,21 +60,22 @@ class HyperTrackModule(reactContext: ReactApplicationContext?) :
             trackingStateListener = null
         }
         trackingStateListener = object : OnTrackingStateChangeListener {
-            override fun onError(trackingError: TrackingError) {
-                emitEvent(
-                    EVENT_ERROR,
-                    serializeErrors(
-                        HyperTrackSdkWrapper.getTrackingErrors(trackingError)
-                    ).toWriteableArray()
-                )
-            }
+            // override fun onError(trackingError: TrackingError) {
+            //     emitEvent(
+            //         EVENT_ERROR,
+            //         serializeErrors(
+            //             HyperTrackSdkWrapper.getTrackingErrors(trackingError)
+            //         ).toWriteableArray()
+            //     )
+            // }
 
             override fun onTrackingStart() {
-                emitEvent(EVENT_TRACKING, serializeIsTracking(true).toWritableMap())
+              sendEvent(reactApplicationContext, EVENT_TRACKING_START, serializeIsTracking(true).toWritableMap())
             }
 
             override fun onTrackingStop() {
-                emitEvent(EVENT_TRACKING, serializeIsTracking(false).toWritableMap())
+              sendEvent(reactApplicationContext, EVENT_TRACKING_START, serializeIsTracking(false).toWritableMap())
+
             }
         }.also {
             sdkInstance.addTrackingListener(it)
@@ -93,13 +94,13 @@ class HyperTrackModule(reactContext: ReactApplicationContext?) :
                     // ignored, errors are handled by trackingStateListener
                 }
 
-                override fun onAvailable() {
-                    emitEvent(EVENT_AVAILABILITY, serializeIsAvailable(true).toWritableMap())
-                }
+                // override fun onAvailable() {
+                //     emitEvent(EVENT_AVAILABILITY, serializeIsAvailable(true).toWritableMap())
+                // }
 
-                override fun onUnavailable() {
-                    emitEvent(EVENT_AVAILABILITY, serializeIsAvailable(false).toWritableMap())
-                }
+                // override fun onUnavailable() {
+                //     emitEvent(EVENT_AVAILABILITY, serializeIsAvailable(false).toWritableMap())
+                // }
             }.also {
                 sdkInstance.addAvailabilityListener(it)
             }
@@ -160,25 +161,7 @@ class HyperTrackModule(reactContext: ReactApplicationContext?) :
         HyperTrackSdkWrapper.getLocation().toPromise(promise)
     }
 
-    private fun emitEvent(event: String, data: WritableMap) {
-        reactApplicationContext
-            .getJSModule(RCTDeviceEventEmitter::class.java)
-            .emit(event, data)
-    }
-
-    private fun emitEvent(event: String, data: WritableArray) {
-        reactApplicationContext
-            .getJSModule(RCTDeviceEventEmitter::class.java)
-            .emit(event, data)
-    }
-
   private fun emitEvent(event: String, data: WritableMap) {
-    reactApplicationContext
-      .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-      .emit(event, data)
-  }
-
-  private fun emitEvent(event: String, data: WritableArray) {
     reactApplicationContext
       .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
       .emit(event, data)
