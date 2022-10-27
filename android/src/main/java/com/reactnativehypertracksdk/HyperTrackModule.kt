@@ -20,6 +20,12 @@ class HyperTrackModule(reactContext: ReactApplicationContext?) :
     return NAME
   }
 
+  private fun sendEvent(reactContext: ReactContext, eventName: String, params: WritableMap?) {
+    reactContext
+      .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+      .emit(eventName, params)
+}
+
   @ReactMethod
   fun addListener(type: String?) {
     // Keep: Required for RN built in Event Emitter Calls.
@@ -67,11 +73,11 @@ class HyperTrackModule(reactContext: ReactApplicationContext?) :
       }
 
       override fun onTrackingStart() {
-        emitEvent(EVENT_TRACKING, serializeIsTracking(true).toWritableMap())
+        sendEvent(reactContext, EVENT_TRACKING, serializeIsTracking(true).toWritableMap())
       }
 
       override fun onTrackingStop() {
-        emitEvent(EVENT_TRACKING, serializeIsTracking(false).toWritableMap())
+        sendEvent(reactContext, EVENT_TRACKING, serializeIsTracking(false).toWritableMap())
       }
     }.also {
       sdkInstance.addTrackingListener(it)
