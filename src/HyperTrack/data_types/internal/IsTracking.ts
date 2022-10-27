@@ -1,4 +1,4 @@
-type IsTracking = {
-    type: "isTracking";
-    value: boolean
-}
+export type IsTracking = {
+  type: 'isTracking';
+  value: boolean;
+};
