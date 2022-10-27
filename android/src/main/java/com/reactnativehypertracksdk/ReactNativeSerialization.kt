@@ -9,7 +9,7 @@ import com.reactnativehypertracksdk.common.Result
 import com.reactnativehypertracksdk.common.Success
 
 @Suppress("UNCHECKED_CAST")
-fun <T> Result<T>.toPromise(promise: Promise) {
+internal fun <T> Result<T>.toPromise(promise: Promise) {
   when(this) {
     is Success -> {
       when(this.success) {
@@ -38,7 +38,7 @@ fun <T> Result<T>.toPromise(promise: Promise) {
 }
 
 @Suppress("UNCHECKED_CAST")
-fun List<Any>.toWriteableArray(): WritableArray {
+internal fun List<Any>.toWriteableArray(): WritableArray {
   return Arguments.createArray().also { writableArray ->
     forEach {
       when(it) {
@@ -57,7 +57,7 @@ fun List<Any>.toWriteableArray(): WritableArray {
 }
 
 @Suppress("UNCHECKED_CAST")
-fun Map<String, Any>.toWritableMap(): WritableMap {
+internal fun Map<String, Any>.toWritableMap(): WritableMap {
   val map = this
   return Arguments.createMap().apply {
     map.forEach { entry ->

@@ -1,6 +1,6 @@
 package com.reactnativehypertracksdk.common
 
-sealed class LocationError
-object NotRunning: LocationError()
-object Starting: LocationError()
-data class Errors(val errors: Set<HyperTrackError>): LocationError()
+internal sealed class LocationError
+internal object NotRunning : LocationError()
+internal object Starting : LocationError()
+internal data class Errors(val errors: Set<HyperTrackError>) : LocationError()
