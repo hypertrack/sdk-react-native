@@ -2,7 +2,7 @@ package com.reactnativehypertracksdk
 
 import com.facebook.react.bridge.*
 import com.facebook.react.module.annotations.ReactModule
-import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
+import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.hypertrack.sdk.*
 import com.hypertrack.sdk.TrackingStateObserver.OnTrackingStateChangeListener
 import com.hypertrack.sdk.AvailabilityStateObserver.OnAvailabilityStateChangeListener
@@ -73,11 +73,11 @@ class HyperTrackModule(reactContext: ReactApplicationContext?) :
       }
 
       override fun onTrackingStart() {
-        sendEvent(reactContext, EVENT_TRACKING, serializeIsTracking(true).toWritableMap())
+        sendEvent(reactApplicationContext, EVENT_TRACKING, serializeIsTracking(true).toWritableMap())
       }
 
       override fun onTrackingStop() {
-        sendEvent(reactContext, EVENT_TRACKING, serializeIsTracking(false).toWritableMap())
+        sendEvent(reactApplicationContext, EVENT_TRACKING, serializeIsTracking(false).toWritableMap())
       }
     }.also {
       sdkInstance.addTrackingListener(it)
@@ -161,13 +161,13 @@ class HyperTrackModule(reactContext: ReactApplicationContext?) :
 
   private fun emitEvent(event: String, data: WritableMap) {
     reactApplicationContext
-      .getJSModule(RCTDeviceEventEmitter::class.java)
+      .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
       .emit(event, data)
   }
 
   private fun emitEvent(event: String, data: WritableArray) {
     reactApplicationContext
-      .getJSModule(RCTDeviceEventEmitter::class.java)
+      .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
       .emit(event, data)
   }
 
