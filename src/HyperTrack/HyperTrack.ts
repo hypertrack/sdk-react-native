@@ -36,14 +36,16 @@ export default class HyperTrack {
 
   static async createInstance(
     publishableKey: string,
-    automaticallyRequestPermissions = true
+    automaticallyRequestPermissions = true,
+    loggingEnabled = false,
+    enableMockLocations = false
   ) {
     try {
-      await HyperTrackSdk.initialize(
-        publishableKey,
-        false,
-        automaticallyRequestPermissions
-      );
+      await HyperTrackSdk.initialize(publishableKey, {
+        loggingEnabled,
+        allowMockLocations: enableMockLocations,
+        requireBackgroundTrackingPermission: automaticallyRequestPermissions,
+      });
       return new HyperTrack();
     } catch (error: any) {
       throw new Error(error.message);

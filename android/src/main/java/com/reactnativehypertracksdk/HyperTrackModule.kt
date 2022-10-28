@@ -155,6 +155,12 @@ class HyperTrackModule(reactContext: ReactApplicationContext?) :
       .emit(event, data)
   }
 
+  private fun emitEvent(event: String, data: WritableArray) {
+    reactApplicationContext
+      .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+      .emit(event, data)
+  }
+
   companion object {
     private const val EVENT_TRACKING = "onTrackingChanged"
     private const val EVENT_AVAILABILITY = "onAvailabilityChanged"
