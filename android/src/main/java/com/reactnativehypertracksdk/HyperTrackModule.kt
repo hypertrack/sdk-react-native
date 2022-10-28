@@ -55,10 +55,10 @@ class HyperTrackModule(reactContext: ReactApplicationContext?) :
     }
     trackingStateListener = object : OnTrackingStateChangeListener {
       override fun onError(trackingError: TrackingError) {
-//        emitEvent(reactApplicationContext, EVENT_ERROR, serializeErrors(
-//            HyperTrackSdkWrapper.getTrackingErrors(trackingError)
-//          ).toWriteableArray()
-//        )
+        emitEvent(reactApplicationContext, EVENT_ERROR, serializeErrors(
+            HyperTrackSdkWrapper.getTrackingErrors(trackingError)
+          ).toWriteableArray()
+        )
       }
 
       override fun onTrackingStart() {
@@ -93,6 +93,8 @@ class HyperTrackModule(reactContext: ReactApplicationContext?) :
         sdkInstance.addAvailabilityListener(it)
       }
   }
+
+
 
   @ReactMethod
   fun getDeviceID(promise: Promise) {
@@ -155,7 +157,7 @@ class HyperTrackModule(reactContext: ReactApplicationContext?) :
       .emit(event, data)
   }
 
-  private fun emitEvent(event: String, data: WritableArray) {
+  private fun emitEvent(reactContext: ReactApplicationContext?, event: String, data: WritableArray) {
     reactApplicationContext
       .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
       .emit(event, data)
