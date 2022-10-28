@@ -56,22 +56,23 @@ internal object HyperTrackSdkWrapper {
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
-    fun addGeotag(data: Map<String, Any>): Result<Map<String, Any>> {
-        return withSdkInstance { sdk ->
-            sdk.addGeotag(data).let { result ->
-                when (result) {
-                    is GeotagResult.SuccessWithDeviation -> {
-                        serializeSuccess(result.deviceLocation)
-                    }
-                    is GeotagResult.Success -> {
-                        serializeSuccess(result.deviceLocation)
-                    }
-                    is GeotagResult.Error -> {
-                        serializeFailure(getLocationError(result.reason))
-                    }
-                    else -> {
-                        throw IllegalArgumentException()
+    fun addGeotag(args: Map<String, Any>): Result<Map<String, Any>> {
+        return deserializeGeotagData(args).flatMap {
+            withSdkInstance { sdk ->
+                sdk.addGeotag(it.data).let { result ->
+                    when (result) {
+                        is GeotagResult.SuccessWithDeviation -> {
+                            serializeSuccess(result.deviceLocation)
+                        }
+                        is GeotagResult.Success -> {
+                            serializeSuccess(result.deviceLocation)
+                        }
+                        is GeotagResult.Error -> {
+                            serializeFailure(getLocationError(result.reason))
+                        }
+                        else -> {
+                            throw IllegalArgumentException()
+                        }
                     }
                 }
             }
@@ -90,12 +91,14 @@ internal object HyperTrackSdkWrapper {
         }
     }
 
-    fun setAvailability(isAvailable: Boolean) {
-        withSdkInstance { sdk ->
-            if (isAvailable) {
-                sdk.availability = Availability.AVAILABLE
-            } else {
-                sdk.availability = Availability.UNAVAILABLE
+    fun setAvailability(args: Map<String, Any>) {
+        deserializeAvailability(args).flatMap { isAvailable ->
+            withSdkInstance { sdk ->
+                if (isAvailable) {
+                    sdk.availability = Availability.AVAILABLE
+                } else {
+                    sdk.availability = Availability.UNAVAILABLE
+                }
             }
         }
     }

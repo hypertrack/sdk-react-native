@@ -1,7 +1,6 @@
 package com.reactnativehypertracksdk.common
 
 import android.location.Location
-import java.lang.IllegalArgumentException
 
 /**
  * Platform-independent serialization code that converts HyperTrack data types
@@ -76,16 +75,77 @@ internal fun serializeHypertrackError(error: HyperTrackError): Map<String, Strin
     )
 }
 
-internal fun deserializeAvailability(isAvailable: Map<String, Any>): Boolean {
-    if (isAvailable.getValue(KEY_TYPE) != TYPE_AVAILABILITY) {
-        throw IllegalArgumentException(isAvailable.toString())
+internal fun deserializeAvailability(isAvailable: Map<String, Any>): Result<Boolean> {
+    return parse(isAvailable) {
+        it.assertValue<String>(key = KEY_TYPE, value = TYPE_AVAILABILITY)
+        it.get<Boolean>(KEY_VALUE).forceUnwrap()
     }
-    return isAvailable.getValue(KEY_VALUE) as Boolean
 }
 
-internal fun deserializeGeotagData(map: Map<String, Any>): Map<String, Any> {
-    return map.getValue(KEY_GEOTAG_DATA) as Map<String, Any>
+internal fun deserializeGeotagData(map: Map<String, Any>): Result<Geotag> {
+    return parse(map) {
+        val data = it.get<Map<String, Any>>(KEY_GEOTAG_DATA).forceUnwrap()
+        Geotag(data)
+    }
 }
+
+private fun <T> parse(
+    source: Map<String, Any>,
+    block: (ParsingHandle) -> T
+): Result<T> {
+    val handle = ParsingHandle(source);
+    return try {
+        Success(block.invoke(handle))
+    } catch (e: Exception) {
+        Failure(
+            if (handle.exceptions.isNotEmpty()) {
+                ParsingExceptions(source, handle.exceptions)
+            } else {
+                e
+            }
+        )
+    }
+}
+
+private class ParsingHandle(
+    private val source: Map<String, Any>,
+) {
+    private val _exceptions = mutableListOf<Exception>()
+    val exceptions: List<Exception> = _exceptions
+
+    inline fun <reified T> get(
+        key: String
+    ): Result<T> {
+        return try {
+            Success(source[key]!! as T)
+        } catch (e: Exception) {
+            Failure(ParsingException(key, e).also {
+                _exceptions.add(it)
+            })
+        }
+    }
+
+    inline fun <reified T> assertValue(
+        key: String,
+        value: Any
+    ) {
+        if (source[key] != value) {
+            _exceptions.add(Exception("Assertion failed: $key != $value"))
+        }
+    }
+}
+
+private data class ParsingExceptions(
+    val source: Any,
+    val exceptions: List<Exception>
+) : Exception(exceptions.joinToString("\n").let {
+    "Invalid input:\n\n${source}\n\n${it}"
+})
+
+private class ParsingException(
+    key: String,
+    exception: Exception
+) : Exception("Invalid value for '$key': $exception", exception)
 
 private const val KEY_TYPE = "type"
 private const val KEY_VALUE = "value"

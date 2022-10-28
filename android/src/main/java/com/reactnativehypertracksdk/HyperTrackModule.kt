@@ -133,7 +133,7 @@ class HyperTrackModule(reactContext: ReactApplicationContext?) :
 
     @ReactMethod
     fun setAvailability(availability: Map<String, Boolean>) {
-        HyperTrackSdkWrapper.setAvailability(deserializeAvailability(availability))
+        HyperTrackSdkWrapper.setAvailability(availability)
     }
 
     @ReactMethod
