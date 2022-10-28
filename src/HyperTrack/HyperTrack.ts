@@ -73,7 +73,9 @@ export default class HyperTrack {
    * @returns true when is available or false when unavailable
    */
   isAvailable(): Promise<boolean> {
-    return HyperTrackSdk.isAvailable();
+    return HyperTrackSdk.isAvailable().then(
+      (isAvailable: IsAvailable) => isAvailable.value
+    );
   }
 
   /**
@@ -81,7 +83,7 @@ export default class HyperTrack {
    *
    * @param availability true when is available or false when unavailable
    */
-  setAvailability(availability: Boolean) {
+  setAvailability(availability: boolean) {
     HyperTrackSdk.setAvailability(availability);
   }
 
@@ -174,6 +176,7 @@ export default class HyperTrack {
     return EventEmitter.addListener(
       EVENT_AVAILABILITY,
       (isAvailable: IsAvailable) => {
+        console.log('inner', isAvailable);
         listener(isAvailable.value);
       }
     );

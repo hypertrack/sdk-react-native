@@ -132,8 +132,8 @@ class HyperTrackModule(reactContext: ReactApplicationContext?) :
   }
 
   @ReactMethod
-  fun setAvailability(rMap: ReadableMap) {
-    HyperTrackSdkWrapper.setAvailability(deserializeAvailability(rMap.toHashMap()))
+  fun setAvailability(isAvailable: Boolean) {
+    HyperTrackSdkWrapper.setAvailability(isAvailable)
   }
 
   @ReactMethod
