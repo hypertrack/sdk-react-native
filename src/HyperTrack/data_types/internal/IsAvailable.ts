@@ -1,4 +1,4 @@
-type IsAvailable = {
-    type: "isAvailable";
-    value: boolean
-}
+export type IsAvailable = {
+  type: 'isAvailable';
+  value: boolean;
+};

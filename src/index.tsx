@@ -2,10 +2,6 @@ import HyperTrack from './HyperTrack/HyperTrack';
 export default HyperTrack;
 export { HyperTrack };
 
-export {
-  Location,
-  Error,
-  SDKError,
-  GeotagError,
-  LocationError,
-} from './HyperTrack/HyperTrack';
+export { HyperTrackError } from './HyperTrack/data_types/HyperTrackError';
+export { LocationError } from './HyperTrack/data_types/LocationError';
+export { Location } from './HyperTrack/data_types/Location';
