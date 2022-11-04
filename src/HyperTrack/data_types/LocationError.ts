@@ -1,12 +1,14 @@
+import type { HyperTrackError } from './HyperTrackError';
+
 type NotRunning = {
-  type: "notRunning"
-}
+  type: 'notRunning';
+};
 type Starting = {
-  type: "starting"
-}
-type Errors = {
-  type: "errors"
-  errors: HyperTrackError[]
+  type: 'starting';
+};
+export type Errors = {
+  type: 'errors';
+  errors: HyperTrackError[];
 };
 
-type LocationError = NotRunning | Starting | Errors
+export type LocationError = NotRunning | Starting | Errors;
