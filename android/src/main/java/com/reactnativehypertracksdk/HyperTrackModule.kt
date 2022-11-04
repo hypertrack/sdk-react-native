@@ -1,5 +1,6 @@
 package com.reactnativehypertracksdk
 
+import android.util.Log
 import com.facebook.react.bridge.*
 import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.modules.core.DeviceEventManagerModule
@@ -11,163 +12,165 @@ import com.reactnativehypertracksdk.common.*
 @Suppress("ComplexRedundantLet")
 @ReactModule(name = HyperTrackModule.NAME)
 class HyperTrackModule(reactContext: ReactApplicationContext?) :
-  ReactContextBaseJavaModule(reactContext) {
+    ReactContextBaseJavaModule(reactContext) {
 
-  var trackingStateListener: OnTrackingStateChangeListener? = null
-  var availabilityListener: OnAvailabilityStateChangeListener? = null
+    var trackingStateListener: OnTrackingStateChangeListener? = null
+    var availabilityListener: OnAvailabilityStateChangeListener? = null
 
-  override fun getName(): String {
-    return NAME
-  }
-
-  @ReactMethod
-  fun addListener(type: String?) {
-    // Keep: Required for RN built in Event Emitter Calls.
-  }
-
-  @ReactMethod
-  fun removeListeners(type: Int?) {
-    // Keep: Required for RN built in Event Emitter Calls.
-  }
-
-  @ReactMethod
-  fun initialize(
-    publishableKey: String,
-    initParams: ReadableMap,
-    promise: Promise
-  ) {
-    SdkInitParams.fromMap(initParams.toHashMap())
-      .flatMap { sdkInitParams ->
-        HyperTrackSdkWrapper.initialize(
-          publishableKey,
-          sdkInitParams
-        )
-      }.flatMap { hyperTrack ->
-        initListeners(hyperTrack)
-        Success(Unit)
-      }.toPromise(promise)
-  }
-
-  private fun initListeners(sdkInstance: HyperTrack) {
-    if (trackingStateListener != null) {
-      sdkInstance.removeTrackingListener(trackingStateListener)
-      trackingStateListener = null
-    }
-    trackingStateListener = object : OnTrackingStateChangeListener {
-      override fun onError(trackingError: TrackingError) {
-        emitEvent(reactApplicationContext, EVENT_ERROR, serializeErrors(
-            HyperTrackSdkWrapper.getTrackingErrors(trackingError)
-          ).toWriteableArray()
-        )
-      }
-
-      override fun onTrackingStart() {
-        emitEvent(reactApplicationContext, EVENT_TRACKING, serializeIsTracking(true).toWritableMap())
-      }
-
-      override fun onTrackingStop() {
-        emitEvent(reactApplicationContext, EVENT_TRACKING, serializeIsTracking(false).toWritableMap())
-      }
-    }.also {
-      sdkInstance.addTrackingListener(it)
+    override fun getName(): String {
+        return NAME
     }
 
-    if (availabilityListener != null) {
-      sdkInstance.removeAvailabilityListener(availabilityListener)
-      availabilityListener = null
+    @ReactMethod
+    fun addListener(type: String?) {
+        // Keep: Required for RN built in Event Emitter Calls.
     }
-    availabilityListener =
-      object : AvailabilityStateObserver.OnAvailabilityStateChangeListener {
-        override fun onError(p0: AvailabilityError) {
-          // ignored, errors are handled by trackingStateListener
+
+    @ReactMethod
+    fun removeListeners(type: Int?) {
+        // Keep: Required for RN built in Event Emitter Calls.
+    }
+
+    @ReactMethod
+    fun initialize(
+        publishableKey: String,
+        initParams: ReadableMap,
+        promise: Promise
+    ) {
+        SdkInitParams.fromMap(initParams.toHashMap())
+            .flatMap { sdkInitParams ->
+                HyperTrackSdkWrapper.initialize(
+                    publishableKey,
+                    sdkInitParams
+                )
+            }.flatMap { hyperTrack ->
+                initListeners(hyperTrack)
+                Success(Unit)
+            }.toPromise(promise)
+    }
+
+    private fun initListeners(sdkInstance: HyperTrack) {
+        if (trackingStateListener != null) {
+            sdkInstance.removeTrackingListener(trackingStateListener)
+            trackingStateListener = null
+        }
+        trackingStateListener = object : OnTrackingStateChangeListener {
+            override fun onError(trackingError: TrackingError) {
+                emitEvent(
+                    EVENT_ERROR, serializeErrors(
+                        HyperTrackSdkWrapper.getTrackingErrors(trackingError)
+                    ).toWriteableArray()
+                )
+            }
+
+            override fun onTrackingStart() {
+                emitEvent(EVENT_TRACKING, serializeIsTracking(true).toWritableMap())
+            }
+
+            override fun onTrackingStop() {
+                emitEvent(EVENT_TRACKING, serializeIsTracking(false).toWritableMap())
+            }
+        }.also {
+            sdkInstance.addTrackingListener(it)
         }
 
-        override fun onAvailable() {
-          emitEvent(reactApplicationContext, EVENT_AVAILABILITY, serializeIsAvailable(true).toWritableMap())
+        if (availabilityListener != null) {
+            sdkInstance.removeAvailabilityListener(availabilityListener)
+            availabilityListener = null
         }
+        availabilityListener =
+            object : AvailabilityStateObserver.OnAvailabilityStateChangeListener {
+                override fun onError(p0: AvailabilityError) {
+                    // ignored, errors are handled by trackingStateListener
+                }
 
-        override fun onUnavailable() {
-          emitEvent(reactApplicationContext, EVENT_AVAILABILITY, serializeIsAvailable(false).toWritableMap())
-        }
-      }.also {
-        sdkInstance.addAvailabilityListener(it)
-      }
-  }
+                override fun onAvailable() {
+                    emitEvent(EVENT_AVAILABILITY, serializeIsAvailable(true).toWritableMap())
+                }
+
+                override fun onUnavailable() {
+                    emitEvent(EVENT_AVAILABILITY, serializeIsAvailable(false).toWritableMap())
+                }
+            }.also {
+                sdkInstance.addAvailabilityListener(it)
+            }
+    }
 
 
+    @ReactMethod
+    fun getDeviceID(promise: Promise) {
+        HyperTrackSdkWrapper.getDeviceID().toPromise(promise)
+    }
 
-  @ReactMethod
-  fun getDeviceID(promise: Promise) {
-    HyperTrackSdkWrapper.getDeviceID().toPromise(promise)
-  }
+    @ReactMethod
+    fun isTracking(promise: Promise) {
+        HyperTrackSdkWrapper.isTracking().toPromise(promise)
+    }
 
-  @ReactMethod
-  fun isTracking(promise: Promise) {
-    HyperTrackSdkWrapper.isTracking().toPromise(promise)
-  }
+    @ReactMethod
+    fun startTracking() {
+        HyperTrackSdkWrapper.startTracking()
+    }
 
-  @ReactMethod
-  fun startTracking() {
-    HyperTrackSdkWrapper.startTracking()
-  }
+    @ReactMethod
+    fun stopTracking() {
+        HyperTrackSdkWrapper.stopTracking()
+    }
 
-  @ReactMethod
-  fun stopTracking() {
-    HyperTrackSdkWrapper.stopTracking()
-  }
+    @ReactMethod
+    fun syncDeviceSettings() {
+        HyperTrackSdkWrapper.sync()
+    }
 
-  @ReactMethod
-  fun syncDeviceSettings() {
-    HyperTrackSdkWrapper.sync()
-  }
+    @ReactMethod
+    fun addGeotag(rMap: ReadableMap, promise: Promise) {
+        HyperTrackSdkWrapper.addGeotag(rMap.toHashMap()).toPromise(promise)
+    }
 
-  @ReactMethod
-  fun addGeotag(rMap: ReadableMap, promise: Promise) {
-    HyperTrackSdkWrapper.addGeotag(rMap.toHashMap()).toPromise(promise)
-  }
+    @ReactMethod
+    fun isAvailable(promise: Promise) {
+        HyperTrackSdkWrapper.isAvailable().toPromise(promise)
+    }
 
-  @ReactMethod
-  fun isAvailable(promise: Promise) {
-    HyperTrackSdkWrapper.isAvailable().toPromise(promise)
-  }
+    @ReactMethod
+    fun setAvailability(isAvailable: Boolean) {
+        HyperTrackSdkWrapper.setAvailability(isAvailable)
+    }
 
-  @ReactMethod
-  fun setAvailability(isAvailable: Boolean) {
-    HyperTrackSdkWrapper.setAvailability(isAvailable)
-  }
+    @ReactMethod
+    fun setDeviceName(name: String) {
+        HyperTrackSdkWrapper.setName(name)
+    }
 
-  @ReactMethod
-  fun setDeviceName(name: String) {
-    HyperTrackSdkWrapper.setName(name)
-  }
+    @ReactMethod
+    fun setMetadata(rMap: ReadableMap) {
+        HyperTrackSdkWrapper.setMetadata(rMap.toHashMap())
+    }
 
-  @ReactMethod
-  fun setMetadata(rMap: ReadableMap) {
-    HyperTrackSdkWrapper.setMetadata(rMap.toHashMap())
-  }
+    @ReactMethod
+    fun getLocation(promise: Promise) {
+        HyperTrackSdkWrapper.getLocation().toPromise(promise)
+    }
 
-  @ReactMethod
-  fun getLocation(promise: Promise) {
-    HyperTrackSdkWrapper.getLocation().toPromise(promise)
-  }
+    private fun emitEvent(event: String, data: WritableMap) {
+        Log.e(javaClass.simpleName, "$event ${data.toHashMap()}")
+        reactApplicationContext
+            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit(event, data)
+    }
 
-  private fun emitEvent(reactContext: ReactContext, event: String, data: WritableMap) {
-    reactApplicationContext
-      .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-      .emit(event, data)
-  }
+    private fun emitEvent(event: String, data: WritableArray) {
+        Log.e(javaClass.simpleName, "$event ${data.toArrayList()}")
+        reactApplicationContext
+            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit(event, data)
+    }
 
-  private fun emitEvent(reactContext: ReactApplicationContext?, event: String, data: WritableArray) {
-    reactApplicationContext
-      .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-      .emit(event, data)
-  }
+    companion object {
+        private const val EVENT_TRACKING = "onTrackingChanged"
+        private const val EVENT_AVAILABILITY = "onAvailabilityChanged"
+        private const val EVENT_ERROR = "onError"
 
-  companion object {
-    private const val EVENT_TRACKING = "onTrackingChanged"
-    private const val EVENT_AVAILABILITY = "onAvailabilityChanged"
-    private const val EVENT_ERROR = "onError"
-
-    const val NAME = "HyperTrack"
-  }
+        const val NAME = "HyperTrack"
+    }
 }

@@ -36,28 +36,14 @@ export default class HyperTrack {
 
   static async createInstance(
     publishableKey: string,
-    automaticallyRequestPermissions = true,
-    loggingEnabled = false,
-    enableMockLocations = false
+    sdkInitParams: SdkInitParams = {}
   ) {
     try {
-      await HyperTrackSdk.initialize(publishableKey, {
-        loggingEnabled,
-        allowMockLocations: enableMockLocations,
-        requireBackgroundTrackingPermission: automaticallyRequestPermissions,
-      });
+      await HyperTrackSdk.initialize(publishableKey, sdkInitParams);
       return new HyperTrack();
     } catch (error: any) {
       throw new Error(error.message);
     }
-  }
-
-  /**
-   * Enables debug log output. This is very verbose, so you shouldn't use this for
-   * production build.
-   */
-  static setLoggingEnabled(enable: boolean) {
-    HyperTrackSdk.enableDebugLogging(enable);
   }
 
   /**
@@ -92,7 +78,9 @@ export default class HyperTrack {
    * @return {boolean} Whether the user's movement data is getting tracked or not.
    */
   isTracking(): Promise<boolean> {
-    return HyperTrackSdk.isTracking();
+    return HyperTrackSdk.isTracking().then(
+      (isTracking: IsTracking) => isTracking.value
+    );
   }
 
   /**
@@ -142,7 +130,7 @@ export default class HyperTrack {
    * subscription.remove()
    * ```
    */
-  subscribeToErrors(listener: (errors: HyperTrackError) => void) {
+  subscribeToErrors(listener: (errors: [HyperTrackError]) => void) {
     return EventEmitter.addListener(EVENT_ERROR, listener);
   }
 
