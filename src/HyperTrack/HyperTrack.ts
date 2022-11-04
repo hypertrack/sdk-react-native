@@ -204,8 +204,6 @@ export default class HyperTrack {
   addGeotag(data: Object): Promise<LocationError | Location> {
     return HyperTrackSdk.addGeotag(data).then(
       (locationResponse: LocationResponse) => {
-        console.log('inner', locationResponse);
-
         return locationResponse.value;
       }
     );
