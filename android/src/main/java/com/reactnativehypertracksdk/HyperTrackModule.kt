@@ -123,7 +123,7 @@ class HyperTrackModule(reactContext: ReactApplicationContext?) :
 
   @ReactMethod
   fun addGeotag(rMap: ReadableMap, promise: Promise) {
-    HyperTrackSdkWrapper.addGeotag(rMap.toHashMap())
+    HyperTrackSdkWrapper.addGeotag(rMap.toHashMap()).toPromise(promise)
   }
 
   @ReactMethod
