@@ -121,7 +121,7 @@ export default class HyperTrack {
     return HyperTrackSdk.getLocation().then(
       (locationResponse: LocationResponse) => {
         console.log('inner', locationResponse);
-        locationResponse.value;
+        return locationResponse.value;
       }
     );
   }
@@ -205,7 +205,7 @@ export default class HyperTrack {
   addGeotag(data: Object): Promise<LocationError | Location> {
     return HyperTrackSdk.addGeotag(data).then(
       (locationResponse: LocationResponse) => {
-        locationResponse.value;
+        return locationResponse.value;
       }
     );
   }
