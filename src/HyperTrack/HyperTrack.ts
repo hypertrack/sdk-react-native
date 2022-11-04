@@ -120,6 +120,7 @@ export default class HyperTrack {
   getLocation(): Promise<LocationError | Location> {
     return HyperTrackSdk.getLocation().then(
       (locationResponse: LocationResponse) => {
+        console.log('inner', locationResponse);
         locationResponse.value;
       }
     );
@@ -176,7 +177,6 @@ export default class HyperTrack {
     return EventEmitter.addListener(
       EVENT_AVAILABILITY,
       (isAvailable: IsAvailable) => {
-        console.log('inner', isAvailable);
         listener(isAvailable.value);
       }
     );
