@@ -5,6 +5,7 @@ import type { IsTracking } from './data_types/internal/IsTracking';
 import type { LocationResponse } from './data_types/internal/LocationResponse';
 import type { Location } from './data_types/Location';
 import type { LocationError } from './data_types/LocationError';
+import type { SdkInitParams } from './data_types/SdkInitParams';
 
 const EVENT_TRACKING = 'onTrackingChanged';
 const EVENT_AVAILABILITY = 'onAvailabilityChanged';
