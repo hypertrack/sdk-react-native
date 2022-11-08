@@ -1,63 +1,79 @@
 package com.reactnativehypertracksdk.common
 
 import com.hypertrack.sdk.*
+import com.reactnativehypertracksdk.common.Serialization.deserializeAvailability
+import com.reactnativehypertracksdk.common.Serialization.deserializeGeotagData
+import com.reactnativehypertracksdk.common.Serialization.serializeFailure
+import com.reactnativehypertracksdk.common.Serialization.serializeErrors
+import com.reactnativehypertracksdk.common.Serialization.serializeIsAvailable
+import com.reactnativehypertracksdk.common.Serialization.serializeIsTracking
+import com.reactnativehypertracksdk.common.Serialization.serializeSuccess
+import com.reactnativehypertracksdk.common.Serialization.serializeDeviceId
+import com.reactnativehypertracksdk.common.Serialization.deserializeDeviceName
+import com.reactnativehypertracksdk.common.Serialization.parse
 import java.lang.IllegalStateException
 import java.lang.RuntimeException
+import android.util.Log
 
 
 /**
- * This class stores SDK instance, calls HyperTrack SDK methods and serializes responses
+ * This class stores SDK instance, calls HyperTrack SDK methods and serializes responses.
+ * It receives serialized params.
  */
 internal object HyperTrackSdkWrapper {
 
-    private var sdkInstance: HyperTrack? = null
+    // initialize method is guaranteed to be called (by non-native side)
+    // prior to any access to the SDK instance
+    private lateinit var sdkInstance: HyperTrack
 
     fun initialize(
-        publishableKey: String,
-        initParams: SdkInitParams
+        args: Map<String, Any?>
     ): Result<HyperTrack> {
         return try {
-            sdkInstance = HyperTrack.getInstance(publishableKey)
-            withSdkInstance { sdk ->
+            SdkInitParams.fromMap(args).flatMapSuccess { initParams ->
+                sdkInstance = HyperTrack.getInstance(initParams.publishableKey)
                 if (initParams.loggingEnabled) {
                     HyperTrack.enableDebugLogging()
                 }
                 if (initParams.allowMockLocations) {
-                    sdk.allowMockLocations()
+                    sdkInstance.allowMockLocations()
                 }
-                sdk.backgroundTrackingRequirement(initParams.requireBackgroundTrackingPermission)
+                this.sdkInstance.backgroundTrackingRequirement(
+                    initParams.requireBackgroundTrackingPermission
+                )
+                Success(sdkInstance)
             }
         } catch (exception: Exception) {
             Failure(Exception("Hypertrack SDK initialization failed.", exception))
         }
     }
 
-    fun getDeviceID(): Result<String> {
+    fun getDeviceID(): Result<Map<String, Any?>> {
         return withSdkInstance { sdk ->
-            sdk.deviceID
+            serializeDeviceId(sdk.deviceID)
         }
     }
 
-    fun startTracking() {
-        withSdkInstance { sdk ->
+    fun startTracking(): Result<Unit> {
+        return withSdkInstance { sdk ->
             sdk.start()
         }
     }
 
-    fun stopTracking() {
-        withSdkInstance { sdk ->
+    fun stopTracking(): Result<Unit> {
+        return withSdkInstance { sdk ->
             sdk.stop()
         }
     }
 
-    fun sync() {
-        withSdkInstance { sdk ->
+    fun sync(): Result<Unit> {
+        return withSdkInstance { sdk ->
             sdk.syncDeviceSettings()
         }
     }
 
-    fun addGeotag(args: Map<String, Any>): Result<Map<String, Any>> {
-        return deserializeGeotagData(args).flatMap {
+    fun addGeotag(args: Map<String, Any?>): Result<Map<String, Any?>> {
+        return deserializeGeotagData(args).flatMapSuccess {
             withSdkInstance { sdk ->
                 sdk.addGeotag(it.data).let { result ->
                     when (result) {
@@ -79,20 +95,20 @@ internal object HyperTrackSdkWrapper {
         }
     }
 
-    fun isTracking(): Result<Map<String, Any>> {
+    fun isTracking(): Result<Map<String, Any?>> {
         return withSdkInstance { sdk ->
             serializeIsTracking(sdk.isTracking)
         }
     }
 
-    fun isAvailable(): Result<Map<String, Any>> {
+    fun isAvailable(): Result<Map<String, Any?>> {
         return withSdkInstance { sdk ->
             serializeIsAvailable(sdk.availability.equals(Availability.AVAILABLE))
         }
     }
 
-    fun setAvailability(args: Map<String, Any>) {
-        deserializeAvailability(args).flatMap { isAvailable ->
+    fun setAvailability(args: Map<String, Any?>): Result<Unit> {
+        return deserializeAvailability(args).flatMapSuccess { isAvailable ->
             withSdkInstance { sdk ->
                 if (isAvailable) {
                     sdk.availability = Availability.AVAILABLE
@@ -103,19 +119,22 @@ internal object HyperTrackSdkWrapper {
         }
     }
 
-    fun setName(name: String) {
-        withSdkInstance { sdk ->
-            sdk.setDeviceName(name)
+    fun setName(args: Map<String, Any?>): Result<Unit> {
+        return deserializeDeviceName(args).flatMapSuccess { name ->
+            withSdkInstance { sdk ->
+                sdk.setDeviceName(name)
+                Unit
+            }
         }
     }
 
-    fun setMetadata(metadata: Map<String, Any>) {
-        withSdkInstance { sdk ->
+    fun setMetadata(metadata: Map<String, Any?>): Result<Unit> {
+        return withSdkInstance { sdk ->
             sdk.setDeviceMetadata(metadata)
         }
     }
 
-    fun getLocation(): Result<Map<String, Any>> {
+    fun getLocation(): Result<Map<String, Any?>> {
         return withSdkInstance { sdk ->
             sdk.latestLocation.let { result ->
                 if (result.isSuccess) {
@@ -135,7 +154,17 @@ internal object HyperTrackSdkWrapper {
         return serializeErrors(getTrackingErrors((error)))
     }
 
-    fun getTrackingErrors(error: TrackingError): Set<HyperTrackError> {
+    fun <T> withSdkInstance(
+        onInstanceCall: (sdk: HyperTrack) -> T
+    ): Result<T> {
+        return try {
+            Success(onInstanceCall(sdkInstance))
+        } catch (e: Exception) {
+            Failure(e)
+        }
+    }
+
+    private fun getTrackingErrors(error: TrackingError): Set<HyperTrackError> {
         return when (error.code) {
             TrackingError.INVALID_PUBLISHABLE_KEY_ERROR -> {
                 HyperTrackError.invalidPublishableKey
@@ -157,22 +186,6 @@ internal object HyperTrackSdkWrapper {
             }
         }.let { hyperTrackError ->
             (hyperTrackError?.let { setOf(it) } ?: setOf()) + getHyperTrackErrorsFromBlockers()
-        }
-    }
-
-    fun <T> withSdkInstance(
-        onInstanceCall: (sdk: HyperTrack) -> T
-    ): Result<T> {
-        return this.sdkInstance.let { instance ->
-            if (instance == null) {
-                Failure(Exception("HyperTrack SDK is not initialized"))
-            } else {
-                try {
-                    Success(onInstanceCall(instance))
-                } catch (e: Exception) {
-                    Failure(e)
-                }
-            }
         }
     }
 
@@ -228,22 +241,24 @@ internal object HyperTrackSdkWrapper {
     }
 
     private fun getHyperTrackErrorsFromBlockers(): Set<HyperTrackError> {
-        return HyperTrack.getBlockers().map {
-            when (it) {
-                Blocker.LOCATION_PERMISSION_DENIED -> {
-                    HyperTrackError.locationPermissionsDenied
-                }
-                Blocker.LOCATION_SERVICE_DISABLED -> {
-                    HyperTrackError.locationServicesDisabled
-                }
-                Blocker.ACTIVITY_PERMISSION_DENIED -> {
-                    HyperTrackError.motionActivityPermissionsDenied
-                }
-                Blocker.BACKGROUND_LOCATION_DENIED -> {
-                    HyperTrackError.locationPermissionsInsufficientForBackground
+        return HyperTrack.getBlockers()
+            .map {
+                when (it) {
+                    Blocker.LOCATION_PERMISSION_DENIED -> {
+                        HyperTrackError.locationPermissionsDenied
+                    }
+                    Blocker.LOCATION_SERVICE_DISABLED -> {
+                        HyperTrackError.locationServicesDisabled
+                    }
+                    Blocker.ACTIVITY_PERMISSION_DENIED -> {
+                        HyperTrackError.motionActivityPermissionsDenied
+                    }
+                    Blocker.BACKGROUND_LOCATION_DENIED -> {
+                        HyperTrackError.locationPermissionsInsufficientForBackground
+                    }
                 }
             }
-        }.toSet()
+            .toSet()
     }
 
 }

@@ -1,12 +1,12 @@
 import type { Location } from '../Location';
 import type { LocationError } from '../LocationError';
 
-type LocationSuccess = {
+export type LocationSuccess = {
   type: 'success';
   value: Location;
 };
 
-type LocationFailure = {
+export type LocationFailure = {
   type: 'failure';
   value: LocationError;
 };

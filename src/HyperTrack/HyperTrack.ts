@@ -5,6 +5,10 @@ import type { IsTracking } from './data_types/internal/IsTracking';
 import type { LocationResponse } from './data_types/internal/LocationResponse';
 import type { Location } from './data_types/Location';
 import type { LocationError } from './data_types/LocationError';
+import type { SdkInitParams } from './data_types/SdkInitParams';
+import type { DeviceId } from './data_types/internal/DeviceId';
+import type { Geotag } from './data_types/internal/Geotag';
+import type { DeviceName } from './data_types/internal/DeviceName';
 
 const EVENT_TRACKING = 'onTrackingChanged';
 const EVENT_AVAILABILITY = 'onAvailabilityChanged';
@@ -34,12 +38,17 @@ export default class HyperTrack {
     return this;
   }
 
-  static async createInstance(
+  static async initialize(
     publishableKey: string,
     sdkInitParams: SdkInitParams = {}
   ) {
     try {
-      await HyperTrackSdk.initialize(publishableKey, sdkInitParams);
+      await HyperTrackSdk.initialize({
+        publishableKey,
+        loggingEnabled: sdkInitParams.loggingEnabled ?? false,
+        allowMockLocations: sdkInitParams.allowMockLocations ?? false,
+        requireBackgroundTrackingPermission: sdkInitParams.requireBackgroundTrackingPermission ?? false,
+      });
       return new HyperTrack();
     } catch (error: any) {
       throw new Error(error.message);
@@ -49,8 +58,10 @@ export default class HyperTrack {
   /**
    * Returns a string which is used by HyperTrack to uniquely identify the user.
    */
-  async getDeviceID(): Promise<string> {
-    return HyperTrackSdk.getDeviceID();
+  getDeviceId(): Promise<string> {
+    return HyperTrackSdk.getDeviceId().then(
+      (deviceId: DeviceId) => deviceId.value
+    );
   }
 
   /**
@@ -69,8 +80,11 @@ export default class HyperTrack {
    *
    * @param availability true when is available or false when unavailable
    */
-  setAvailability(availability: boolean) {
-    HyperTrackSdk.setAvailability(availability);
+  setAvailability(isAvailable: boolean) {
+    HyperTrackSdk.setAvailability({
+      type: 'isAvailable',
+      value: isAvailable
+    } as IsAvailable);
   }
 
   /**
@@ -107,6 +121,39 @@ export default class HyperTrack {
   /// The current location of the user or an outage reason.
   getLocation(): Promise<LocationError | Location> {
     return HyperTrackSdk.getLocation().then(
+      (locationResponse: LocationResponse) => {
+        return locationResponse.value;
+      }
+    );
+  }
+
+  /**
+   * Send device name to HyperTrack
+   * @param {string} name - Device name you want to see in the Dashboard.
+   */
+  setName(name: string) {
+    HyperTrackSdk.setDeviceName({
+      type: 'deviceName',
+      value: name
+    } as DeviceName)
+  }
+
+  /**
+   * Send metadata details to HyperTrack
+   * @param {Object} data - Send extra device information.
+   */
+  setMetadata(data: Object) {
+    HyperTrackSdk.setMetadata(data);
+  }
+
+  /**
+   * Add geotag
+   * @param {Object} data - Include anything that can be parsed into JSON.
+   */
+  addGeotag(data: Object): Promise<LocationError | Location> {
+    return HyperTrackSdk.addGeotag({
+      data
+    } as Geotag).then(
       (locationResponse: LocationResponse) => {
         return locationResponse.value;
       }
@@ -165,34 +212,6 @@ export default class HyperTrack {
       EVENT_AVAILABILITY,
       (isAvailable: IsAvailable) => {
         listener(isAvailable.value);
-      }
-    );
-  }
-
-  /**
-   * Send device name to HyperTrack
-   * @param {string} name - Device name you want to see in the Dashboard.
-   */
-  setName(name: string) {
-    HyperTrackSdk.setDeviceName(name);
-  }
-
-  /**
-   * Send metadata details to HyperTrack
-   * @param {Object} data - Send extra device information.
-   */
-  setMetadata(data: Object) {
-    HyperTrackSdk.setMetadata(data);
-  }
-
-  /**
-   * Add geotag
-   * @param {Object} data - Include anything that can be parsed into JSON.
-   */
-  addGeotag(data: Object): Promise<LocationError | Location> {
-    return HyperTrackSdk.addGeotag(data).then(
-      (locationResponse: LocationResponse) => {
-        return locationResponse.value;
       }
     );
   }
