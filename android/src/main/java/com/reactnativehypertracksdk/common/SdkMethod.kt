@@ -1,7 +1,9 @@
-package com.hypertrack.sdk.flutter.common
+package com.reactnativehypertracksdk.common
 
-// enum naming convention is ingored to make datatype sync
-// across platforms easier
+/**
+ * The list of available methods in the SDK API.
+ * Enum naming convention is ignored to make datatype sync across platforms easier
+ */
 internal enum class SdkMethod {
     initialize,
     getDeviceId,

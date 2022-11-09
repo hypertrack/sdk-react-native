@@ -1,6 +1,5 @@
 package com.reactnativehypertracksdk
 
-import android.util.Log
 import com.facebook.react.bridge.*
 import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.modules.core.DeviceEventManagerModule
@@ -8,6 +7,8 @@ import com.hypertrack.sdk.*
 import com.hypertrack.sdk.TrackingStateObserver.OnTrackingStateChangeListener
 import com.hypertrack.sdk.AvailabilityStateObserver.OnAvailabilityStateChangeListener
 import com.reactnativehypertracksdk.common.*
+import com.reactnativehypertracksdk.common.Serialization.serializeIsAvailable
+import com.reactnativehypertracksdk.common.Serialization.serializeIsTracking
 
 @Suppress("ComplexRedundantLet")
 @ReactModule(name = HyperTrackModule.NAME)
@@ -23,32 +24,59 @@ class HyperTrackModule(reactContext: ReactApplicationContext?) :
 
     @ReactMethod
     fun addListener(type: String?) {
-        Log.v(javaClass.simpleName, "add listener $type")
+        HyperTrackSdkWrapper.withSdkInstance {
+            when(type) {
+                EVENT_TRACKING -> {
+                    HyperTrackSdkWrapper.isTracking().let {
+                        when(it) {
+                            is Success -> {
+                                emitIsTracking(it.success)
+                            }
+                            is Failure -> {
+                                throw Exception("isTracking failed: ${it.failure}", it.failure)
+                            }
+                        }
+                    }
+                }
+                EVENT_AVAILABILITY -> {
+                    HyperTrackSdkWrapper.isAvailable().let {
+                        when(it) {
+                            is Success -> {
+                                emitIsAvailable(it.success)
+                            }
+                            is Failure -> {
+                                throw Exception("isAvailable failed: ${it.failure}", it.failure)
+                            }
+                        }
+                    }
+                }
+                EVENT_ERRORS -> {
+                    HyperTrackSdkWrapper.getInitialErrors().let {
+                        emitErrors(it)
+                    }
+                }
+                else -> Unit
+            }
+        }
         // Keep: Required for RN built in Event Emitter Calls.
     }
 
     @ReactMethod
     fun removeListeners(type: Int?) {
-        Log.v(javaClass.simpleName, "add listener $type")
         // Keep: Required for RN built in Event Emitter Calls.
     }
 
     @ReactMethod
     fun initialize(
-        publishableKey: String,
         initParams: ReadableMap,
         promise: Promise
     ) {
-        SdkInitParams.fromMap(initParams.toHashMap())
-            .flatMap { sdkInitParams ->
-                HyperTrackSdkWrapper.initialize(
-                    publishableKey,
-                    sdkInitParams
-                )
-            }.flatMap { hyperTrack ->
-                initListeners(hyperTrack)
-                Success(Unit)
-            }.toPromise(promise)
+        HyperTrackSdkWrapper
+            .initialize(initParams.toHashMap())
+            .mapSuccess { sdk ->
+                initListeners(sdk)
+            }
+            .toPromise(promise)
     }
 
     private fun initListeners(sdkInstance: HyperTrack) {
@@ -58,19 +86,15 @@ class HyperTrackModule(reactContext: ReactApplicationContext?) :
         }
         trackingStateListener = object : OnTrackingStateChangeListener {
             override fun onError(trackingError: TrackingError) {
-                emitEvent(
-                    EVENT_ERROR, serializeErrors(
-                        HyperTrackSdkWrapper.getTrackingErrors(trackingError)
-                    ).toWriteableArray()
-                )
+                emitErrors(HyperTrackSdkWrapper.getErrors(trackingError))
             }
 
             override fun onTrackingStart() {
-                emitEvent(EVENT_TRACKING, serializeIsTracking(true).toWritableMap())
+                emitIsTracking(serializeIsTracking(true))
             }
 
             override fun onTrackingStop() {
-                emitEvent(EVENT_TRACKING, serializeIsTracking(false).toWritableMap())
+                emitIsTracking(serializeIsTracking(false))
             }
         }.also {
             sdkInstance.addTrackingListener(it)
@@ -87,20 +111,19 @@ class HyperTrackModule(reactContext: ReactApplicationContext?) :
                 }
 
                 override fun onAvailable() {
-                    emitEvent(EVENT_AVAILABILITY, serializeIsAvailable(true).toWritableMap())
+                    emitIsAvailable(serializeIsAvailable(true))
                 }
 
                 override fun onUnavailable() {
-                    emitEvent(EVENT_AVAILABILITY, serializeIsAvailable(false).toWritableMap())
+                    emitIsAvailable(serializeIsAvailable(false))
                 }
             }.also {
                 sdkInstance.addAvailabilityListener(it)
             }
     }
 
-
     @ReactMethod
-    fun getDeviceID(promise: Promise) {
+    fun getDeviceId(promise: Promise) {
         HyperTrackSdkWrapper.getDeviceID().toPromise(promise)
     }
 
@@ -125,8 +148,8 @@ class HyperTrackModule(reactContext: ReactApplicationContext?) :
     }
 
     @ReactMethod
-    fun addGeotag(rMap: ReadableMap, promise: Promise) {
-        HyperTrackSdkWrapper.addGeotag(rMap.toHashMap()).toPromise(promise)
+    fun addGeotag(args: ReadableMap, promise: Promise) {
+        HyperTrackSdkWrapper.addGeotag(args.toHashMap()).toPromise(promise)
     }
 
     @ReactMethod
@@ -135,18 +158,18 @@ class HyperTrackModule(reactContext: ReactApplicationContext?) :
     }
 
     @ReactMethod
-    fun setAvailability(availability: Map<String, Boolean>) {
-        HyperTrackSdkWrapper.setAvailability(availability)
+    fun setAvailability(args: ReadableMap) {
+        HyperTrackSdkWrapper.setAvailability(args.toHashMap())
     }
 
     @ReactMethod
-    fun setDeviceName(name: String) {
-        HyperTrackSdkWrapper.setName(name)
+    fun setDeviceName(args: ReadableMap) {
+        HyperTrackSdkWrapper.setName(args.toHashMap())
     }
 
     @ReactMethod
-    fun setMetadata(rMap: ReadableMap) {
-        HyperTrackSdkWrapper.setMetadata(rMap.toHashMap())
+    fun setMetadata(args: ReadableMap) {
+        HyperTrackSdkWrapper.setMetadata(args.toHashMap())
     }
 
     @ReactMethod
@@ -154,15 +177,25 @@ class HyperTrackModule(reactContext: ReactApplicationContext?) :
         HyperTrackSdkWrapper.getLocation().toPromise(promise)
     }
 
+    private fun emitIsTracking(isTracking: Map<String, Any?>) {
+        emitEvent(EVENT_TRACKING, isTracking.toWritableMap())
+    }
+
+    private fun emitIsAvailable(isAvailable: Map<String, Any?>) {
+        emitEvent(EVENT_AVAILABILITY, isAvailable.toWritableMap())
+    }
+
+    private fun emitErrors(errors: List<Map<String, Any?>>) {
+        emitEvent(EVENT_ERRORS, errors.toWriteableArray())
+    }
+
     private fun emitEvent(event: String, data: WritableMap) {
-        Log.v(javaClass.simpleName, "$event ${data.toHashMap()}")
         reactApplicationContext
             .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
             .emit(event, data)
     }
 
     private fun emitEvent(event: String, data: WritableArray) {
-        Log.v(javaClass.simpleName, "$event ${data.toArrayList()}")
         reactApplicationContext
             .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
             .emit(event, data)
@@ -171,7 +204,7 @@ class HyperTrackModule(reactContext: ReactApplicationContext?) :
     companion object {
         private const val EVENT_TRACKING = "onTrackingChanged"
         private const val EVENT_AVAILABILITY = "onAvailabilityChanged"
-        private const val EVENT_ERROR = "onError"
+        private const val EVENT_ERRORS = "onError"
 
         const val NAME = "HyperTrack"
     }

@@ -1,4 +1,5 @@
 package com.reactnativehypertracksdk
+
 import android.util.Log
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
@@ -15,12 +16,6 @@ internal fun <T> Result<T>.toPromise(promise: Promise) {
       when(this.success) {
         is Map<*, *> -> {
           promise.resolve((this.success as Map<String, Any>).toWritableMap())
-        }
-        is List<*> -> {
-          promise.resolve((this.success as List<Any>).toWriteableArray())
-        }
-        is String -> {
-          promise.resolve(this.success)
         }
         is Unit -> {
           promise.resolve(null)
@@ -39,52 +34,55 @@ internal fun <T> Result<T>.toPromise(promise: Promise) {
 
 @Suppress("UNCHECKED_CAST")
 internal fun List<Any>.toWriteableArray(): WritableArray {
-  return Arguments.createArray().also { writableArray ->
-    forEach {
-      when(it) {
-        is String -> {
-          writableArray.pushString(it)
+    return Arguments.createArray().also { writableArray ->
+        forEach {
+            when (it) {
+                is String -> {
+                    writableArray.pushString(it)
+                }
+                is Map<*, *> -> {
+                    writableArray.pushMap((it as Map<String, Any>).toWritableMap())
+                }
+                else -> {
+                    throw Exception(IllegalArgumentException(it.javaClass.toString()))
+                }
+            }
         }
-        is Map<*,*> -> {
-          writableArray.pushMap((it as Map<String, Any>).toWritableMap())
-        }
-        else -> {
-          throw Exception(IllegalArgumentException(it.javaClass.toString()))
-        }
-      }
     }
-  }
 }
 
 @Suppress("UNCHECKED_CAST")
-internal fun Map<String, Any>.toWritableMap(): WritableMap {
-  val map = this
-  return Arguments.createMap().apply {
-    map.forEach { entry ->
-      val key = entry.key
-      when(val value = entry.value) {
-        is String -> {
-          putString(key, value)
+internal fun Map<String, Any?>.toWritableMap(): WritableMap {
+    val map = this
+    return Arguments.createMap().apply {
+        map.forEach { entry ->
+            val key = entry.key
+            when (val value = entry.value) {
+                is String -> {
+                    putString(key, value)
+                }
+                is Int -> {
+                    putInt(key, value)
+                }
+                is Double -> {
+                    putDouble(key, value)
+                }
+                is Boolean -> {
+                    putBoolean(key, value)
+                }
+                is List<*> -> {
+                    putArray(key, (value as List<String>).toWriteableArray())
+                }
+                is Map<*, *> -> {
+                    putMap(key, (value as Map<String, Any>).toWritableMap())
+                }
+                null -> {
+                    putNull(key)
+                }
+                else -> {
+                    throw Exception(IllegalArgumentException(entry.value?.javaClass.toString()))
+                }
+            }
         }
-        is Int -> {
-          putInt(key, value)
-        }
-        is Double -> {
-          putDouble(key, value)
-        }
-        is Boolean -> {
-          putBoolean(key, value)
-        }
-        is List<*> -> {
-          putArray(key, (value as List<String>).toWriteableArray())
-        }
-        is Map<*,*> -> {
-          putMap(key, (value as Map<String, Any>).toWritableMap())
-        }
-        else -> {
-          throw Exception(IllegalArgumentException(entry.value.javaClass.toString()))
-        }
-      }
     }
-  }
 }

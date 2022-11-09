@@ -1,10 +1,10 @@
 package com.reactnativehypertracksdk.common
 
 internal sealed class Result<S> {
-    fun <T> flatMap(function: (S) -> Result<T>): Result<T> {
+    fun <T> flatMapSuccess(onSuccess: (S) -> Result<T>): Result<T> {
         return when (this) {
             is Success -> {
-                function.invoke(this.success)
+                onSuccess.invoke(this.success)
             }
             is Failure -> {
                 Failure<T>(this.failure)
@@ -12,11 +12,22 @@ internal sealed class Result<S> {
         }
     }
 
-    fun forceUnwrap(): S {
+    fun <T> mapSuccess(onSuccess: (S) -> T): Result<T> {
+        return when (this) {
+            is Success -> {
+                Success(onSuccess.invoke(this.success))
+            }
+            is Failure -> {
+                Failure<T>(this.failure)
+            }
+        }
+    }
+
+    fun getOrThrow(): S {
         return when (this) {
             is Success -> this.success
             is Failure -> throw Exception(
-                "Unwrapping failed, this Result is failure: ${this.failure}",
+                "Result unwrapping failed: ${this.failure}",
                 this.failure
             )
         }
@@ -34,4 +45,4 @@ internal sealed class Result<S> {
 }
 
 internal data class Success<S>(val success: S) : Result<S>()
-internal data class Failure<S>(val failure: Exception) : Result<S>()
+internal data class Failure<S>(val failure: Throwable) : Result<S>()

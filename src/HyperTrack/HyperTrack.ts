@@ -70,8 +70,11 @@ export default class HyperTrack {
    *
    * @param availability true when is available or false when unavailable
    */
-  setAvailability(availability: boolean) {
-    HyperTrackSdk.setAvailability(availability);
+  setAvailability(isAvailable: boolean) {
+    HyperTrackSdk.setAvailability({
+      type: 'isAvailable',
+      value: isAvailable
+    } as IsAvailable);
   }
 
   /**
