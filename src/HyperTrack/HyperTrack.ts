@@ -175,7 +175,9 @@ export default class HyperTrack {
    * @param {string} name - Device name you want to see in the Dashboard.
    */
   setName(name: string) {
-    HyperTrackSdk.setDeviceName(name);
+    HyperTrackSdk.setDeviceName({
+      name,
+    });
   }
 
   /**
