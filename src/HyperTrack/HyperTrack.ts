@@ -35,12 +35,9 @@ export default class HyperTrack {
     return this;
   }
 
-  static async initialize(
-    publishableKey: string,
-    sdkInitParams: SdkInitParams = {}
-  ) {
+  static async initialize(sdkInitParams: SdkInitParams = {}) {
     try {
-      await HyperTrackSdk.initialize(publishableKey, sdkInitParams);
+      await HyperTrackSdk.initialize(sdkInitParams);
       return new HyperTrack();
     } catch (error: any) {
       throw new Error(error.message);
