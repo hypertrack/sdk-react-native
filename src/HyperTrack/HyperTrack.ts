@@ -50,8 +50,8 @@ export default class HyperTrack {
   /**
    * Returns a string which is used by HyperTrack to uniquely identify the user.
    */
-  async getDeviceID(): Promise<string> {
-    return HyperTrackSdk.getDeviceID();
+  async getDeviceId(): Promise<string> {
+    return HyperTrackSdk.getDeviceId();
   }
 
   /**
