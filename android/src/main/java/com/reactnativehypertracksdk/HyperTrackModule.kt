@@ -68,6 +68,7 @@ class HyperTrackModule(reactContext: ReactApplicationContext?) :
 
     @ReactMethod
     fun initialize(
+        publishableKey: String,
         initParams: ReadableMap,
         promise: Promise
     ) {
