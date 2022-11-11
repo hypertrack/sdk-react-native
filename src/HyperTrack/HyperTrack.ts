@@ -35,7 +35,7 @@ export default class HyperTrack {
     return this;
   }
 
-  static async createInstance(
+  static async initialize(
     publishableKey: string,
     sdkInitParams: SdkInitParams = {}
   ) {
@@ -73,7 +73,7 @@ export default class HyperTrack {
   setAvailability(isAvailable: boolean) {
     HyperTrackSdk.setAvailability({
       type: 'isAvailable',
-      value: isAvailable
+      value: isAvailable,
     } as IsAvailable);
   }
 
