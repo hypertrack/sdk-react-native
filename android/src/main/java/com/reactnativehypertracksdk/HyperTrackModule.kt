@@ -24,39 +24,37 @@ class HyperTrackModule(reactContext: ReactApplicationContext?) :
 
     @ReactMethod
     fun addListener(type: String?) {
-        HyperTrackSdkWrapper.withSdkInstance {
-            when(type) {
-                EVENT_TRACKING -> {
-                    HyperTrackSdkWrapper.isTracking().let {
-                        when(it) {
-                            is Success -> {
-                                emitIsTracking(it.success)
-                            }
-                            is Failure -> {
-                                throw Exception("isTracking failed: ${it.failure}", it.failure)
-                            }
+        when(type) {
+            EVENT_TRACKING -> {
+                HyperTrackSdkWrapper.isTracking().let {
+                    when(it) {
+                        is Success -> {
+                            emitIsTracking(it.success)
+                        }
+                        is Failure -> {
+                            throw Exception("isTracking failed: ${it.failure}", it.failure)
                         }
                     }
                 }
-                EVENT_AVAILABILITY -> {
-                    HyperTrackSdkWrapper.isAvailable().let {
-                        when(it) {
-                            is Success -> {
-                                emitIsAvailable(it.success)
-                            }
-                            is Failure -> {
-                                throw Exception("isAvailable failed: ${it.failure}", it.failure)
-                            }
-                        }
-                    }
-                }
-                EVENT_ERRORS -> {
-                    HyperTrackSdkWrapper.getInitialErrors().let {
-                        emitErrors(it)
-                    }
-                }
-                else -> Unit
             }
+            EVENT_AVAILABILITY -> {
+                HyperTrackSdkWrapper.isAvailable().let {
+                    when(it) {
+                        is Success -> {
+                            emitIsAvailable(it.success)
+                        }
+                        is Failure -> {
+                            throw Exception("isAvailable failed: ${it.failure}", it.failure)
+                        }
+                    }
+                }
+            }
+            EVENT_ERRORS -> {
+                HyperTrackSdkWrapper.getInitialErrors().let {
+                    emitErrors(it)
+                }
+            }
+            else -> Unit
         }
         // Keep: Required for RN built in Event Emitter Calls.
     }
