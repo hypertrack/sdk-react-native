@@ -1,9 +1,9 @@
 import type { HyperTrackError } from './HyperTrackError';
 
-type NotRunning = {
+export type NotRunning = {
   type: 'notRunning';
 };
-type Starting = {
+export type Starting = {
   type: 'starting';
 };
 export type Errors = {

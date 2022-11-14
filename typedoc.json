@@ -1,13 +1,13 @@
 {
   "entryPoints": [
-    "src/HyperTrack/HyperTrack.ts"
+    "src/index.tsx"
   ],
   "out": "docs",
   "entryPointStrategy": "expand",
   "hideGenerator": true,
   "githubPages": false,
   "disableSources": true,
-  "name": "HyperTrack SDK API",
+  "name": "HyperTrack React Native SDK API",
   "includeVersion": true,
   "readme": "none",
   "sort": "source-order"
