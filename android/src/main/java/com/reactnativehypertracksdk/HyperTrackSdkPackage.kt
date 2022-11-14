@@ -6,7 +6,7 @@ import com.facebook.react.uimanager.ViewManager
 
 class HyperTrackSdkPackage : ReactPackage {
     override fun createNativeModules(reactContext: ReactApplicationContext): MutableList<NativeModule> {
-        return listOf(HyperTrackModule(reactContext)).toMutableList()
+        return listOf(HyperTrackReactNativePlugin(reactContext)).toMutableList()
     }
 
     override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {

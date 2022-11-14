@@ -20,8 +20,8 @@ const LINKING_ERROR =
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo managed workflow\n';
 
-const HyperTrackSdk = NativeModules.HyperTrack
-  ? NativeModules.HyperTrack
+const HyperTrackSdk = NativeModules.HyperTrackReactNativePlugin
+  ? NativeModules.HyperTrackReactNativePlugin
   : new Proxy(
       {},
       {
@@ -43,7 +43,7 @@ export default class HyperTrack {
     sdkInitParams: SdkInitParams = {}
   ) {
     try {
-      await HyperTrackSdk.initialize({
+      await HyperTrackSdk.initializeSdk({
         publishableKey,
         loggingEnabled: sdkInitParams.loggingEnabled ?? false,
         allowMockLocations: sdkInitParams.allowMockLocations ?? false,
@@ -101,7 +101,7 @@ export default class HyperTrack {
    * Update device state from server.
    */
   sync() {
-    HyperTrackSdk.syncDeviceSettings();
+    HyperTrackSdk.sync();
   }
 
   /**
@@ -132,7 +132,7 @@ export default class HyperTrack {
    * @param {string} name - Device name you want to see in the Dashboard.
    */
   setName(name: string) {
-    HyperTrackSdk.setDeviceName({
+    HyperTrackSdk.setName({
       type: 'deviceName',
       value: name
     } as DeviceName)

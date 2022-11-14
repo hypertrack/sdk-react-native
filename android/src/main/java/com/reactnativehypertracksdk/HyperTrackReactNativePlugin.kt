@@ -11,8 +11,8 @@ import com.reactnativehypertracksdk.common.Serialization.serializeIsAvailable
 import com.reactnativehypertracksdk.common.Serialization.serializeIsTracking
 
 @Suppress("ComplexRedundantLet")
-@ReactModule(name = HyperTrackModule.NAME)
-class HyperTrackModule(reactContext: ReactApplicationContext?) :
+@ReactModule(name = HyperTrackReactNativePlugin.NAME)
+class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
     ReactContextBaseJavaModule(reactContext) {
 
     var trackingStateListener: OnTrackingStateChangeListener? = null
@@ -65,7 +65,7 @@ class HyperTrackModule(reactContext: ReactApplicationContext?) :
     }
 
     @ReactMethod
-    fun initialize(
+    fun initializeSdk(
         initParams: ReadableMap,
         promise: Promise
     ) {
@@ -141,7 +141,7 @@ class HyperTrackModule(reactContext: ReactApplicationContext?) :
     }
 
     @ReactMethod
-    fun syncDeviceSettings() {
+    fun sync() {
         HyperTrackSdkWrapper.sync()
     }
 
@@ -161,7 +161,7 @@ class HyperTrackModule(reactContext: ReactApplicationContext?) :
     }
 
     @ReactMethod
-    fun setDeviceName(args: ReadableMap) {
+    fun setName(args: ReadableMap) {
         HyperTrackSdkWrapper.setName(args.toHashMap())
     }
 
@@ -204,6 +204,6 @@ class HyperTrackModule(reactContext: ReactApplicationContext?) :
         private const val EVENT_AVAILABILITY = "onAvailabilityChanged"
         private const val EVENT_ERRORS = "onError"
 
-        const val NAME = "HyperTrack"
+        const val NAME = "HyperTrackReactNativePlugin"
     }
 }
