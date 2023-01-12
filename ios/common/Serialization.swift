@@ -51,6 +51,49 @@ func getHyperTrackError(_ error: HyperTrack.RestorableError) -> HyperTrackError 
     }
 }
 
+func getHyperTrackError(_ error: HyperTrack.HyperTrackError) -> HyperTrackError {
+    switch(error) {
+    case .locationPermissionsNotDetermined:
+        return .locationPermissionsNotDetermined
+    case .locationPermissionsInsufficientForBackground:
+        return .locationPermissionsInsufficientForBackground
+    case .locationPermissionsRestricted:
+        return .locationPermissionsRestricted
+    case .locationPermissionsReducedAccuracy:
+        return .locationPermissionsReducedAccuracy
+    case .locationPermissionsProvisional:
+        return .locationPermissionsProvisional
+    case .locationPermissionsDenied:
+        return .locationPermissionsDenied
+    case .locationServicesDisabled:
+        return .locationServicesDisabled
+    case .motionActivityPermissionsNotDetermined:
+        return .motionActivityPermissionsNotDetermined
+    case .motionActivityPermissionsDenied:
+        return .motionActivityPermissionsDenied
+    case .motionActivityServicesDisabled:
+        return .motionActivityServicesDisabled
+    case .motionActivityServicesUnavailable:
+        return .motionActivityServicesUnavailable
+    case .gpsSignalLost:
+        return .gpsSignalLost
+    case .locationMocked:
+        return .locationMocked
+    case .invalidPublishableKey:
+        return .invalidPublishableKey
+    case .blockedFromRunning:
+        return .blockedFromRunning
+    default:
+        preconditionFailure("Unknown error \(error)")
+    }
+}
+
+func serializeErrors(_ errors: Set<HyperTrack.HyperTrackError>) -> Array<Dictionary<String, Any>> {
+    return errors.map({ error in
+        serializeHyperTrackError(getHyperTrackError(error))
+    })
+}
+
 func serializeDeviceId(_ deviceId: String) -> Dictionary<String, Any> {
     return [
         keyType: "deviceID",

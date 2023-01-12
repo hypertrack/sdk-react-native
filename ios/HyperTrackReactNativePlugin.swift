@@ -7,6 +7,8 @@ class HyperTrackReactNativePlugin: RCTEventEmitter {
     private let eventAvailability = "onAvailabilityChanged"
     private let eventErrors = "onError"
     
+    private var errorsSubscription: HyperTrack.Cancellable!
+    
     @objc override static func requiresMainQueueSetup() -> Bool {
         return false
     }
@@ -24,10 +26,12 @@ class HyperTrackReactNativePlugin: RCTEventEmitter {
         switch(eventName) {
         case eventTracking:
             sendEvent(withName: eventTracking, body: serializeIsTracking(sdkInstance.isTracking))
+            return
         case eventAvailability:
             sendEvent(withName: eventAvailability, body: serializeIsAvailable(sdkInstance.availability))
+            return
         case eventErrors:
-            // we don't send initial errors value here because errors getter is not implemented for iOS SDK yet
+            sendEvent(withName: eventErrors, body: serializeErrors(sdkInstance.errors))
             return
         default:
             return
@@ -201,8 +205,9 @@ class HyperTrackReactNativePlugin: RCTEventEmitter {
         NotificationCenter.default.addObserver(self, selector: #selector(onTrackingStopped), name: HyperTrack.stoppedTrackingNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(onAvailable), name: HyperTrack.becameAvailableNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(onUnavailable), name: HyperTrack.becameUnavailableNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(onSdkError(notification:)), name: HyperTrack.didEncounterRestorableErrorNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(onSdkError(notification:)), name: HyperTrack.didEncounterUnrestorableErrorNotification, object: nil)
+        errorsSubscription = sdkInstance.subscribeToErrors { errors in
+            self.sendErrorsEvent(serializeErrors(errors))
+        }
     }
     
     @objc
@@ -223,21 +228,6 @@ class HyperTrackReactNativePlugin: RCTEventEmitter {
     @objc
     private func onUnavailable() {
         sendAvailabilityEvent(isAvailable: .unavailable)
-    }
-    
-    @objc
-    private func onSdkError(notification: Notification) {
-        let hyperTrackError: HyperTrack.TrackingError? = notification.hyperTrackTrackingError()
-        let errors: [Dictionary<String, Any>]!
-        switch(hyperTrackError) {
-        case .unrestorableError(let unrestorableError):
-            errors = [serializeHyperTrackError(getHyperTrackError(unrestorableError))]
-        case .restorableError(let restorableError):
-            errors = [serializeHyperTrackError(getHyperTrackError(restorableError))]
-        default:
-            preconditionFailure("onSdkError: Unexpected SDK error \(String(describing: hyperTrackError))")
-        }
-        sendErrorsEvent(errors)
     }
     
     private func sendTrackingEvent(isTracking: Bool) {

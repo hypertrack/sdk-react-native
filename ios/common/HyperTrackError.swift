@@ -12,6 +12,7 @@ enum HyperTrackError: String {
     case motionActivityPermissionsNotDetermined
     case motionActivityPermissionsDenied
     case motionActivityServicesDisabled
+    case motionActivityServicesUnavailable
     case motionActivityPermissionsRestricted
     case networkConnectionUnavailable
     case invalidPublishableKey

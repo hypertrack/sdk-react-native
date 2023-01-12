@@ -19,6 +19,7 @@ internal enum class HyperTrackError {
     motionActivityPermissionsNotDetermined,
     motionActivityPermissionsDenied,
     motionActivityServicesDisabled,
+    motionActivityServicesUnavailable,
     motionActivityPermissionsRestricted,
     networkConnectionUnavailable,
     invalidPublishableKey,

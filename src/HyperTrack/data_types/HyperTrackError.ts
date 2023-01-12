@@ -2,11 +2,21 @@
 // across platforms easier
 export enum HyperTrackError {
   gpsSignalLost,
+  locationMocked,
   locationPermissionsDenied,
   locationPermissionsInsufficientForBackground,
+  locationPermissionsNotDetermined,
+  locationPermissionsReducedAccuracy,
+  locationPermissionsProvisional,
+  locationPermissionsRestricted,
   locationServicesDisabled,
+  locationServicesUnavailable,
+  motionActivityPermissionsNotDetermined,
   motionActivityPermissionsDenied,
+  motionActivityServicesDisabled,
+  motionActivityServicesUnavailable,
+  motionActivityPermissionsRestricted,
+  networkConnectionUnavailable,
   invalidPublishableKey,
-  permissionsDenied,
-  blockedFromRunning,
+  blockedFromRunning
 }
