@@ -7,6 +7,8 @@ class HyperTrackReactNativePlugin: RCTEventEmitter {
     private let eventAvailability = "onAvailabilityChanged"
     private let eventErrors = "onError"
     
+    private var isTrackingSubscription: HyperTrack.Cancellable!
+    private var availabilitySubscription: HyperTrack.Cancellable!
     private var errorsSubscription: HyperTrack.Cancellable!
     
     @objc override static func requiresMainQueueSetup() -> Bool {
@@ -26,13 +28,10 @@ class HyperTrackReactNativePlugin: RCTEventEmitter {
         switch(eventName) {
         case eventTracking:
             sendEvent(withName: eventTracking, body: serializeIsTracking(sdkInstance.isTracking))
-            return
         case eventAvailability:
             sendEvent(withName: eventAvailability, body: serializeIsAvailable(sdkInstance.availability))
-            return
         case eventErrors:
             sendEvent(withName: eventErrors, body: serializeErrors(sdkInstance.errors))
-            return
         default:
             return
         }
@@ -201,44 +200,26 @@ class HyperTrackReactNativePlugin: RCTEventEmitter {
     }
     
     private func initListeners() {
-        NotificationCenter.default.addObserver(self, selector: #selector(onTrackingStarted), name: HyperTrack.startedTrackingNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(onTrackingStopped), name: HyperTrack.stoppedTrackingNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(onAvailable), name: HyperTrack.becameAvailableNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(onUnavailable), name: HyperTrack.becameUnavailableNotification, object: nil)
+        isTrackingSubscription = sdkInstance.subscribeToIsTracking(callback: { isTracking in
+            self.sendTrackingEvent(isTracking: isTracking)
+        })
+        availabilitySubscription = sdkInstance.subscribeToAvailability(callback: { availability in
+            self.sendAvailabilityEvent(availability: availability)
+        })
         errorsSubscription = sdkInstance.subscribeToErrors { errors in
-            self.sendErrorsEvent(serializeErrors(errors))
+            self.sendErrorsEvent(errors)
         }
-    }
-    
-    @objc
-    private func onTrackingStarted() {
-        sendTrackingEvent(isTracking: true)
-    }
-    
-    @objc
-    private func onTrackingStopped() {
-        sendTrackingEvent(isTracking: false)
-    }
-    
-    @objc
-    private func onAvailable() {
-        sendAvailabilityEvent(isAvailable: .available)
-    }
-    
-    @objc
-    private func onUnavailable() {
-        sendAvailabilityEvent(isAvailable: .unavailable)
     }
     
     private func sendTrackingEvent(isTracking: Bool) {
         sendEvent(withName: eventTracking, body: serializeIsTracking(isTracking))
     }
-    private func sendAvailabilityEvent(isAvailable: HyperTrack.Availability) {
-        sendEvent(withName: eventAvailability, body: serializeIsAvailable(isAvailable))
+    private func sendAvailabilityEvent(availability: HyperTrack.Availability) {
+        sendEvent(withName: eventAvailability, body: serializeIsAvailable(availability))
     }
     
-    private func sendErrorsEvent(_ errors: [Dictionary<String, Any>]) {
-        sendEvent(withName: eventErrors, body: errors)
+    private func sendErrorsEvent(_ errors: Set<HyperTrack.HyperTrackError>) {
+        sendEvent(withName: eventErrors, body: serializeErrors(errors))
     }
     
 }

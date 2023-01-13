@@ -74,12 +74,8 @@ func setName(_ args: Dictionary<String, Any>) -> Result<SuccessResult, FailureRe
 }
 
 func setMetadata(_ map: Dictionary<String, Any>) -> Result<SuccessResult, FailureResult> {
-    if let metadata = HyperTrack.Metadata.init(dictionary: map as [String : Any]) {
-        sdkInstance.setDeviceMetadata(metadata)
-        return .success(.void)
-    } else {
-        return .failure(.error("Failed to parse metadata"))
-    }
+    sdkInstance.metadata = getJSON(map)
+    return .success(.void)
 }
 
 func isTracking() -> Result<SuccessResult, FailureResult> {
@@ -92,12 +88,9 @@ func isAvailable() -> Result<SuccessResult, FailureResult> {
 
 func addGeotag(_ args: Dictionary<String, Any>) -> Result<SuccessResult, FailureResult> {
     return deserializeGeotagData(args).flatMap { data in
-        if let metadata = HyperTrack.Metadata.init(dictionary: data) {
-            sdkInstance.addGeotag(metadata)
-            return .success(.dict(serializeLocationResult(sdkInstance.location)))
-        } else {
-            return .failure(.error("Failed to parse geotag data"))
-        }
+        let metadata: HyperTrack.JSON.Object = getJSON(data)
+        let result = sdkInstance.addGeotag(metadata)
+        return .success(.dict(serializeLocationResult(result)))
     }
 }
 

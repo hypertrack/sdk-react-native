@@ -11,6 +11,10 @@ private let typeIsAvailable = "isAvailable"
 
 let keyGeotagData = "data"
 
+func getJSON(_ dictionary: Dictionary<String, Any>) -> HyperTrack.JSON.Object {
+    return try! DictionaryDecoder().decode(HyperTrack.JSON.Object.self, from: dictionary)
+}
+
 func getHyperTrackError(_ error: HyperTrack.UnrestorableError) -> HyperTrackError {
     switch(error) {
     case .invalidPublishableKey:
@@ -139,7 +143,7 @@ func serializeLocationResult(_ result: Result<HyperTrack.Location, HyperTrack.Lo
             locationError = serializeHyperTrackErrorAsLocationError(HyperTrackError.motionActivityPermissionsDenied)
         case .motionActivityServicesDisabled:
             locationError = serializeHyperTrackErrorAsLocationError(HyperTrackError.motionActivityServicesDisabled)
-            
+
         case .gpsSignalLost:
             locationError = serializeHyperTrackErrorAsLocationError(HyperTrackError.gpsSignalLost)
         case .locationMocked:
@@ -151,6 +155,44 @@ func serializeLocationResult(_ result: Result<HyperTrack.Location, HyperTrack.Lo
         case .notRunning:
             locationError = [
                 keyType: "notRunning"
+            ]
+        }
+
+        return [
+            keyType: typeFailure,
+            keyValue: locationError
+        ]
+    }
+}
+
+func serializeLocationResult(_ result: Result<HyperTrack.Location, HyperTrack.NoLocationError>) -> Dictionary<String, Any>  {
+    switch (result) {
+    case .success(let success):
+        return [
+            keyType: typeSuccess,
+            keyValue: [
+                keyType: "location",
+                keyValue: [
+                    "latitude": success.latitude,
+                    "longitude": success.longitude
+                ]
+            ]
+        ]
+    case .failure(let failure):
+        var locationError: Dictionary<String, Any>
+        switch(failure) {
+        case .starting:
+            locationError = [
+                keyType: "starting"
+            ]
+        case .notRunning:
+            locationError = [
+                keyType: "notRunning"
+            ]
+        case .errors(let errors):
+            locationError = [
+                keyType: "errors",
+                keyValue: serializeErrors(errors)
             ]
         }
         
