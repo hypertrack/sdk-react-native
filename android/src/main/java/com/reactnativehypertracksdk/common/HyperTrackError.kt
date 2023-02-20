@@ -1,8 +1,9 @@
 package com.reactnativehypertracksdk.common
 
 /**
- * Check HyperTrack SDK docs for HyperTrackError
- * Enum naming convention is ignored to make datatype sync across platforms easier
+ * Check HyperTrack SDK docs for HyperTrackError.
+ * Enum naming convention is ignored to make datatype sync across platforms easier.
+ * Using Swift naming convention.
  */
 @Suppress("EnumEntryName")
 internal enum class HyperTrackError {

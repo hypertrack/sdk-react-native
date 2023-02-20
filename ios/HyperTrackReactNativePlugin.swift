@@ -63,7 +63,7 @@ class HyperTrackReactNativePlugin: RCTEventEmitter {
     ) {
         sendAsPromise(
             hypertrack_sdk_react_native.getDeviceID(),
-            method: .getDeviceId,
+            method: .getDeviceID,
             resolve,
             reject
         )

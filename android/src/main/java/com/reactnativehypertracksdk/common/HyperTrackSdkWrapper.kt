@@ -2,19 +2,16 @@ package com.reactnativehypertracksdk.common
 
 import com.hypertrack.sdk.*
 import com.reactnativehypertracksdk.common.Serialization.deserializeAvailability
+import com.reactnativehypertracksdk.common.Serialization.deserializeDeviceName
 import com.reactnativehypertracksdk.common.Serialization.deserializeGeotagData
-import com.reactnativehypertracksdk.common.Serialization.serializeFailure
+import com.reactnativehypertracksdk.common.Serialization.serializeDeviceId
 import com.reactnativehypertracksdk.common.Serialization.serializeErrors
+import com.reactnativehypertracksdk.common.Serialization.serializeFailure
 import com.reactnativehypertracksdk.common.Serialization.serializeIsAvailable
 import com.reactnativehypertracksdk.common.Serialization.serializeIsTracking
 import com.reactnativehypertracksdk.common.Serialization.serializeSuccess
-import com.reactnativehypertracksdk.common.Serialization.serializeDeviceId
-import com.reactnativehypertracksdk.common.Serialization.deserializeDeviceName
-import com.reactnativehypertracksdk.common.Serialization.parse
 import java.lang.IllegalStateException
 import java.lang.RuntimeException
-import android.util.Log
-
 
 /**
  * This class stores SDK instance, calls HyperTrack SDK methods and serializes responses.
@@ -28,29 +25,32 @@ internal object HyperTrackSdkWrapper {
     val sdkInstance: HyperTrack
         get() = _sdkInstance
 
-    fun initialize(
+    // method is named to align with 'initializeSDK' in iOS
+    fun initializeSdk(
         args: Map<String, Any?>
     ): Result<HyperTrack> {
         return try {
-            SdkInitParams.fromMap(args).flatMapSuccess { initParams ->
-                _sdkInstance = HyperTrack.getInstance(initParams.publishableKey)
-                if (initParams.loggingEnabled) {
-                    HyperTrack.enableDebugLogging()
+            SdkInitParams
+                .fromMap(args)
+                .flatMapSuccess { initParams ->
+                    _sdkInstance = HyperTrack.getInstance(initParams.publishableKey)
+                    if (initParams.loggingEnabled) {
+                        HyperTrack.enableDebugLogging()
+                    }
+                    if (initParams.allowMockLocations) {
+                        sdkInstance.allowMockLocations()
+                    }
+                    this.sdkInstance.backgroundTrackingRequirement(
+                        initParams.requireBackgroundTrackingPermission
+                    )
+                    Success(sdkInstance)
                 }
-                if (initParams.allowMockLocations) {
-                    sdkInstance.allowMockLocations()
-                }
-                this.sdkInstance.backgroundTrackingRequirement(
-                    initParams.requireBackgroundTrackingPermission
-                )
-                Success(sdkInstance)
-            }
         } catch (exception: Exception) {
             Failure(Exception("Hypertrack SDK initialization failed.", exception))
         }
     }
 
-    fun getDeviceID(): Result<Map<String, Any?>> {
+    fun getDeviceId(): Result<Map<String, Any?>> {
         return Success(serializeDeviceId(sdkInstance.deviceID))
     }
 
@@ -70,26 +70,30 @@ internal object HyperTrackSdkWrapper {
     }
 
     fun addGeotag(args: Map<String, Any?>): Result<Map<String, Any?>> {
-        return deserializeGeotagData(args).flatMapSuccess { geotag ->
-            sdkInstance.addGeotag(geotag.data).let { result ->
-                when (result) {
-                    is GeotagResult.SuccessWithDeviation -> {
-                        serializeSuccess(result.deviceLocation)
+        return deserializeGeotagData(args)
+            .flatMapSuccess { geotag ->
+                sdkInstance
+                    .addGeotag(geotag.data)
+                    .let { result ->
+                        when (result) {
+                            is GeotagResult.SuccessWithDeviation -> {
+                                serializeSuccess(result.deviceLocation)
+                            }
+                            is GeotagResult.Success -> {
+                                serializeSuccess(result.deviceLocation)
+                            }
+                            is GeotagResult.Error -> {
+                                serializeFailure(getLocationError(result.reason))
+                            }
+                            else -> {
+                                throw IllegalArgumentException()
+                            }
+                        }
                     }
-                    is GeotagResult.Success -> {
-                        serializeSuccess(result.deviceLocation)
+                    .let {
+                        Success(it)
                     }
-                    is GeotagResult.Error -> {
-                        serializeFailure(getLocationError(result.reason))
-                    }
-                    else -> {
-                        throw IllegalArgumentException()
-                    }
-                }
-            }.let {
-                Success(it)
             }
-        }
     }
 
     fun isTracking(): Result<Map<String, Any?>> {
@@ -103,19 +107,21 @@ internal object HyperTrackSdkWrapper {
     }
 
     fun setAvailability(args: Map<String, Any?>): Result<Unit> {
-        return deserializeAvailability(args).mapSuccess { isAvailable ->
-            if (isAvailable) {
-                sdkInstance.availability = Availability.AVAILABLE
-            } else {
-                sdkInstance.availability = Availability.UNAVAILABLE
+        return deserializeAvailability(args)
+            .mapSuccess { isAvailable ->
+                if (isAvailable) {
+                    sdkInstance.availability = Availability.AVAILABLE
+                } else {
+                    sdkInstance.availability = Availability.UNAVAILABLE
+                }
             }
-        }
     }
 
     fun setName(args: Map<String, Any?>): Result<Unit> {
-        return deserializeDeviceName(args).mapSuccess { name ->
-            sdkInstance.setDeviceName(name)
-        }
+        return deserializeDeviceName(args)
+            .mapSuccess { name ->
+                sdkInstance.setDeviceName(name)
+            }
     }
 
     fun setMetadata(metadata: Map<String, Any?>): Result<Unit> {
@@ -126,13 +132,15 @@ internal object HyperTrackSdkWrapper {
     }
 
     fun getLocation(): Result<Map<String, Any?>> {
-        return sdkInstance.latestLocation.let { result ->
-            if (result.isSuccess) {
-                serializeSuccess(result.value)
-            } else {
-                serializeFailure(getLocationError(result.error))
+        return sdkInstance.latestLocation
+            .let { result ->
+                if (result.isSuccess) {
+                    serializeSuccess(result.value)
+                } else {
+                    serializeFailure(getLocationError(result.error))
+                }
             }
-        }.let { Success(it) }
+            .let { Success(it) }
     }
 
     fun getInitialErrors(): List<Map<String, String>> {
@@ -163,9 +171,10 @@ internal object HyperTrackSdkWrapper {
             else -> {
                 throw RuntimeException("Unknown tracking error")
             }
-        }.let { hyperTrackError ->
-            (hyperTrackError?.let { setOf(it) } ?: setOf()) + getHyperTrackErrorsFromBlockers()
         }
+            .let { hyperTrackError ->
+                (hyperTrackError?.let { setOf(it) } ?: setOf()) + getHyperTrackErrorsFromBlockers()
+            }
     }
 
     private fun getLocationError(error: OutageReason): LocationError {
@@ -239,5 +248,4 @@ internal object HyperTrackSdkWrapper {
             }
             .toSet()
     }
-
 }

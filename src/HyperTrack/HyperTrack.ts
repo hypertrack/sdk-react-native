@@ -56,6 +56,7 @@ export default class HyperTrack {
         loggingEnabled: sdkInitParams.loggingEnabled ?? false,
         allowMockLocations: sdkInitParams.allowMockLocations ?? false,
         requireBackgroundTrackingPermission: sdkInitParams.requireBackgroundTrackingPermission ?? false,
+        automaticallyRequestPermissions: sdkInitParams.automaticallyRequestPermissions ?? true,
       });
       return new HyperTrack();
     } catch (error: any) {

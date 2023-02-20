@@ -98,10 +98,10 @@ func serializeErrors(_ errors: Set<HyperTrack.HyperTrackError>) -> Array<Diction
     })
 }
 
-func serializeDeviceId(_ deviceId: String) -> Dictionary<String, Any> {
+func serializeDeviceID(_ deviceID: String) -> Dictionary<String, Any> {
     return [
         keyType: "deviceID",
-        keyValue: deviceId
+        keyValue: deviceID
     ]
 }
 
@@ -143,7 +143,6 @@ func serializeLocationResult(_ result: Result<HyperTrack.Location, HyperTrack.Lo
             locationError = serializeHyperTrackErrorAsLocationError(HyperTrackError.motionActivityPermissionsDenied)
         case .motionActivityServicesDisabled:
             locationError = serializeHyperTrackErrorAsLocationError(HyperTrackError.motionActivityServicesDisabled)
-
         case .gpsSignalLost:
             locationError = serializeHyperTrackErrorAsLocationError(HyperTrackError.gpsSignalLost)
         case .locationMocked:
@@ -157,7 +156,6 @@ func serializeLocationResult(_ result: Result<HyperTrack.Location, HyperTrack.Lo
                 keyType: "notRunning"
             ]
         }
-
         return [
             keyType: typeFailure,
             keyValue: locationError
@@ -195,7 +193,7 @@ func serializeLocationResult(_ result: Result<HyperTrack.Location, HyperTrack.No
                 keyValue: serializeErrors(errors)
             ]
         }
-        
+
         return [
             keyType: typeFailure,
             keyValue: locationError
