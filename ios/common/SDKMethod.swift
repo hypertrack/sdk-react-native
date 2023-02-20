@@ -1,6 +1,6 @@
 enum SDKMethod: String {
     case initialize = "initialize"
-    case getDeviceId = "getDeviceId"
+    case getDeviceID = "getDeviceID"
     case getLocation = "getLocation"
     case startTracking = "startTracking"
     case stopTracking = "stopTracking"

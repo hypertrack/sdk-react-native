@@ -63,7 +63,8 @@ internal object Serialization {
             is Errors -> {
                 mapOf(
                     KEY_TYPE to TYPE_LOCATION_ERROR_ERRORS,
-                    KEY_VALUE to locationError.errors.map { serializeHypertrackError(it) }
+                    KEY_VALUE to locationError.errors
+                        .map { serializeHypertrackError(it) }
                 )
             }
         }
@@ -86,39 +87,45 @@ internal object Serialization {
     fun deserializeDeviceName(name: Map<String, Any?>): Result<String> {
         return parse(name) {
             it.assertValue<String>(key = KEY_TYPE, value = TYPE_DEVICE_NAME)
-            it.get<String>(KEY_VALUE).getOrThrow()
+            it
+                .get<String>(KEY_VALUE)
+                .getOrThrow()
         }
     }
 
     fun deserializeAvailability(isAvailable: Map<String, Any?>): Result<Boolean> {
         return parse(isAvailable) {
             it.assertValue<String>(key = KEY_TYPE, value = TYPE_AVAILABILITY)
-            it.get<Boolean>(KEY_VALUE).getOrThrow()
+            it
+                .get<Boolean>(KEY_VALUE)
+                .getOrThrow()
         }
     }
 
     fun deserializeGeotagData(map: Map<String, Any?>): Result<Geotag> {
         return parse(map) {
-            val data = it.get<Map<String, Any?>>(KEY_GEOTAG_DATA).getOrThrow()
+            val data = it
+                .get<Map<String, Any?>>(KEY_GEOTAG_DATA)
+                .getOrThrow()
             Geotag(data)
         }
     }
 
     fun <T> parse(
         source: Map<String, Any?>,
-        parseFunction: (ParsingHandle) -> T
+        parseFunction: (Parser) -> T
     ): Result<T> {
-        val handle = ParsingHandle(source);
+        val parser = Parser(source)
         return try {
-            if (handle.exceptions.isEmpty()) {
-                Success(parseFunction.invoke(handle))
+            if (parser.exceptions.isEmpty()) {
+                Success(parseFunction.invoke(parser))
             } else {
-                Failure(ParsingExceptions(source, handle.exceptions))
+                Failure(ParsingExceptions(source, parser.exceptions))
             }
         } catch (e: Exception) {
             Failure(
-                if (handle.exceptions.isNotEmpty()) {
-                    ParsingExceptions(source, handle.exceptions + e)
+                if (parser.exceptions.isNotEmpty()) {
+                    ParsingExceptions(source, parser.exceptions + e)
                 } else {
                     e
                 }
@@ -126,8 +133,8 @@ internal object Serialization {
         }
     }
 
-    internal class ParsingHandle(
-        private val source: Map<String, Any?>,
+    internal class Parser(
+        private val source: Map<String, Any?>
     ) {
         private val _exceptions = mutableListOf<Exception>()
         val exceptions: List<Exception> = _exceptions
@@ -160,9 +167,12 @@ internal object Serialization {
     internal data class ParsingExceptions(
         val source: Any,
         val exceptions: List<Exception>
-    ) : Throwable(exceptions.joinToString("\n").let {
-        "Invalid input:\n\n${source}\n\n${it}"
-    })
+    ) : Throwable(
+        exceptions.joinToString("\n")
+            .let {
+                "Invalid input:\n\n${source}\n\n$it"
+            }
+    )
 
     internal class ParsingException(
         key: String,
@@ -190,7 +200,4 @@ internal object Serialization {
     private const val KEY_LONGITUDE = "longitude"
 
     const val KEY_GEOTAG_DATA = "data"
-
 }
-
-

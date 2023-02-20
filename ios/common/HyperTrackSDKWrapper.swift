@@ -12,6 +12,7 @@ enum FailureResult: Error {
 
 var sdkInstance: HyperTrack! // initialize method is guaranteed to be called (by non-native side) prior to any access to the SDK instance
 
+// method is named 'initializeSDK' to avoid conflict with React Native plugin 'initialize' method
 func initializeSDK(
     _ params: Dictionary<String, Any>
 ) -> Result<SuccessResult, FailureResult> {
@@ -20,6 +21,7 @@ func initializeSDK(
         if let publishableKey = publishableKey {
             switch HyperTrack.makeSDK(
                 publishableKey: publishableKey,
+                automaticallyRequestPermissions: sdkInitParams.automaticallyRequestPermissions,
                 mockLocationsAllowed: sdkInitParams.allowMockLocations
             ) {
             case let .success(hyperTrack):
@@ -38,7 +40,7 @@ func initializeSDK(
 }
 
 func getDeviceID() -> Result<SuccessResult, FailureResult> {
-    .success(.dict(serializeDeviceId(sdkInstance.deviceID)))
+    .success(.dict(serializeDeviceID(sdkInstance.deviceID)))
 }
 
 func getLocation() -> Result<SuccessResult, FailureResult> {
@@ -68,9 +70,8 @@ func setAvailability(
 
 func setName(_ args: Dictionary<String, Any>) -> Result<SuccessResult, FailureResult> {
     deserializeDeviceName(args).flatMap({ (name: String) in
-            .success(asVoid(sdkInstance.setDeviceName(name)))
+        .success(asVoid(sdkInstance.setDeviceName(name)))
     })
-    
 }
 
 func setMetadata(_ map: Dictionary<String, Any>) -> Result<SuccessResult, FailureResult> {
@@ -108,6 +109,7 @@ private func mapFatalError(fatalError: HyperTrack.FatalError) -> FailureResult {
         return .fatalError("missingLocationUpdatesBackgroundModeCapability")
     case .developmentError(.runningOnSimulatorUnsupported):
         return .fatalError("runningOnSimulatorUnsupported")
+    // typo is in the HyperTrack SDK itself, no need to fix (it will be deleted in the next major update)
     case .productionError(.locationServicesUnavalible):
         return .error("locationServicesUnavalible")
     case .productionError(.motionActivityServicesUnavalible):

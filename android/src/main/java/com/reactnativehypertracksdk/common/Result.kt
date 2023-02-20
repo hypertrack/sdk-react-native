@@ -1,29 +1,31 @@
 package com.reactnativehypertracksdk.common
 
-internal sealed class Result<S> {
-    fun <T> flatMapSuccess(onSuccess: (S) -> Result<T>): Result<T> {
+internal sealed class Result<SuccessType> {
+    fun <MappedSuccess> flatMapSuccess(
+        onSuccess: (SuccessType) -> Result<MappedSuccess>
+    ): Result<MappedSuccess> {
         return when (this) {
             is Success -> {
                 onSuccess.invoke(this.success)
             }
             is Failure -> {
-                Failure<T>(this.failure)
+                Failure<MappedSuccess>(this.failure)
             }
         }
     }
 
-    fun <T> mapSuccess(onSuccess: (S) -> T): Result<T> {
+    fun <MappedSuccess> mapSuccess(onSuccess: (SuccessType) -> MappedSuccess): Result<MappedSuccess> {
         return when (this) {
             is Success -> {
                 Success(onSuccess.invoke(this.success))
             }
             is Failure -> {
-                Failure<T>(this.failure)
+                Failure<MappedSuccess>(this.failure)
             }
         }
     }
 
-    fun getOrThrow(): S {
+    fun getOrThrow(): SuccessType {
         return when (this) {
             is Success -> this.success
             is Failure -> throw Exception(
@@ -34,7 +36,7 @@ internal sealed class Result<S> {
     }
 
     companion object {
-        fun <T> tryAsResult(block: () -> T): Result<T> {
+        fun <SuccessType> tryAsResult(block: () -> SuccessType): Result<SuccessType> {
             return try {
                 Success(block.invoke())
             } catch (e: Exception) {
@@ -44,5 +46,5 @@ internal sealed class Result<S> {
     }
 }
 
-internal data class Success<S>(val success: S) : Result<S>()
-internal data class Failure<S>(val failure: Throwable) : Result<S>()
+internal data class Success<SuccessType>(val success: SuccessType) : Result<SuccessType>()
+internal data class Failure<SuccessType>(val failure: Throwable) : Result<SuccessType>()

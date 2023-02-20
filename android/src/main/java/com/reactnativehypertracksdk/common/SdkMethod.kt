@@ -2,11 +2,12 @@ package com.reactnativehypertracksdk.common
 
 /**
  * The list of available methods in the SDK API.
- * Enum naming convention is ignored to make datatype sync across platforms easier
+ * Enum naming convention is ignored to make datatype sync across platforms easier.
+ * Using Swift naming convention.
  */
 internal enum class SdkMethod {
     initialize,
-    getDeviceId,
+    getDeviceID,
     getLocation,
     startTracking,
     stopTracking,

@@ -70,7 +70,7 @@ class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
         promise: Promise
     ) {
         HyperTrackSdkWrapper
-            .initialize(initParams.toHashMap())
+            .initializeSdk(initParams.toHashMap())
             .mapSuccess { sdk ->
                 initListeners(sdk)
             }
@@ -122,7 +122,7 @@ class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
 
     @ReactMethod
     fun getDeviceId(promise: Promise) {
-        HyperTrackSdkWrapper.getDeviceID().toPromise(promise)
+        HyperTrackSdkWrapper.getDeviceId().toPromise(promise)
     }
 
     @ReactMethod
