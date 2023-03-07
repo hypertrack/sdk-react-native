@@ -13,7 +13,7 @@ For information about how to get started with React Native HyperTrack SDK, pleas
 
 ## Installation
 
-`npm install hypertrack-sdk-react-native`
+`yarn add hypertrack-sdk-react-native`
 
 ## Sample code
 
