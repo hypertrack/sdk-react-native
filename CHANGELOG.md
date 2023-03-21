@@ -3,6 +3,11 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [9.1.0] - 2023-03-21
+
+### Added
+- `automaticallyRequestPermissions` param to `initialize()`
+
 ## [9.0.0] - 2023-02-17
 
 ### Changed
@@ -23,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `subscribeToAvailability()`
 
 ### Removed
+- `automaticallyRequestPermissions` param from `initialize()`
 - `enableDebugLogging()` (use `initialize()` param `loggingEnabled` istead)
 - `setTripMarker()` (use `addGeotag` instead)
 
