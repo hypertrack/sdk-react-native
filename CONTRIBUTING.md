@@ -18,14 +18,12 @@
   
 3. Update CHANGELOG.md
 4. Update badge in README.md
-5. Commit
-5. Create a version tag
-6. Push branch and tags
-7. Create a Github repo release
+5. Do the release dry run with `just release` and verify that the release is correct (checklist is in the command output)
+6. Commit and merge to master
+7. Create and push a new version tag
+8. Run `npm publish` to publish the package to npm
+9. Create a Github repo release
    - Release title should be the current version tag
-8. `yarn release`
-   - will generate docs
-9. `yarn npm publish`
 
 ### How to change build config
 
