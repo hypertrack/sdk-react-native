@@ -28,6 +28,42 @@ internal object Serialization {
         )
     }
 
+    fun serializeGeotagResult(result: GeotagResultData): Map<String, Any?> {
+        return when (result) {
+            is GeotagSuccess -> serializeGeotagSuccess(result.location)
+            is GeotagSuccessWithDeviation -> serializeGeotagSuccessWithDeviation(
+                result.location,
+                result.deviation
+            )
+            is GeotagFailure -> serializeGeotagFailure(result.failure)
+        }
+    }
+
+    private fun serializeGeotagSuccess(location: Location): Map<String, Any?> {
+        return mapOf(
+            KEY_TYPE to TYPE_GEOTAG_SUCCESS,
+            KEY_VALUE to serializeLocation(location)
+        )
+    }
+
+    private fun serializeGeotagSuccessWithDeviation(
+        location: Location,
+        deviation: Float
+    ): Map<String, Any?> {
+        return mapOf(
+            KEY_TYPE to TYPE_GEOTAG_SUCCESS_WITH_DEVIATION,
+            KEY_VALUE to serializeLocation(location),
+            KEY_GEOTAG_DEVIATION to deviation
+        )
+    }
+
+    private fun serializeGeotagFailure(failure: Throwable): Map<String, Any?> {
+        return mapOf(
+            KEY_TYPE to TYPE_GEOTAG_FAILURE,
+            KEY_VALUE to failure.message
+        )
+    }
+
     fun serializeIsTracking(isTracking: Boolean): Map<String, Any?> {
         return mapOf(
             KEY_TYPE to TYPE_IS_TRACKING,
@@ -107,7 +143,32 @@ internal object Serialization {
             val data = it
                 .get<Map<String, Any?>>(KEY_GEOTAG_DATA)
                 .getOrThrow()
-            Geotag(data)
+            val locationData = it
+                .get<Map<String, Any?>>(KEY_GEOTAG_EXPECTED_LOCATION)
+                .getOrThrow()
+            val location = deserializeLocation(locationData).getOrThrow()
+            Geotag(data, location)
+        }
+    }
+
+    fun deserializeLocation(map: Map<String, Any?>): Result<Location> {
+        return parse(map) {
+            it.assertValue<String>(key = KEY_TYPE, value = TYPE_LOCATION)
+            val value = it
+                .get<Map<String, Any?>>(KEY_VALUE)
+                .getOrThrow()
+            parse(value) { parser ->
+                val latitude = parser
+                    .get<Double>(KEY_LATITUDE)
+                    .getOrThrow()
+                val longitude = parser
+                    .get<Double>(KEY_LONGITUDE)
+                    .getOrThrow()
+                Location("api").also {
+                    it.latitude = latitude
+                    it.longitude = longitude
+                }
+            }.getOrThrow()
         }
     }
 
@@ -196,8 +257,14 @@ internal object Serialization {
     private const val TYPE_LOCATION_ERROR_STARTING = "starting"
     private const val TYPE_LOCATION_ERROR_ERRORS = "errors"
 
+    private const val TYPE_GEOTAG_SUCCESS = "geotagSuccess"
+    private const val TYPE_GEOTAG_SUCCESS_WITH_DEVIATION = "geotagSuccessWithDeviation"
+    private const val TYPE_GEOTAG_FAILURE = "geotagFailure"
+
     private const val KEY_LATITUDE = "latitude"
     private const val KEY_LONGITUDE = "longitude"
 
     const val KEY_GEOTAG_DATA = "data"
+    const val KEY_GEOTAG_EXPECTED_LOCATION = "expected_location"
+    const val KEY_GEOTAG_DEVIATION = "deviation"
 }

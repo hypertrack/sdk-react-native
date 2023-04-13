@@ -1,9 +1,13 @@
 package com.reactnativehypertracksdk.common
 
+import android.location.Location
+
 /**
- * The data that represents geotag to create. Now it contains only payload data but
- * can have other params like expectedLocation in future
+ * The data that represents geotag to create
  *
  * @param data Geotag payload
  */
-internal data class Geotag(val data: Map<String, Any?>)
+internal data class Geotag(
+    val data: Map<String, Any?>,
+    val expectedLocation: Location?
+)

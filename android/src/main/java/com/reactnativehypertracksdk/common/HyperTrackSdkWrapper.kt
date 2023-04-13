@@ -1,6 +1,7 @@
 package com.reactnativehypertracksdk.common
 
 import com.hypertrack.sdk.*
+import com.hypertrack.sdk.GeotagResult
 import com.reactnativehypertracksdk.common.Serialization.deserializeAvailability
 import com.reactnativehypertracksdk.common.Serialization.deserializeDeviceName
 import com.reactnativehypertracksdk.common.Serialization.deserializeGeotagData
@@ -30,8 +31,7 @@ internal object HyperTrackSdkWrapper {
         args: Map<String, Any?>
     ): Result<HyperTrack> {
         return try {
-            SdkInitParams
-                .fromMap(args)
+            SdkInitParams.fromMap(args)
                 .flatMapSuccess { initParams ->
                     _sdkInstance = HyperTrack.getInstance(initParams.publishableKey)
                     if (initParams.loggingEnabled) {
@@ -40,7 +40,7 @@ internal object HyperTrackSdkWrapper {
                     if (initParams.allowMockLocations) {
                         sdkInstance.allowMockLocations()
                     }
-                    this.sdkInstance.backgroundTrackingRequirement(
+                    sdkInstance.backgroundTrackingRequirement(
                         initParams.requireBackgroundTrackingPermission
                     )
                     Success(sdkInstance)
@@ -73,7 +73,7 @@ internal object HyperTrackSdkWrapper {
         return deserializeGeotagData(args)
             .flatMapSuccess { geotag ->
                 sdkInstance
-                    .addGeotag(geotag.data)
+                    .addGeotag(geotag.data, geotag.expectedLocation)
                     .let { result ->
                         when (result) {
                             is GeotagResult.SuccessWithDeviation -> {
