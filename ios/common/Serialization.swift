@@ -1,13 +1,19 @@
 import HyperTrack
 
+
 private let keyType = "type"
 private let keyValue = "value"
+private let keyExpectedLocation = "expectedLocation"
 
 private let typeSuccess = "success"
 private let typeFailure = "failure"
 private let typeHyperTrackError = "hyperTrackError"
 private let typeIsTracking = "isTracking"
 private let typeIsAvailable = "isAvailable"
+private let typeGeotagSuccess = "geotagSuccess"
+private let typeGeotagFailure = "geotagFailure"
+private let typeGeotagSuccessWithDeviation = "geotagSuccessWithDeviation"
+private let typeLocation = "location"
 
 let keyGeotagData = "data"
 
@@ -111,7 +117,7 @@ func serializeLocationResult(_ result: Result<HyperTrack.Location, HyperTrack.Lo
         return [
             keyType: typeSuccess,
             keyValue: [
-                keyType: "location",
+                keyType: typeLocation,
                 keyValue: [
                     "latitude": success.latitude,
                     "longitude": success.longitude
@@ -163,18 +169,22 @@ func serializeLocationResult(_ result: Result<HyperTrack.Location, HyperTrack.Lo
     }
 }
 
+private func serializeLocation(_ location: HyperTrack.Location) -> Dictionary<String, Any> {
+    return [
+        keyType: typeLocation,
+        keyValue: [
+            "latitude": location.latitude,
+            "longitude": location.longitude
+        ]
+    ]
+}
+
 func serializeLocationResult(_ result: Result<HyperTrack.Location, HyperTrack.NoLocationError>) -> Dictionary<String, Any>  {
     switch (result) {
     case .success(let success):
         return [
             keyType: typeSuccess,
-            keyValue: [
-                keyType: "location",
-                keyValue: [
-                    "latitude": success.latitude,
-                    "longitude": success.longitude
-                ]
-            ]
+            keyValue: serializeLocation(success)
         ]
     case .failure(let failure):
         var locationError: Dictionary<String, Any>
@@ -198,6 +208,29 @@ func serializeLocationResult(_ result: Result<HyperTrack.Location, HyperTrack.No
             keyType: typeFailure,
             keyValue: locationError
         ]
+    }
+}
+
+func serializeGeotagResult(_ result: GeotagResultData) -> Dictionary<String, Any> {
+    switch (result) {
+        case .geotagSuccess(let location):
+            return [
+                keyType: typeGeotagSuccess,
+                keyValue: serializeLocation(location)
+            ]
+        case .geotagFailure(let error):
+            return [
+                keyType: typeGeotagFailure,
+                keyValue: serializeHyperTrackError(getHyperTrackError(error))
+            ]
+        case .geotagSuccessWithDeviation(let location, let deviation):
+            return [
+                keyType: typeGeotagSuccessWithDeviation,
+                keyValue: [
+                    typeLocation: serializeLocation(location),
+                    "deviation": deviation
+                ]
+            ]
     }
 }
 
@@ -256,11 +289,31 @@ func deserializeAvailability(_ data: Dictionary<String, Any>) -> Result<Bool, Fa
 
 func deserializeGeotagData(
     _ geotag: Dictionary<String, Any>
-) -> Result<Dictionary<String, Any>, FailureResult> {
+) -> Result<Geotag, FailureResult> {
     guard let data = geotag[keyGeotagData] as? Dictionary<String, Any> else {
         return .failure(.fatalError(getParseError(geotag, key: keyGeotagData)))
     }
-    return .success(data)
+    let expectedLocationData = geotag[keyExpectedLocation] as? Dictionary<String, Any>
+    let expectedLocation = expectedLocationData.flatMap { data in
+        return deserializeLocation(data).value
+    }
+    return .success(Geotag(data: data, expectedLocation: expectedLocation))
+}
+
+func deserializeLocation(_ data: Dictionary<String, Any>) -> Result<HyperTrack.Location, FailureResult> {
+    if (data[keyType] as? String != typeLocation) {
+        return .failure(.fatalError(getParseError(data, key: keyType)))
+    }
+    guard let value = data[keyValue] as? Dictionary<String, Any> else {
+        return .failure(.fatalError(getParseError(data, key: keyValue)))
+    }
+    guard let latitude = value["latitude"] as? Double else {
+        return .failure(.fatalError(getParseError(value, key: "latitude")))
+    }
+    guard let longitude = value["longitude"] as? Double else {
+        return .failure(.fatalError(getParseError(value, key: "longitude")))
+    }
+    return .success(HyperTrack.Location(latitude: latitude, longitude: longitude))
 }
 
 func getParseError(_ data: Any, key: String) -> String {
