@@ -4,59 +4,53 @@ import com.facebook.react.bridge.*
 import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.hypertrack.sdk.*
-import com.hypertrack.sdk.AvailabilityStateObserver.OnAvailabilityStateChangeListener
-import com.hypertrack.sdk.TrackingStateObserver.OnTrackingStateChangeListener
+import com.hypertrack.sdk.android.HyperTrack
 import com.reactnativehypertracksdk.common.*
+import com.reactnativehypertracksdk.common.Serialization.serializeErrors
 import com.reactnativehypertracksdk.common.Serialization.serializeIsAvailable
 import com.reactnativehypertracksdk.common.Serialization.serializeIsTracking
+import com.reactnativehypertracksdk.common.Serialization.serializeLocateResult
+import com.reactnativehypertracksdk.common.Serialization.serializeLocation
+import com.reactnativehypertracksdk.common.Serialization.serializeLocationResult
 
-@Suppress("ComplexRedundantLet")
 @ReactModule(name = HyperTrackReactNativePlugin.NAME)
 class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
     ReactContextBaseJavaModule(reactContext) {
 
-    var trackingStateListener: OnTrackingStateChangeListener? = null
-    var availabilityListener: OnAvailabilityStateChangeListener? = null
+    private var locateSubscription: HyperTrack.Cancellable? = null
 
     override fun getName(): String {
         return NAME
     }
 
+    /**
+     * ReactNative built-in methods
+     */
+
     @ReactMethod
-    fun addListener(type: String?) {
-        when (type) {
-            EVENT_TRACKING -> {
-                HyperTrackSdkWrapper.isTracking().let {
-                    when (it) {
-                        is Success -> {
-                            emitIsTracking(it.success)
-                        }
-                        is Failure -> {
-                            throw Exception("isTracking failed: ${it.failure}", it.failure)
-                        }
-                    }
-                }
-            }
-            EVENT_AVAILABILITY -> {
-                HyperTrackSdkWrapper.isAvailable().let {
-                    when (it) {
-                        is Success -> {
-                            emitIsAvailable(it.success)
-                        }
-                        is Failure -> {
-                            throw Exception("isAvailable failed: ${it.failure}", it.failure)
-                        }
-                    }
-                }
-            }
+    fun addListener(eventName: String?) {
+        // called when RN app subscribes to an event
+        when (eventName) {
             EVENT_ERRORS -> {
-                HyperTrackSdkWrapper.getInitialErrors().let {
-                    emitErrors(it)
-                }
+                emitEvent(EVENT_ERRORS, serializeErrors(HyperTrack.errors).toWriteableArray())
+            }
+            EVENT_IS_AVAILABLE -> {
+                emitEvent(EVENT_IS_AVAILABLE, serializeIsAvailable(HyperTrack.isAvailable).toWritableMap())
+            }
+            EVENT_IS_TRACKING -> {
+                emitEvent(EVENT_IS_TRACKING, serializeIsTracking(HyperTrack.isTracking).toWritableMap())
+            }
+            EVENT_LOCATION -> {
+                emitEvent(EVENT_LOCATION, serializeLocationResult(HyperTrack.location).toWritableMap())
             }
             else -> Unit
         }
         // Keep: Required for RN built in Event Emitter Calls.
+    }
+
+    override fun initialize() {
+        super.initialize()
+        initListeners()
     }
 
     @ReactMethod
@@ -64,60 +58,13 @@ class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
         // Keep: Required for RN built in Event Emitter Calls.
     }
 
+    /**
+     * SDK methods
+     */
+
     @ReactMethod
-    fun initializeSdk(
-        initParams: ReadableMap,
-        promise: Promise
-    ) {
-        HyperTrackSdkWrapper
-            .initializeSdk(initParams.toHashMap())
-            .mapSuccess { sdk ->
-                initListeners(sdk)
-            }
-            .toPromise(promise)
-    }
-
-    private fun initListeners(sdkInstance: HyperTrack) {
-        if (trackingStateListener != null) {
-            sdkInstance.removeTrackingListener(trackingStateListener)
-            trackingStateListener = null
-        }
-        trackingStateListener = object : OnTrackingStateChangeListener {
-            override fun onError(trackingError: TrackingError) {
-                emitErrors(HyperTrackSdkWrapper.getErrors(trackingError))
-            }
-
-            override fun onTrackingStart() {
-                emitIsTracking(serializeIsTracking(true))
-            }
-
-            override fun onTrackingStop() {
-                emitIsTracking(serializeIsTracking(false))
-            }
-        }.also {
-            sdkInstance.addTrackingListener(it)
-        }
-
-        if (availabilityListener != null) {
-            sdkInstance.removeAvailabilityListener(availabilityListener)
-            availabilityListener = null
-        }
-        availabilityListener =
-            object : AvailabilityStateObserver.OnAvailabilityStateChangeListener {
-                override fun onError(p0: AvailabilityError) {
-                    // ignored, errors are handled by trackingStateListener
-                }
-
-                override fun onAvailable() {
-                    emitIsAvailable(serializeIsAvailable(true))
-                }
-
-                override fun onUnavailable() {
-                    emitIsAvailable(serializeIsAvailable(false))
-                }
-            }.also {
-                sdkInstance.addAvailabilityListener(it)
-            }
+    fun addGeotag(args: ReadableMap, promise: Promise) {
+        HyperTrackSdkWrapper.addGeotag(args.toHashMap()).toPromise(promise)
     }
 
     @ReactMethod
@@ -126,43 +73,52 @@ class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
     }
 
     @ReactMethod
-    fun isTracking(promise: Promise) {
-        HyperTrackSdkWrapper.isTracking().toPromise(promise)
+    fun getErrors(promise: Promise) {
+        HyperTrackSdkWrapper.getErrors().toPromise(promise)
     }
 
     @ReactMethod
-    fun startTracking() {
-        HyperTrackSdkWrapper.startTracking()
+    fun getIsAvailable(promise: Promise) {
+        HyperTrackSdkWrapper.getIsAvailable().toPromise(promise)
     }
 
     @ReactMethod
-    fun stopTracking() {
-        HyperTrackSdkWrapper.stopTracking()
+    fun getIsTracking(promise: Promise) {
+        HyperTrackSdkWrapper.getIsTracking().toPromise(promise)
     }
 
     @ReactMethod
-    fun sync() {
-        HyperTrackSdkWrapper.sync()
+    fun getLocation(promise: Promise) {
+        HyperTrackSdkWrapper.getLocation().toPromise(promise)
     }
 
     @ReactMethod
-    fun addGeotag(args: ReadableMap, promise: Promise) {
-        HyperTrackSdkWrapper.addGeotag(args.toHashMap()).toPromise(promise)
+    fun getMetadata(promise: Promise) {
+        HyperTrackSdkWrapper.getMetadata().toPromise(promise)
     }
 
     @ReactMethod
-    fun isAvailable(promise: Promise) {
-        HyperTrackSdkWrapper.isAvailable().toPromise(promise)
+    fun getName(promise: Promise) {
+        HyperTrackSdkWrapper.getName().toPromise(promise)
     }
 
     @ReactMethod
-    fun setAvailability(args: ReadableMap) {
-        HyperTrackSdkWrapper.setAvailability(args.toHashMap())
+    fun locate(promise: Promise) {
+        locateSubscription?.cancel()
+        locateSubscription = HyperTrack.locate {
+            emitEvent(EVENT_LOCATE, serializeLocateResult(it).toWritableMap())
+        }
+        Success(Unit).toPromise(promise)
     }
 
     @ReactMethod
-    fun setName(args: ReadableMap) {
-        HyperTrackSdkWrapper.setName(args.toHashMap())
+    fun setIsAvailable(args: ReadableMap) {
+        HyperTrackSdkWrapper.setIsAvailable(args.toHashMap())
+    }
+
+    @ReactMethod
+    fun setIsTracking(args: ReadableMap) {
+        HyperTrackSdkWrapper.setIsTracking(args.toHashMap())
     }
 
     @ReactMethod
@@ -171,20 +127,26 @@ class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
     }
 
     @ReactMethod
-    fun getLocation(promise: Promise) {
-        HyperTrackSdkWrapper.getLocation().toPromise(promise)
+    fun setName(args: ReadableMap) {
+        HyperTrackSdkWrapper.setName(args.toHashMap())
     }
 
-    private fun emitIsTracking(isTracking: Map<String, Any?>) {
-        emitEvent(EVENT_TRACKING, isTracking.toWritableMap())
-    }
+    private fun initListeners() {
+        HyperTrack.subscribeToErrors {
+            emitEvent(EVENT_ERRORS, serializeErrors(it).toWriteableArray())
+        }
 
-    private fun emitIsAvailable(isAvailable: Map<String, Any?>) {
-        emitEvent(EVENT_AVAILABILITY, isAvailable.toWritableMap())
-    }
+        HyperTrack.subscribeToIsAvailable {
+            emitEvent(EVENT_IS_AVAILABLE, serializeIsAvailable(it).toWritableMap())
+        }
 
-    private fun emitErrors(errors: List<Map<String, Any?>>) {
-        emitEvent(EVENT_ERRORS, errors.toWriteableArray())
+        HyperTrack.subscribeToIsTracking {
+            emitEvent(EVENT_IS_TRACKING, serializeIsTracking(it).toWritableMap())
+        }
+
+        HyperTrack.subscribeToLocation {
+            emitEvent(EVENT_LOCATION, serializeLocationResult(it).toWritableMap())
+        }
     }
 
     private fun emitEvent(event: String, data: WritableMap) {
@@ -193,6 +155,7 @@ class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
             .emit(event, data)
     }
 
+    @Suppress("SameParameterValue")
     private fun emitEvent(event: String, data: WritableArray) {
         reactApplicationContext
             .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
@@ -200,9 +163,11 @@ class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
     }
 
     companion object {
-        private const val EVENT_TRACKING = "onTrackingChanged"
-        private const val EVENT_AVAILABILITY = "onAvailabilityChanged"
-        private const val EVENT_ERRORS = "onError"
+        private const val EVENT_ERRORS = "errors"
+        private const val EVENT_IS_AVAILABLE = "isAvailable"
+        private const val EVENT_IS_TRACKING = "isTracking"
+        private const val EVENT_LOCATE = "locate"
+        private const val EVENT_LOCATION = "location"
 
         const val NAME = "HyperTrackReactNativePlugin"
     }

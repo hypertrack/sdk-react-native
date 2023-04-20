@@ -1,62 +1,77 @@
 import HyperTrack
 
+struct Subscriptions {
+    let locationSubscription: HyperTrack.Cancellable
+    let isAvailableSubscription: HyperTrack.Cancellable
+    let isTrackingSubscription: HyperTrack.Cancellable
+    let errorsSubscription: HyperTrack.Cancellable
+}
+
 @objc(HyperTrackReactNativePlugin)
 class HyperTrackReactNativePlugin: RCTEventEmitter {
-    
-    private let eventTracking = "onTrackingChanged"
-    private let eventAvailability = "onAvailabilityChanged"
-    private let eventErrors = "onError"
-    
-    private var isTrackingSubscription: HyperTrack.Cancellable!
-    private var availabilitySubscription: HyperTrack.Cancellable!
-    private var errorsSubscription: HyperTrack.Cancellable!
-    
+    private let eventErrors = "errors"
+    private let eventIsAvailable = "isAvailable"
+    private let eventIsTracking = "isTracking"
+    private let eventLocate = "locate"
+    private let eventLocation = "location"
+
+    private var subscriptions: Subscriptions? = nil
+    private var locateSubscription: HyperTrack.Cancellable? = nil
+
     @objc override static func requiresMainQueueSetup() -> Bool {
         return false
     }
-    
+
     @objc override func supportedEvents() -> [String] {
         return [
-            eventTracking,
-            eventAvailability,
-            eventErrors
+            eventErrors,
+            eventIsAvailable,
+            eventIsTracking,
+            eventLocate,
+            eventLocation,
         ]
     }
-    
+
     @objc override func addListener(_ eventName: String) {
+        // Called when any listener is added.
         super.addListener(eventName)
-        switch(eventName) {
-        case eventTracking:
-            sendEvent(withName: eventTracking, body: serializeIsTracking(sdkInstance.isTracking))
-        case eventAvailability:
-            sendEvent(withName: eventAvailability, body: serializeIsAvailable(sdkInstance.availability))
+        /*
+         Due to the issue in RN (probably related to the fact that the SDK calls the subscription
+         callback too fast) we can't init listener in init() anymore.
+         So we init them lazily here.
+         */
+        if subscriptions == nil {
+            subscriptions = initListeners()
+        }
+        switch eventName {
+        case eventIsTracking:
+            sendEvent(withName: eventIsTracking, body: serializeIsTracking(HyperTrack.isTracking))
+        case eventIsAvailable:
+            sendEvent(withName: eventIsAvailable, body: serializeIsAvailable(HyperTrack.isAvailable))
         case eventErrors:
-            sendEvent(withName: eventErrors, body: serializeErrors(sdkInstance.errors))
+            sendEvent(withName: eventErrors, body: serializeErrors(HyperTrack.errors))
+        case eventLocation:
+            sendEvent(withName: eventLocation, body: serializeLocationResult(HyperTrack.location))
         default:
             return
         }
     }
-    
-    /// Method name is changed from 'initialize' because RCTEventEmitter has a method with the same name
-    @objc func initializeSdk(
+
+    @objc func addGeotag(
         _ args: NSDictionary,
         resolver resolve: RCTPromiseResolveBlock,
         rejecter reject: RCTPromiseRejectBlock
     ) {
         sendAsPromise(
-            hypertrack_sdk_react_native.initializeSDK(
-                args as! Dictionary<String, Any>
-            ).map({ (result:SuccessResult) in
-                initListeners()
-                return result
-            }),
-            method: .initialize,
+            hypertrack_sdk_react_native.addGeotag(
+                args as! [String: Any]
+            ),
+            method: .addGeotag,
             resolve,
             reject
         )
-        
     }
-    
+
     @objc func getDeviceId(
         _ resolve: RCTPromiseResolveBlock,
         rejecter reject: RCTPromiseRejectBlock
@@ -68,35 +83,43 @@ class HyperTrackReactNativePlugin: RCTEventEmitter {
             reject
         )
     }
-    
-    @objc func setName(
-        _ args: NSDictionary,
-        resolver resolve: RCTPromiseResolveBlock,
+
+    @objc func getErrors(
+        _ resolve: RCTPromiseResolveBlock,
         rejecter reject: RCTPromiseRejectBlock
     ) {
         sendAsPromise(
-            hypertrack_sdk_react_native.setName(args as! Dictionary<String, Any>),
-            method: .setName,
+            hypertrack_sdk_react_native.getErrors(),
+            method: .getErrors,
             resolve,
             reject
         )
     }
-    
-    @objc func setMetadata(
-        _ args: NSDictionary,
-        resolver resolve: RCTPromiseResolveBlock,
+
+    @objc func getIsAvailable(
+        _ resolve: RCTPromiseResolveBlock,
         rejecter reject: RCTPromiseRejectBlock
     ) {
         sendAsPromise(
-            hypertrack_sdk_react_native.setMetadata(
-                args as! Dictionary<String, Any>
-            ),
-            method: .setMetadata,
+            hypertrack_sdk_react_native.getIsAvailable(),
+            method: .getIsAvailable,
             resolve,
             reject
         )
     }
-    
+
+    @objc func getIsTracking(
+        _ resolve: RCTPromiseResolveBlock,
+        rejecter reject: RCTPromiseRejectBlock
+    ) {
+        sendAsPromise(
+            hypertrack_sdk_react_native.getIsTracking(),
+            method: .getIsTracking,
+            resolve,
+            reject
+        )
+    }
+
     @objc func getLocation(
         _ resolve: RCTPromiseResolveBlock,
         rejecter reject: RCTPromiseRejectBlock
@@ -108,120 +131,122 @@ class HyperTrackReactNativePlugin: RCTEventEmitter {
             reject
         )
     }
-    
-    @objc func startTracking(
+
+    @objc func getMetadata(
         _ resolve: RCTPromiseResolveBlock,
         rejecter reject: RCTPromiseRejectBlock
     ) {
         sendAsPromise(
-            hypertrack_sdk_react_native.startTracking(),
-            method: .startTracking,
+            hypertrack_sdk_react_native.getMetadata(),
+            method: .getMetadata,
             resolve,
             reject
         )
     }
-    
-    @objc func stopTracking(
+
+    @objc func getName(
         _ resolve: RCTPromiseResolveBlock,
         rejecter reject: RCTPromiseRejectBlock
     ) {
         sendAsPromise(
-            hypertrack_sdk_react_native.stopTracking(),
-            method: .stopTracking,
+            hypertrack_sdk_react_native.getName(),
+            method: .getName,
             resolve,
             reject
         )
     }
-    
-    @objc func setAvailability(
-        _ args: NSDictionary,
-        resolver resolve: RCTPromiseResolveBlock,
-        rejecter reject: RCTPromiseRejectBlock
-    ) {
-        sendAsPromise(
-            hypertrack_sdk_react_native.setAvailability(
-                args as! Dictionary<String, Any>
-            ),
-            method: .setAvailability,
-            resolve,
-            reject
-        )
-    }
-    
-    @objc func isTracking(
+
+    @objc func locate(
         _ resolve: RCTPromiseResolveBlock,
         rejecter reject: RCTPromiseRejectBlock
     ) {
-        sendAsPromise(
-            hypertrack_sdk_react_native.isTracking(),
-            method: .isTracking,
-            resolve,
-            reject
-        )
-    }
-    
-    @objc func isAvailable(
-        _ resolve: RCTPromiseResolveBlock,
-        rejecter reject: RCTPromiseRejectBlock
-    ) {
-        sendAsPromise(
-            hypertrack_sdk_react_native.isAvailable(),
-            method: .isAvailable,
-            resolve,
-            reject
-        )
-    }
-    
-    @objc func addGeotag(
-        _ args: NSDictionary,
-        resolver resolve: RCTPromiseResolveBlock,
-        rejecter reject: RCTPromiseRejectBlock
-    ) {
-        sendAsPromise(
-            hypertrack_sdk_react_native.addGeotag(
-                args as! Dictionary<String, Any>
-            ),
-            method: .addGeotag,
-            resolve,
-            reject
-        )
-    }
-    
-    @objc func sync(
-        _ resolve: RCTPromiseResolveBlock,
-        rejecter reject: RCTPromiseRejectBlock
-    ) {
-        sendAsPromise(
-            hypertrack_sdk_react_native.sync(),
-            method: .sync,
-            resolve,
-            reject
-        )
-    }
-    
-    private func initListeners() {
-        isTrackingSubscription = sdkInstance.subscribeToIsTracking(callback: { isTracking in
-            self.sendTrackingEvent(isTracking: isTracking)
-        })
-        availabilitySubscription = sdkInstance.subscribeToAvailability(callback: { availability in
-            self.sendAvailabilityEvent(availability: availability)
-        })
-        errorsSubscription = sdkInstance.subscribeToErrors { errors in
-            self.sendErrorsEvent(errors)
+        if let locateSubscription = locateSubscription {
+            locateSubscription.cancel()
         }
+        locateSubscription = HyperTrack.locate { locateResult in
+            self.sendEvent(withName: self.eventLocate, body: serializeLocateResult(locateResult))
+        }
+        sendAsPromise(
+            .success(.void),
+            method: .locate,
+            resolve,
+            reject
+        )
     }
-    
-    private func sendTrackingEvent(isTracking: Bool) {
-        sendEvent(withName: eventTracking, body: serializeIsTracking(isTracking))
+
+    @objc func setIsAvailable(
+        _ args: NSDictionary,
+        resolver resolve: RCTPromiseResolveBlock,
+        rejecter reject: RCTPromiseRejectBlock
+    ) {
+        sendAsPromise(
+            hypertrack_sdk_react_native.setIsAvailable(
+                args as! [String: Any]
+            ),
+            method: .setIsAvailable,
+            resolve,
+            reject
+        )
     }
-    private func sendAvailabilityEvent(availability: HyperTrack.Availability) {
-        sendEvent(withName: eventAvailability, body: serializeIsAvailable(availability))
+
+    @objc func setMetadata(
+        _ args: NSDictionary,
+        resolver resolve: RCTPromiseResolveBlock,
+        rejecter reject: RCTPromiseRejectBlock
+    ) {
+        sendAsPromise(
+            hypertrack_sdk_react_native.setMetadata(
+                args as! [String: Any]
+            ),
+            method: .setMetadata,
+            resolve,
+            reject
+        )
     }
-    
-    private func sendErrorsEvent(_ errors: Set<HyperTrack.HyperTrackError>) {
-        sendEvent(withName: eventErrors, body: serializeErrors(errors))
+
+    @objc func setName(
+        _ args: NSDictionary,
+        resolver resolve: RCTPromiseResolveBlock,
+        rejecter reject: RCTPromiseRejectBlock
+    ) {
+        sendAsPromise(
+            hypertrack_sdk_react_native.setName(args as! [String: Any]),
+            method: .setName,
+            resolve,
+            reject
+        )
     }
-    
+
+    @objc func setIsTracking(
+        _ args: NSDictionary,
+        resolver resolve: RCTPromiseResolveBlock,
+        rejecter reject: RCTPromiseRejectBlock
+    ) {
+        sendAsPromise(
+            hypertrack_sdk_react_native.setIsTracking(
+                args as! [String: Any]
+            ),
+            method: .setIsTracking,
+            resolve,
+            reject
+        )
+    }
+
+    private func initListeners() -> Subscriptions {
+        let errorsSubscription = HyperTrack.subscribeToErrors { errors in
+            self.sendEvent(withName: self.eventErrors, body: serializeErrors(errors))
+        }
+        let isAvailableSubscription = HyperTrack.subscribeToIsAvailable { [self] isAvailable in
+            self.sendEvent(withName: self.eventIsAvailable, body: serializeIsAvailable(isAvailable))
+        }
+        let isTrackingSubscription = HyperTrack.subscribeToIsTracking { isTracking in
+            self.sendEvent(withName: self.eventIsTracking, body: serializeIsTracking(isTracking))
+        }
+        let locationSubscription = HyperTrack.subscribeToLocation { locationResult in
+            self.sendEvent(withName: self.eventLocation, body: serializeLocationResult(locationResult))
+        }
+        return Subscriptions(locationSubscription: locationSubscription, isAvailableSubscription: isAvailableSubscription, isTrackingSubscription: isTrackingSubscription, errorsSubscription: errorsSubscription)
+    }
 }
 
 private func sendAsPromise(
@@ -231,22 +256,24 @@ private func sendAsPromise(
     _ reject: RCTPromiseRejectBlock
 ) {
     switch result {
-    case .success(let success):
-        switch (success) {
+    case let .success(success):
+        switch success {
         case .void:
             resolve(nil)
-        case .dict(let value):
+        case let .dict(value):
+            resolve(value)
+        case let .array(value):
             resolve(value)
         }
-    case .failure(let failure):
-        switch(failure) {
-        case .error(let message):
+    case let .failure(failure):
+        switch failure {
+        case let .error(message):
             reject(
                 "method_call_error",
                 "\(method.rawValue): \(message)",
-                NSError.init(domain: "com.hypertrack.sdk.reactnative.ios", code: 0, userInfo: nil)
+                NSError(domain: "com.hypertrack.sdk.reactnative.ios", code: 0, userInfo: nil)
             )
-        case .fatalError(let message):
+        case let .fatalError(message):
             preconditionFailure(message)
         }
     }
