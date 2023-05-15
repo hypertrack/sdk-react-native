@@ -1,7 +1,4 @@
 export type Location = {
-  type: 'location';
-  value: {
-    latitude: number;
-    longitude: number;
-  };
+  latitude: number;
+  longitude: number;
 };

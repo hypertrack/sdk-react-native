@@ -88,10 +88,15 @@ func isAvailable() -> Result<SuccessResult, FailureResult> {
 }
 
 func addGeotag(_ args: Dictionary<String, Any>) -> Result<SuccessResult, FailureResult> {
-    return deserializeGeotagData(args).flatMap { data in
-        let metadata: HyperTrack.JSON.Object = getJSON(data)
-        let result = sdkInstance.addGeotag(metadata)
-        return .success(.dict(serializeLocationResult(result)))
+    return deserializeGeotagData(args).flatMap { geotagData in
+        let metadata: HyperTrack.JSON.Object = getJSON(geotagData.data)
+        if let expectedLocation = geotagData.expectedLocation {
+            let result = sdkInstance.addGeotag(metadata, expectedLocation: expectedLocation)
+            return .success(.dict(serializeExpectedLocationResult(result)))
+        } else {
+            let result = sdkInstance.addGeotag(metadata)
+            return .success(.dict(serializeLocationResult(result)))
+        }
     }
 }
 
