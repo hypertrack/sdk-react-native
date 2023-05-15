@@ -6,7 +6,7 @@ import type { Location } from './data_types/Location';
 import type { LocationError } from './data_types/LocationError';
 import type { SdkInitParams } from './data_types/SdkInitParams';
 import type { DeviceId } from './data_types/internal/DeviceId';
-import type { Geotag } from './data_types/internal/Geotag';
+import type { GeotagData } from './data_types/internal/GeotagData';
 import type { DeviceName } from './data_types/internal/DeviceName';
 import type { HyperTrackErrorInternal } from './data_types/internal/HyperTrackErrorInternal';
 import type { Result } from './data_types/Result';
@@ -189,8 +189,9 @@ export default class HyperTrack {
   ): Promise<Result<Location | LocationWithDeviation, LocationError>> {
     if (args.length === 1 && typeof args[0] === 'object') {
       return HyperTrackSdk.addGeotag({
-        data: args[0],
-      } as Geotag).then(
+        data: args,
+        expectedLocation: undefined,
+      } as GeotagData).then(
         (locationResponse: Result<LocationInternal, LocationErrorInternal>) => {
           return this.deserializeLocationResponse(locationResponse);
         }
@@ -203,7 +204,7 @@ export default class HyperTrack {
       return HyperTrackSdk.addGeotag({
         data: args[0],
         expectedLocation: args[1],
-      } as Geotag).then(
+      } as GeotagData).then(
         (
           locationResponse: Result<
             LocationWithDeviationInternal,
