@@ -1,4 +1,4 @@
-import type { Location } from 'lib/typescript';
+import type { Location } from '../Location';
 
 export type GeotagData = {
   data: Object;
