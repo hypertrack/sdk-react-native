@@ -1,6 +1,6 @@
-import type { Location } from '../Location';
+import type { LocationInternal } from './LocationInternal';
 
 export type GeotagData = {
   data: Object;
-  expectedLocation?: Location;
+  expectedLocation?: LocationInternal;
 };

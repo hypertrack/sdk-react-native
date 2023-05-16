@@ -201,9 +201,16 @@ export default class HyperTrack {
       typeof args[0] === 'object' &&
       this.isLocation(args[1])
     ) {
+      let expectedLocation = args[1] as Location;
       return HyperTrackSdk.addGeotag({
         data: args[0],
-        expectedLocation: args[1],
+        expectedLocation: {
+          type: 'location',
+          value: {
+            latitude: expectedLocation.latitude,
+            longitude: expectedLocation.longitude,
+          },
+        } as LocationInternal,
       } as GeotagData).then(
         (
           locationResponse: Result<
