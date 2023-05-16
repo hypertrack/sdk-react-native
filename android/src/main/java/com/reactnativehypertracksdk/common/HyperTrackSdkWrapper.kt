@@ -7,10 +7,11 @@ import com.reactnativehypertracksdk.common.Serialization.deserializeDeviceName
 import com.reactnativehypertracksdk.common.Serialization.deserializeGeotagData
 import com.reactnativehypertracksdk.common.Serialization.serializeDeviceId
 import com.reactnativehypertracksdk.common.Serialization.serializeErrors
-import com.reactnativehypertracksdk.common.Serialization.serializeFailure
 import com.reactnativehypertracksdk.common.Serialization.serializeIsAvailable
 import com.reactnativehypertracksdk.common.Serialization.serializeIsTracking
-import com.reactnativehypertracksdk.common.Serialization.serializeSuccess
+import com.reactnativehypertracksdk.common.Serialization.serializeLocationErrorFailure
+import com.reactnativehypertracksdk.common.Serialization.serializeLocationSuccess
+import com.reactnativehypertracksdk.common.Serialization.serializeLocationWithDeviationSuccess
 import java.lang.IllegalStateException
 import java.lang.RuntimeException
 
@@ -75,18 +76,43 @@ internal object HyperTrackSdkWrapper {
                 sdkInstance
                     .addGeotag(geotag.data, geotag.expectedLocation)
                     .let { result ->
-                        when (result) {
-                            is GeotagResult.SuccessWithDeviation -> {
-                                serializeSuccess(result.deviceLocation)
+                        if(geotag.expectedLocation == null) {
+                            when (result) {
+                                is GeotagResult.SuccessWithDeviation -> {
+                                    // not supposed to happen
+                                    serializeLocationSuccess(result.deviceLocation)
+                                }
+
+                                is GeotagResult.Success -> {
+                                    serializeLocationSuccess(result.deviceLocation)
+                                }
+
+                                is GeotagResult.Error -> {
+                                    serializeLocationErrorFailure(getLocationError(result.reason))
+                                }
+
+                                else -> {
+                                    throw IllegalArgumentException()
+                                }
                             }
-                            is GeotagResult.Success -> {
-                                serializeSuccess(result.deviceLocation)
-                            }
-                            is GeotagResult.Error -> {
-                                serializeFailure(getLocationError(result.reason))
-                            }
-                            else -> {
-                                throw IllegalArgumentException()
+                        } else {
+                            when (result) {
+                                is GeotagResult.SuccessWithDeviation -> {
+                                    serializeLocationWithDeviationSuccess(result.deviceLocation, result.deviationDistance.toDouble())
+                                }
+
+                                is GeotagResult.Success -> {
+                                    // not supposed to happen
+                                    serializeLocationWithDeviationSuccess(result.deviceLocation, 0.0)
+                                }
+
+                                is GeotagResult.Error -> {
+                                    serializeLocationErrorFailure(getLocationError(result.reason))
+                                }
+
+                                else -> {
+                                    throw IllegalArgumentException()
+                                }
                             }
                         }
                     }
@@ -135,9 +161,9 @@ internal object HyperTrackSdkWrapper {
         return sdkInstance.latestLocation
             .let { result ->
                 if (result.isSuccess) {
-                    serializeSuccess(result.value)
+                    serializeLocationSuccess(result.value)
                 } else {
-                    serializeFailure(getLocationError(result.error))
+                    serializeLocationErrorFailure(getLocationError(result.error))
                 }
             }
             .let { Success(it) }
