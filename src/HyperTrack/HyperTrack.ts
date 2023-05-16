@@ -189,7 +189,7 @@ export default class HyperTrack {
   ): Promise<Result<Location | LocationWithDeviation, LocationError>> {
     if (args.length === 1 && typeof args[0] === 'object') {
       return HyperTrackSdk.addGeotag({
-        data: args,
+        data: args[0],
         expectedLocation: undefined,
       } as GeotagData).then(
         (locationResponse: Result<LocationInternal, LocationErrorInternal>) => {
