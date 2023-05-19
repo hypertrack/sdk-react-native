@@ -3,6 +3,12 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [9.2.1] - 2023-05-19
+
+### Fixed
+
+- Fixed `addGeotag` (with expected location) return type
+
 ## [9.2.0] - 2023-05-18
 
 ### Added
@@ -489,6 +495,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial release.
 
+[9.2.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/9.2.0
+[9.1.1]: https://github.com/hypertrack/sdk-react-native/releases/tag/9.1.1
+[9.1.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/9.1.0
+[9.0.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/9.0.0
 [8.2.2]: https://github.com/hypertrack/sdk-react-native/releases/tag/8.2.2
 [8.2.1]: https://github.com/hypertrack/sdk-react-native/releases/tag/8.2.1
 [8.2.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/8.2.0
