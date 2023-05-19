@@ -1,6 +1,5 @@
 package com.reactnativehypertracksdk
 
-import android.util.Log
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.WritableArray
@@ -11,25 +10,25 @@ import com.reactnativehypertracksdk.common.Success
 
 @Suppress("UNCHECKED_CAST")
 internal fun <T> Result<T>.toPromise(promise: Promise) {
-  when(this) {
-    is Success -> {
-      when(this.success) {
-        is Map<*, *> -> {
-          promise.resolve((this.success as Map<String, Any>).toWritableMap())
+    when (this) {
+        is Success -> {
+            when (this.success) {
+                is Map<*, *> -> {
+                    promise.resolve((this.success as Map<String, Any>).toWritableMap())
+                }
+                is Unit -> {
+                    promise.resolve(null)
+                }
+                else -> {
+                    // using nested exception to correctly display error in RN logs
+                    promise.reject(Exception(IllegalArgumentException(this.success.toString())))
+                }
+            }
         }
-        is Unit -> {
-          promise.resolve(null)
+        is Failure -> {
+            promise.reject(Exception(this.failure))
         }
-        else -> {
-          // using nested exception to correctly display error in RN logs
-          promise.reject(Exception(IllegalArgumentException(this.success.toString())))
-        }
-      }
     }
-    is Failure -> {
-      promise.reject(Exception(this.failure))
-    }
-  }
 }
 
 @Suppress("UNCHECKED_CAST")

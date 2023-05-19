@@ -14,18 +14,22 @@ internal object Serialization {
         }
     }
 
-    fun serializeSuccess(location: Location): Map<String, Any?> {
-        return mapOf(
-            KEY_TYPE to TYPE_RESULT_SUCCESS,
-            KEY_VALUE to serializeLocation(location)
-        )
+    fun serializeLocationSuccess(location: Location): Map<String, Any?> {
+        return serializeSuccess(serializeLocation(location))
     }
 
-    fun serializeFailure(locationError: LocationError): Map<String, Any?> {
-        return mapOf(
-            KEY_TYPE to TYPE_RESULT_FAILURE,
-            KEY_VALUE to serializeLocationError(locationError)
-        )
+    fun serializeLocationWithDeviationSuccess(
+        location: Location,
+        deviation: Double
+    ): Map<String, Any?> {
+        return serializeSuccess(serializeLocationWithDeviation(
+            location,
+            deviation
+        ))
+    }
+
+    fun serializeLocationErrorFailure(locationError: LocationError): Map<String, Any?> {
+        return serializeFailure(serializeLocationError(locationError))
     }
 
     fun serializeIsTracking(isTracking: Boolean): Map<String, Any?> {
@@ -40,34 +44,6 @@ internal object Serialization {
             KEY_TYPE to TYPE_AVAILABILITY,
             KEY_VALUE to isAvailable
         )
-    }
-
-    fun serializeLocation(location: Location): Map<String, Any?> {
-        return mapOf(
-            KEY_TYPE to TYPE_LOCATION,
-            KEY_VALUE to mapOf(
-                KEY_LATITUDE to location.latitude,
-                KEY_LONGITUDE to location.longitude
-            )
-        )
-    }
-
-    fun serializeLocationError(locationError: LocationError): Map<String, Any?> {
-        return when (locationError) {
-            NotRunning -> {
-                mapOf(KEY_TYPE to TYPE_LOCATION_ERROR_NOT_RUNNING)
-            }
-            Starting -> {
-                mapOf(KEY_TYPE to TYPE_LOCATION_ERROR_STARTING)
-            }
-            is Errors -> {
-                mapOf(
-                    KEY_TYPE to TYPE_LOCATION_ERROR_ERRORS,
-                    KEY_VALUE to locationError.errors
-                        .map { serializeHypertrackError(it) }
-                )
-            }
-        }
     }
 
     fun serializeHypertrackError(error: HyperTrackError): Map<String, String> {
@@ -102,12 +78,16 @@ internal object Serialization {
         }
     }
 
-    fun deserializeGeotagData(map: Map<String, Any?>): Result<Geotag> {
+    fun deserializeGeotagData(map: Map<String, Any?>): Result<GeotagData> {
         return parse(map) {
             val data = it
                 .get<Map<String, Any?>>(KEY_GEOTAG_DATA)
                 .getOrThrow()
-            Geotag(data)
+            val locationData = it
+                .getOptional<Map<String, Any?>>(KEY_GEOTAG_EXPECTED_LOCATION)
+                .getOrThrow()
+            val location = locationData?.let { deserializeLocation(it).getOrThrow() }
+            GeotagData(data, location)
         }
     }
 
@@ -154,6 +134,21 @@ internal object Serialization {
             }
         }
 
+        inline fun <reified T> getOptional(
+            key: String
+        ): Result<T?> {
+            return try {
+                Success(source[key] as T?)
+            } catch (e: Exception) {
+                Failure(
+                    ParsingException(key, e)
+                        .also {
+                            _exceptions.add(it)
+                        }
+                )
+            }
+        }
+
         inline fun <reified T> assertValue(
             key: String,
             value: Any
@@ -179,6 +174,82 @@ internal object Serialization {
         exception: Exception
     ) : Exception("Invalid value for '$key': $exception", exception)
 
+    private fun deserializeLocation(map: Map<String, Any?>): Result<Location> {
+        return parse(map) {
+            it.assertValue<String>(key = KEY_TYPE, value = TYPE_LOCATION)
+            val value = it
+                .get<Map<String, Any?>>(KEY_VALUE)
+                .getOrThrow()
+            parse(value) { parser ->
+                val latitude = parser
+                    .get<Double>(KEY_LATITUDE)
+                    .getOrThrow()
+                val longitude = parser
+                    .get<Double>(KEY_LONGITUDE)
+                    .getOrThrow()
+                Location("api").also {
+                    it.latitude = latitude
+                    it.longitude = longitude
+                }
+            }.getOrThrow()
+        }
+    }
+
+    private fun serializeLocationWithDeviation(
+        location: Location,
+        deviation: Double
+    ): Map<String, Any?> {
+        return mapOf(
+            KEY_TYPE to TYPE_LOCATION,
+            KEY_VALUE to mapOf(
+                KEY_LOCATION to serializeLocation(location),
+                KEY_DEVIATION to deviation
+            )
+        )
+    }
+
+    private fun serializeFailure(failure: Map<String, Any?>): Map<String, Any?> {
+        return mapOf(
+            KEY_TYPE to TYPE_RESULT_FAILURE,
+            KEY_VALUE to failure
+        )
+    }
+
+    private fun serializeSuccess(success: Map<String, Any?>): Map<String, Any?> {
+        return mapOf(
+            KEY_TYPE to TYPE_RESULT_SUCCESS,
+            KEY_VALUE to success
+        )
+    }
+
+    private fun serializeLocation(location: Location): Map<String, Any?> {
+        return mapOf(
+            KEY_TYPE to TYPE_LOCATION,
+            KEY_VALUE to mapOf(
+                KEY_LATITUDE to location.latitude,
+                KEY_LONGITUDE to location.longitude
+            )
+        )
+    }
+
+    private fun serializeLocationError(locationError: LocationError): Map<String, Any?> {
+        return when (locationError) {
+            NotRunning -> {
+                mapOf(KEY_TYPE to TYPE_LOCATION_ERROR_NOT_RUNNING)
+            }
+            Starting -> {
+                mapOf(KEY_TYPE to TYPE_LOCATION_ERROR_STARTING)
+            }
+            is Errors -> {
+                mapOf(
+                    KEY_TYPE to TYPE_LOCATION_ERROR_ERRORS,
+                    KEY_VALUE to locationError.errors
+                        .map { serializeHypertrackError(it) }
+                )
+            }
+        }
+    }
+
     private const val KEY_TYPE = "type"
     private const val KEY_VALUE = "value"
 
@@ -186,6 +257,7 @@ internal object Serialization {
     private const val TYPE_RESULT_FAILURE = "failure"
 
     private const val TYPE_LOCATION = "location"
+    private const val TYPE_LOCATION_WITH_DEVIATION = "locationWithDeviation"
     private const val TYPE_AVAILABILITY = "isAvailable"
     private const val TYPE_DEVICE_NAME = "deviceName"
     private const val TYPE_DEVICE_ID = "deviceID"
@@ -200,4 +272,7 @@ internal object Serialization {
     private const val KEY_LONGITUDE = "longitude"
 
     const val KEY_GEOTAG_DATA = "data"
+    const val KEY_GEOTAG_EXPECTED_LOCATION = "expectedLocation"
+    const val KEY_DEVIATION = "deviation"
+    const val KEY_LOCATION = "location"
 }

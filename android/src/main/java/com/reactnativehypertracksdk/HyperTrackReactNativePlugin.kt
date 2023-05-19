@@ -4,8 +4,8 @@ import com.facebook.react.bridge.*
 import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.hypertrack.sdk.*
-import com.hypertrack.sdk.TrackingStateObserver.OnTrackingStateChangeListener
 import com.hypertrack.sdk.AvailabilityStateObserver.OnAvailabilityStateChangeListener
+import com.hypertrack.sdk.TrackingStateObserver.OnTrackingStateChangeListener
 import com.reactnativehypertracksdk.common.*
 import com.reactnativehypertracksdk.common.Serialization.serializeIsAvailable
 import com.reactnativehypertracksdk.common.Serialization.serializeIsTracking
@@ -24,10 +24,10 @@ class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
 
     @ReactMethod
     fun addListener(type: String?) {
-        when(type) {
+        when (type) {
             EVENT_TRACKING -> {
                 HyperTrackSdkWrapper.isTracking().let {
-                    when(it) {
+                    when (it) {
                         is Success -> {
                             emitIsTracking(it.success)
                         }
@@ -39,7 +39,7 @@ class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
             }
             EVENT_AVAILABILITY -> {
                 HyperTrackSdkWrapper.isAvailable().let {
-                    when(it) {
+                    when (it) {
                         is Success -> {
                             emitIsAvailable(it.success)
                         }
