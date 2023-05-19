@@ -5,6 +5,7 @@
 ### How to update the HyperTrack SDK version and make a release?
 
 1. Update SDK version constant
+
    - android
      - android/gradle.properties - HyperTrackSdk_HyperTrackSDKVersion
    - ios
@@ -12,11 +13,12 @@
        - s.dependency 'HyperTrack/Objective-C', '**version**'
 
 2. Increment wrapper version
-   
+
    - package.json
      - version
-  
+
 3. Update CHANGELOG.md
+   - Add the release link to the bottom
 4. Update badge in README.md
 5. Do the release dry run with `just release` and verify that the release is correct (checklist is in the command output)
 6. Commit and merge to master
@@ -71,4 +73,3 @@ When you're sending a pull request:
 - Review the documentation to make sure it looks good.
 - Follow the pull request template when opening a pull request.
 - For pull requests that change the API or implementation, discuss with maintainers first by opening an issue.
-
