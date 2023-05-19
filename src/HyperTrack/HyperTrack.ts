@@ -182,7 +182,7 @@ export default class HyperTrack {
   async addGeotag(
     data: Object,
     expectedLocation: Location
-  ): Promise<Result<Location, LocationError>>;
+  ): Promise<Result<LocationWithDeviation, LocationError>>;
 
   async addGeotag(
     ...args: any[]
