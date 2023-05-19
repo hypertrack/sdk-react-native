@@ -496,6 +496,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Initial release.
 
 [9.2.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/9.2.0
+[9.1.1]: https://github.com/hypertrack/sdk-react-native/releases/tag/9.1.1
 [9.1.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/9.1.0
 [9.0.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/9.0.0
 [8.2.2]: https://github.com/hypertrack/sdk-react-native/releases/tag/8.2.2
