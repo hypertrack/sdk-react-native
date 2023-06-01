@@ -18,14 +18,16 @@
      - version
 
 3. Update CHANGELOG.md
+
    - Add the release link to the bottom
+
 4. Update badge in README.md
 5. Do the release dry run with `just release` and verify that the release is correct (checklist is in the command output)
 6. Commit and merge to master
 7. Create and push a new version tag
-8. Run `npm publish` to publish the package to npm
-9. Create a Github repo release
+8. Create a Github repo release
    - Release title should be the current version tag
+9. Run `npm publish` to publish the package to npm
 
 ### How to change build config
 
