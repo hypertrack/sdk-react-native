@@ -18,7 +18,9 @@
      - version
 
 3. Update CHANGELOG.md
+
    - Add the release link to the bottom
+
 4. Update badge in README.md
 5. Do the release dry run with `just release` and verify that the release is correct (checklist is in the command output)
 6. Commit and merge to master
