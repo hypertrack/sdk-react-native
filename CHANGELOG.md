@@ -3,7 +3,22 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [10.0.0] - 2023-06-06
+
+### Changed
+
+- `getLocation` return type (now it use Result)
+
+### Fixed
+
+- `addGeotag` and `getLocation` have wrong return type that is different from the one in the API docs
+- Kotlin version is fixed to 1.7.21 for the plugin module to avoid `Module was compiled with an incompatible version of Kotlin. The binary version of its metadata is X, expected version is Y` build error.
+
 ## [9.2.2] - 2023-06-01
+
+### Issues
+
+- `addGeotag` and `getLocation` have wrong return type that is different from the one in the API docs (fixed in 10.0.0)
 
 ### Changed
 
@@ -11,11 +26,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [9.2.1] - 2023-05-19
 
+### Issues
+
+- `addGeotag` and `getLocation` have wrong return type that is different from the one in the API docs (fixed in 10.0.0)
+
 ### Fixed
 
 - Fixed `addGeotag` (with expected location) return type
 
 ## [9.2.0] - 2023-05-18
+
+### Issues
+
+- `addGeotag` and `getLocation` have wrong return type that is different from the one in the API docs (fixed in 10.0.0)
 
 ### Added
 
@@ -48,6 +71,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `syncDeviceSettings()` renamed to `sync()`
 - `setDeviceName()` renamed to `setName()`
 - `subscribeToErrors()` callback now has param type (`HyperTrackError`)
+- `getLocation` return type
 - `LocationError` now has different structure
 
 ### Added
@@ -74,7 +98,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- enableDebugLogging() now doesn't cause an infinite loop when called.
+- `enableDebugLogging()` now doesn't cause an infinite loop when called.
 
 ## [8.2.0] - 2022-09-23
 
