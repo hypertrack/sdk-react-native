@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- `getLocation` return type (now it use Result)
+- `getLocation` return type to Result<Location, LocationError>
 
 ### Fixed
 
