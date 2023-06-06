@@ -1,6 +1,5 @@
 buildscript {
-    // Buildscript is evaluated before everything else so we can't use getExtOrDefault
-    def kotlin_version = rootProject.ext.has('kotlinVersion') ? rootProject.ext.get('kotlinVersion') : project.properties['HyperTrackSdk_kotlinVersion']
+    def project_kotlin_version = '1.7.21'
 
     repositories {
         google()
@@ -10,9 +9,10 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:7.1.2'
         // noinspection DifferentKotlinGradleVersion
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$project_kotlin_version"
     }
 }
+
 
 def isNewArchitectureEnabled() {
     return rootProject.hasProperty("newArchEnabled") && rootProject.getProperty("newArchEnabled") == "true"
@@ -138,7 +138,8 @@ repositories {
     }
 }
 
-def kotlin_version = getExtOrDefault('kotlinVersion')
+// make sure it is aligned with 'project_kotlin_version' in the buildscript
+def kotlin_version = '1.7.21'
 def hyperTrackSdk_version = getExtOrDefault('HyperTrackSDKVersion')
 
 dependencies {
