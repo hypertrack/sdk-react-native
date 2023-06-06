@@ -40,13 +40,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `addGeotag` and `getLocation` have wrong return type that is different from the one in the API docs (fixed in 10.0.0)
 
+### Changed
+
+- **Breaking change:** Changed `addGeotag` return type to `Result<Location, LocationError>`
+- HyperTrack iOS SDK updated to 4.15.0
+
 ### Added
 
 - `addGeotag` with expected location
-
-### Changed
-
-- HyperTrack iOS SDK updated to 4.15.0
 
 ## [9.1.1] - 2023-03-30
 
