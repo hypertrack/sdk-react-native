@@ -11,8 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- `addGeotag` and `getLocation` have wrong return type that is different from the one in the API docs
-- Kotlin version is fixed to 1.7.21 for the plugin module to avoid `Module was compiled with an incompatible version of Kotlin. The binary version of its metadata is X, expected version is Y` build error.
+- `addGeotag` and `getLocation` wrong return type that is different from the one in the API docs
 
 ## [9.2.2] - 2023-06-01
 
