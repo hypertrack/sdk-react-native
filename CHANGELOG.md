@@ -11,13 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- `addGeotag` and `getLocation` wrong return type that is different from the one in the API docs
+- `addGeotag` and `getLocation` wrong return type that is different from the one in the API docs (introduced in 9.2.0)
 
 ## [9.2.2] - 2023-06-01
-
-### Issues
-
-- `addGeotag` and `getLocation` have wrong return type that is different from the one in the API docs (fixed in 10.0.0)
 
 ### Changed
 
@@ -25,19 +21,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [9.2.1] - 2023-05-19
 
-### Issues
-
-- `addGeotag` and `getLocation` have wrong return type that is different from the one in the API docs (fixed in 10.0.0)
-
 ### Fixed
 
 - Fixed `addGeotag` (with expected location) return type
 
 ## [9.2.0] - 2023-05-18
-
-### Issues
-
-- `addGeotag` and `getLocation` have wrong return type that is different from the one in the API docs (fixed in 10.0.0)
 
 ### Changed
 
