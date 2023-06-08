@@ -137,7 +137,7 @@ export default class HyperTrack {
   /**
    * Reflects the current location of the user or an outage reason
    */
-  getLocation(): Promise<LocationError | Location> {
+  getLocation(): Promise<Result<Location, LocationError>> {
     return HyperTrackSdk.getLocation().then(
       (locationResponse: Result<LocationInternal, LocationErrorInternal>) => {
         return this.deserializeLocationResponse(locationResponse);

@@ -3,6 +3,16 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [10.0.0] - 2023-06-06
+
+### Changed
+
+- `getLocation` return type to `Result<Location, LocationError>`
+
+### Fixed
+
+- `addGeotag` and `getLocation` wrong return type that is different from the one in the API docs (introduced in 9.2.0)
+
 ## [9.2.2] - 2023-06-01
 
 ### Changed
@@ -17,13 +27,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [9.2.0] - 2023-05-18
 
+### Changed
+
+- **Breaking change:** Changed `addGeotag` return type to `Result<Location, LocationError>`
+- HyperTrack iOS SDK updated to 4.15.0
+
 ### Added
 
 - `addGeotag` with expected location
-
-### Changed
-
-- HyperTrack iOS SDK updated to 4.15.0
 
 ## [9.1.1] - 2023-03-30
 
@@ -48,6 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `syncDeviceSettings()` renamed to `sync()`
 - `setDeviceName()` renamed to `setName()`
 - `subscribeToErrors()` callback now has param type (`HyperTrackError`)
+- `getLocation` return type
 - `LocationError` now has different structure
 
 ### Added
@@ -74,7 +86,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- enableDebugLogging() now doesn't cause an infinite loop when called.
+- `enableDebugLogging()` now doesn't cause an infinite loop when called.
 
 ## [8.2.0] - 2022-09-23
 
