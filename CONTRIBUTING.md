@@ -7,27 +7,27 @@
 1. Update SDK version constant
 
    - android
-     - android/gradle.properties - HyperTrackSdk_HyperTrackSDKVersion
+     - [android/gradle.properties](android/gradle.properties)
+       - HyperTrackSdk_HyperTrackSDKVersion
    - ios
-     - hypertrack-sdk-react-native.podspec
+     - [hypertrack-sdk-react-native.podspec](hypertrack-sdk-react-native.podspec)
        - s.dependency 'HyperTrack/Objective-C', '**version**'
 
 2. Increment wrapper version
 
-   - package.json
+   - [package.json](package.json)
      - version
 
-3. Update CHANGELOG.md
+3. Update [CHANGELOG](CHANGELOG.md)
 
-   - Add the release link to the bottom
+   - **Add the release link to the bottom**
 
-4. Update badge in README.md
+4. Update badge in [README](README.md)
 5. Do the release dry run with `just release` and verify that the release is correct (checklist is in the command output)
 6. Commit and merge to master
-7. Create and push a new version tag
-8. Create a Github repo release
+7. Create a Github repo release
    - Release title should be the current version tag
-9. Run `npm publish` to publish the package to npm
+8. Run `npm publish` to publish the package to npm
 
 ### How to change build config
 
