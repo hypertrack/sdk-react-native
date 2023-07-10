@@ -200,7 +200,7 @@ internal object Serialization {
         deviation: Double
     ): Map<String, Any?> {
         return mapOf(
-            KEY_TYPE to TYPE_LOCATION,
+            KEY_TYPE to TYPE_LOCATION_WITH_DEVIATION,
             KEY_VALUE to mapOf(
                 KEY_LOCATION to serializeLocation(location),
                 KEY_DEVIATION to deviation
