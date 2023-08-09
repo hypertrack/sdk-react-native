@@ -33,7 +33,7 @@ internal object HyperTrackSdkWrapper {
     ): Result<HyperTrack> {
         return try {
             SdkInitParams.fromMap(args)
-                .flatMapSuccess { initParams ->
+                .flatMapSuccess { initParams -> 
                     _sdkInstance = HyperTrack.getInstance(initParams.publishableKey)
                     if (initParams.loggingEnabled) {
                         HyperTrack.enableDebugLogging()
@@ -47,7 +47,7 @@ internal object HyperTrackSdkWrapper {
                     Success(sdkInstance)
                 }
         } catch (exception: Exception) {
-            Failure(Exception("Hypertrack SDK initialization failed.", exception))
+            Failure(exception)
         }
     }
 

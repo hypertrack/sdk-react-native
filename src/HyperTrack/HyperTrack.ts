@@ -66,7 +66,7 @@ export default class HyperTrack {
       });
       return new HyperTrack();
     } catch (error: any) {
-      throw new Error(error.message);
+      throw error;
     }
   }
 

@@ -26,7 +26,28 @@ internal fun <T> Result<T>.toPromise(promise: Promise) {
             }
         }
         is Failure -> {
-            promise.reject(Exception(this.failure))
+            /**
+             * ReactNative NativeBridge converts the Exception to JS Error
+             * adding some additional fields (see com.facebook.react.bridge.PromiseImpl.java):
+             *   "nativeStackAndroid": [
+             *     {
+             *       "lineNumber": 29,
+             *       "file": "ReactNativeSerialization.kt",
+             *       "methodName": "toPromise",
+             *       "class": "com.reactnativehypertracksdk.ReactNativeSerializationKt"
+             *     },
+             *   ]
+             *
+             *   "userInfo": {}
+             *
+             *   Default ReactNative logger skips the Exception class name in logs, so we build a
+             *   custom Exception to include the class name in the message.
+             *   
+             *   Default Exception.toString() will print both the class name and the message
+             */
+            val exception = Exception(this.failure.toString())
+            exception.stackTrace = this.failure.stackTrace
+            promise.reject(exception)
         }
     }
 }
