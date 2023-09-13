@@ -18,9 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Updated HyperTrack Android SDK to 7.0.0
-- Add Android SDK plugins (`location-services-google` and `push-service-firebase`)
-- Updated HyperTrack iOS SDK to 5.0.0
+- Updated HyperTrack Android SDK to 7.0.1
+- Add Android SDK plugins (`location-services-google-19-0-1` and `push-service-firebase`)
+- Updated HyperTrack iOS SDK to 5.0.1
 - The whole HyperTrack API is now static
 - Changed the way to provide publishableKey (you need to add `HyperTrackPublishableKey` `meta-data` item to your `AndroidManifest.xml`)
 - Renamed HyperTrackError types:
