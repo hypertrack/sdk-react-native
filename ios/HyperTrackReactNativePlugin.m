@@ -9,36 +9,39 @@ RCT_EXTERN_METHOD(addListener)
 
 RCT_EXTERN_METHOD(requiresMainQueueSetup)
 
-RCT_EXTERN_METHOD(initializeSdk:(NSDictionary *)args
+RCT_EXTERN_METHOD(addGeotag:(NSDictionary *)args
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(getDeviceId:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(getErrors:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(getIsAvailable:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(getIsTracking:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)   
+
 RCT_EXTERN_METHOD(getLocation:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(startTracking:(RCTPromiseResolveBlock)resolve
+RCT_EXTERN_METHOD(getMetadata:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(stopTracking:(RCTPromiseResolveBlock)resolve
+RCT_EXTERN_METHOD(getName:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(isTracking:(RCTPromiseResolveBlock)resolve
+RCT_EXTERN_METHOD(locate:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(isAvailable:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN_METHOD(sync:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN_METHOD(setAvailability:(NSDictionary *)args
+RCT_EXTERN_METHOD(setIsAvailable:(NSDictionary *)args
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(setName:(NSDictionary *)args
+RCT_EXTERN_METHOD(setIsTracking:(NSDictionary *)args
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
@@ -46,9 +49,8 @@ RCT_EXTERN_METHOD(setMetadata:(NSDictionary *)args
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(addGeotag:(NSDictionary *)args
+RCT_EXTERN_METHOD(setName:(NSDictionary *)args
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
-
 
 @end

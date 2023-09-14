@@ -3,6 +3,54 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [11.0.0] - 2023-09-08
+
+### Added
+
+- `locate()` to ask for one-time user location
+- `subscribeToLocation()` to subscribe to user location updates
+- `getErrors()`
+- `getName()`
+- `getMetadata()`
+- HyperTrackError types:
+  - `noExemptionFromBackgroundStartRestrictions`
+  - `permissionsNotificationsDenied`
+
+### Changed
+
+- Updated HyperTrack Android SDK to 7.0.1
+- Add Android SDK plugins (`location-services-google-19-0-1` and `push-service-firebase`)
+- Updated HyperTrack iOS SDK to 5.0.1
+- The whole HyperTrack API is now static
+- Changed the way to provide publishableKey (you need to add `HyperTrackPublishableKey` `meta-data` item to your `AndroidManifest.xml`)
+- Renamed HyperTrackError types:
+  - `gpsSignalLost` to `locationSignalLost`
+  - `locationPermissionsDenied` to `permissionsLocationDenied`
+  - `locationPermissionsInsufficientForBackground` to `permissionsLocationInsufficientForBackground`
+  - `locationPermissionsNotDetermined` to `permissionsLocationNotDetermined`
+  - `locationPermissionsProvisional` to `locationPermissionsProvisional`
+  - `locationPermissionsReducedAccuracy` to `permissionsLocationReducedAccuracy`
+  - `locationPermissionsRestricted` to `permissionsLocationRestricted`
+- Renamed `isAvailable()` to `getIsAvailable()`
+- Renamed `isTracking()` to `getIsTracking()`
+- Renamed `setAvailability()` to `setIsAvailable(boolean)`
+- Changed `startTracking()` and `stopTracking()` to `setIsTracking(boolean)`
+- Renamed `subscribeToTracking()` to `subscribeToIsTracking()`
+- Renamed `subscribeToAvailability()` to `subscribeToIsAvailable()`
+
+### Removed
+
+- `initialize()` method (the API is now static)
+- `SdkInitParams` (the config now should be done with the `AndroidManifest` metadata and `Info.plist`)
+- Motion Activity permissions are not required for tracking anymore
+- HyperTrackError types:
+  - `motionActivityPermissionsDenied`
+  - `motionActivityServicesDisabled`
+  - `motionActivityServicesUnavailable`
+  - `motionActivityPermissionsRestricted`
+  - `networkConnectionUnavailable`
+- `sync()` method
+
 ## [10.0.3] - 2023-08-04
 
 ### Fixed

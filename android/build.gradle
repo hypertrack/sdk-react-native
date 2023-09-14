@@ -144,8 +144,12 @@ def hyperTrackSdk_version = getExtOrDefault('HyperTrackSDKVersion')
 dependencies {
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "com.hypertrack:hypertrack:$hyperTrackSdk_version"
+
+    implementation "com.hypertrack:sdk-android:$hyperTrackSdk_version"
+    implementation "com.hypertrack:location-services-google-19-0-1:$hyperTrackSdk_version"
+    implementation "com.hypertrack:push-service-firebase:$hyperTrackSdk_version"
 }
 
 if (isNewArchitectureEnabled()) {

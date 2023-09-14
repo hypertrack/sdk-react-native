@@ -2,7 +2,8 @@ import HyperTrack
 
 enum SuccessResult {
     case void
-    case dict(Dictionary<String, Any>)
+    case dict([String: Any])
+    case array([Any])
 }
 
 enum FailureResult: Error {
@@ -10,116 +11,79 @@ enum FailureResult: Error {
     case error(_ message: String)
 }
 
-var sdkInstance: HyperTrack! // initialize method is guaranteed to be called (by non-native side) prior to any access to the SDK instance
-
-// method is named 'initializeSDK' to avoid conflict with React Native plugin 'initialize' method
-func initializeSDK(
-    _ params: Dictionary<String, Any>
-) -> Result<SuccessResult, FailureResult> {
-    if let sdkInitParams = SDKInitParams(params) {
-        let publishableKey = HyperTrack.PublishableKey(params["publishableKey"] as! String)
-        if let publishableKey = publishableKey {
-            switch HyperTrack.makeSDK(
-                publishableKey: publishableKey,
-                automaticallyRequestPermissions: sdkInitParams.automaticallyRequestPermissions,
-                mockLocationsAllowed: sdkInitParams.allowMockLocations
-            ) {
-            case let .success(hyperTrack):
-                sdkInstance = hyperTrack
-                HyperTrack.isLoggingEnabled = sdkInitParams.loggingEnabled
-                return .success(.void)
-            case let .failure(fatalError):
-                return .failure(mapFatalError(fatalError: fatalError))
+func addGeotag(_ args: [String: Any]) -> Result<SuccessResult, FailureResult> {
+    return deserializeGeotagData(args).flatMap { geotagData in
+        if let metadata: HyperTrack.JSON.Object = toJSON(geotagData.data) {
+            if let expectedLocation = geotagData.expectedLocation {
+                let result = HyperTrack.addGeotag(metadata, expectedLocation: expectedLocation)
+                return .success(.dict(serializeLocationWithDeviationResult(result)))
+            } else {
+                let result = HyperTrack.addGeotag(metadata)
+                return .success(.dict(serializeLocationResult(result)))
             }
         } else {
-            return .failure(.fatalError("Invalid publishable key"))
+            return .failure(.error("Failed to deserialize geotag metadata"))
         }
-    } else {
-        return .failure(.error("Invalid SDK init parameters \(params)"))
     }
 }
 
 func getDeviceID() -> Result<SuccessResult, FailureResult> {
-    .success(.dict(serializeDeviceID(sdkInstance.deviceID)))
+    .success(.dict(serializeDeviceID(HyperTrack.deviceID)))
+}
+
+func getName() -> Result<SuccessResult, FailureResult> {
+    .success(.dict(serializeName(HyperTrack.name)))
+}
+
+func setName(_ args: [String: Any]) -> Result<SuccessResult, FailureResult> {
+    deserializeName(args).flatMap { (name: String) in
+        .success(asVoid(HyperTrack.name = name))
+    }
+}
+
+func getMetadata() -> Result<SuccessResult, FailureResult> {
+    .success(.dict(serializeMetadata(HyperTrack.metadata)))
+}
+
+func setMetadata(_ map: [String: Any]) -> Result<SuccessResult, FailureResult> {
+    if let metadata = toJSON(map) {
+        HyperTrack.metadata = metadata
+        return .success(.void)
+    } else {
+        return .failure(.error("Failed to deserialize metadata"))
+    }
 }
 
 func getLocation() -> Result<SuccessResult, FailureResult> {
-    .success(.dict(serializeLocationResult(sdkInstance.location)))
+    .success(.dict(serializeLocationResult(HyperTrack.location)))
 }
 
-func startTracking() -> Result<SuccessResult, FailureResult> {
-    .success(asVoid(sdkInstance.start()))
+func getIsAvailable() -> Result<SuccessResult, FailureResult> {
+    .success(.dict(serializeIsAvailable(HyperTrack.isAvailable)))
 }
 
-func stopTracking() -> Result<SuccessResult, FailureResult> {
-    .success(asVoid(sdkInstance.stop()))
-}
-
-func setAvailability(
-    _ availability: Dictionary<String, Any>
-) -> Result<SuccessResult, FailureResult> {
-    deserializeAvailability(availability).flatMap { (isAvailable:Bool) in
-        if(isAvailable) {
-            sdkInstance.availability = .available
-        } else {
-            sdkInstance.availability = .unavailable
-        }
+func setIsAvailable(_ args: [String: Any]) -> Result<SuccessResult, FailureResult> {
+    deserializeIsAvailable(args).flatMap { (isAvailable: Bool) in
+        HyperTrack.isAvailable = isAvailable
         return .success(.void)
     }
 }
 
-func setName(_ args: Dictionary<String, Any>) -> Result<SuccessResult, FailureResult> {
-    deserializeDeviceName(args).flatMap({ (name: String) in
-        .success(asVoid(sdkInstance.setDeviceName(name)))
-    })
+func getIsTracking() -> Result<SuccessResult, FailureResult> {
+    .success(.dict(serializeIsTracking(HyperTrack.isTracking)))
 }
 
-func setMetadata(_ map: Dictionary<String, Any>) -> Result<SuccessResult, FailureResult> {
-    sdkInstance.metadata = getJSON(map)
-    return .success(.void)
-}
-
-func isTracking() -> Result<SuccessResult, FailureResult> {
-    .success(.dict(serializeIsTracking(sdkInstance.isTracking)))
-}
-
-func isAvailable() -> Result<SuccessResult, FailureResult> {
-    .success(.dict(serializeIsAvailable(sdkInstance.availability)))
-}
-
-func addGeotag(_ args: Dictionary<String, Any>) -> Result<SuccessResult, FailureResult> {
-    return deserializeGeotagData(args).flatMap { geotagData in
-        let metadata: HyperTrack.JSON.Object = getJSON(geotagData.data)
-        if let expectedLocation = geotagData.expectedLocation {
-            let result = sdkInstance.addGeotag(metadata, expectedLocation: expectedLocation)
-            return .success(.dict(serializeExpectedLocationResult(result)))
-        } else {
-            let result = sdkInstance.addGeotag(metadata)
-            return .success(.dict(serializeLocationResult(result)))
-        }
+func setIsTracking(_ args: [String: Any]) -> Result<SuccessResult, FailureResult> {
+    deserializeIsTracking(args).flatMap { (isTracking: Bool) in
+        HyperTrack.isTracking = isTracking
+        return .success(.void)
     }
 }
 
-func sync() -> Result<SuccessResult, FailureResult> {
-    .success(asVoid(sdkInstance.syncDeviceSettings()))
+func getErrors() -> Result<SuccessResult, FailureResult> {
+    .success(.array(serializeErrors(HyperTrack.errors)))
 }
 
-func asVoid(_ void: Void) -> SuccessResult {
+func asVoid(_: Void) -> SuccessResult {
     .void
-}
-
-private func mapFatalError(fatalError: HyperTrack.FatalError) -> FailureResult {
-    switch fatalError {
-    case .developmentError(.missingLocationUpdatesBackgroundModeCapability):
-        return .fatalError("missingLocationUpdatesBackgroundModeCapability")
-    case .developmentError(.runningOnSimulatorUnsupported):
-        return .fatalError("runningOnSimulatorUnsupported")
-    // typo is in the HyperTrack SDK itself, no need to fix (it will be deleted in the next major update)
-    case .productionError(.locationServicesUnavalible):
-        return .error("locationServicesUnavalible")
-    case .productionError(.motionActivityServicesUnavalible):
-        return .error("motionActivityServicesUnavalible")
-    case .productionError(.motionActivityPermissionsDenied):
-        return .fatalError("motionActivityPermissionsDenied")
-    }
 }
