@@ -11,7 +11,7 @@
        - HyperTrackSdk_HyperTrackSDKVersion
    - ios
      - [hypertrack-sdk-react-native.podspec](hypertrack-sdk-react-native.podspec)
-       - s.dependency 'HyperTrack/Objective-C', '**version**'
+       - s.dependency 'HyperTrack', '**version**'
 
 2. Increment wrapper version
 
