@@ -31,27 +31,16 @@ func getDeviceID() -> Result<SuccessResult, FailureResult> {
     .success(.dict(serializeDeviceID(HyperTrack.deviceID)))
 }
 
-func getName() -> Result<SuccessResult, FailureResult> {
-    .success(.dict(serializeName(HyperTrack.name)))
-}
-
-func setName(_ args: [String: Any]) -> Result<SuccessResult, FailureResult> {
-    deserializeName(args).flatMap { (name: String) in
-        .success(asVoid(HyperTrack.name = name))
-    }
+func getErrors() -> Result<SuccessResult, FailureResult> {
+    .success(.array(serializeErrors(HyperTrack.errors)))
 }
 
 func getMetadata() -> Result<SuccessResult, FailureResult> {
     .success(.dict(serializeMetadata(HyperTrack.metadata)))
 }
 
-func setMetadata(_ map: [String: Any]) -> Result<SuccessResult, FailureResult> {
-    if let metadata = toJSON(map) {
-        HyperTrack.metadata = metadata
-        return .success(.void)
-    } else {
-        return .failure(.error("Failed to deserialize metadata"))
-    }
+func getName() -> Result<SuccessResult, FailureResult> {
+    .success(.dict(serializeName(HyperTrack.name)))
 }
 
 func getLocation() -> Result<SuccessResult, FailureResult> {
@@ -80,8 +69,21 @@ func setIsTracking(_ args: [String: Any]) -> Result<SuccessResult, FailureResult
     }
 }
 
-func getErrors() -> Result<SuccessResult, FailureResult> {
-    .success(.array(serializeErrors(HyperTrack.errors)))
+func setMetadata(_ args: [String: Any]) -> Result<SuccessResult, FailureResult> {
+    deserializeMetadata(args).flatMap { map in
+        if let metadata = toJSON(map) {
+            HyperTrack.metadata = metadata
+            return .success(.void)
+        } else {
+            return .failure(.error("Failed to deserialize metadata"))
+        }
+    }
+}
+
+func setName(_ args: [String: Any]) -> Result<SuccessResult, FailureResult> {
+    deserializeName(args).flatMap { name in
+        .success(asVoid(HyperTrack.name = name))
+    }
 }
 
 func asVoid(_: Void) -> SuccessResult {
