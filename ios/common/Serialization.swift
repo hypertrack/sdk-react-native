@@ -69,6 +69,16 @@ func deserializeLocation(_ data: [String: Any]) -> Result<HyperTrack.Location, F
     return .success(.init(latitude: latitude, longitude: longitude))
 }
 
+func deserializeMetadata(_ data: [String: Any]) -> Result<[String: Any], FailureResult> {
+    if data[keyType] as? String != typeMetadata {
+        return .failure(.fatalError(getParseError(data, key: keyType)))
+    }
+    guard let value = data[keyValue] as? [String: Any] else {
+        return .failure(.fatalError(getParseError(data, key: keyValue)))
+    }
+    return .success(value)
+}
+
 func deserializeName(_ data: [String: Any]) -> Result<String, FailureResult> {
     if data[keyType] as? String != typeName {
         return .failure(.fatalError(getParseError(data, key: keyType)))
