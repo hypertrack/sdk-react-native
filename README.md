@@ -2,8 +2,8 @@
 
 ![GitHub](https://img.shields.io/github/license/hypertrack/sdk-react-native.svg)
 ![npm](https://img.shields.io/npm/v/hypertrack-sdk-react-native.svg)
-![iOS SDK](https://img.shields.io/badge/iOS%20SDK-5.0.1-brightgreen.svg)
-![Android SDK](https://img.shields.io/badge/Android%20SDK-7.0.1-brightgreen.svg)
+![iOS SDK](https://img.shields.io/badge/iOS%20SDK-5.0.2-brightgreen.svg)
+![Android SDK](https://img.shields.io/badge/Android%20SDK-7.0.2-brightgreen.svg)
 
 [HyperTrack](https://www.hypertrack.com) lets you add live location tracking to your mobile app. Live location is made available along with ongoing activity, tracking controls and tracking outage with reasons.
 
