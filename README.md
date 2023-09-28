@@ -1,6 +1,6 @@
 # React Native HyperTrack SDK
 
-[![GitHub](https://img.shields.io/github/license/hypertrack/sdk-react-native.svg)](./LICENSE)
+[![GitHub](https://img.shields.io/github/license/hypertrack/sdk-react-native?color=orange)](./LICENSE)
 ![npm](https://img.shields.io/npm/v/hypertrack-sdk-react-native.svg)
 ![iOS SDK](https://img.shields.io/badge/iOS%20SDK-5.0.2-brightgreen.svg)
 ![Android SDK](https://img.shields.io/badge/Android%20SDK-7.0.3-brightgreen.svg)
