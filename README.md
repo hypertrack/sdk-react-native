@@ -29,6 +29,7 @@ For information about how to get started with React Native HyperTrack SDK, pleas
 
 - Gradle version 6.7.1+
 - compileSdkVersion 31+
+- minSdkVersion 21+
 
 ### iOS
 
