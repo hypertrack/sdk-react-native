@@ -3,12 +3,18 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [11.0.3] - 2023-10-04
+
+### Changed
+
+- Updated HyperTrack Android SDK to [7.0.4](https://github.com/hypertrack/sdk-android/releases/tag/7.0.4)
+
 ## [11.0.2] - 2023-09-28
 
 ### Changed
 
-- Updated HyperTrack Android SDK to 7.0.3
-- Updated HyperTrack iOS SDK to 5.0.2
+- Updated HyperTrack Android SDK to [7.0.3](https://github.com/hypertrack/sdk-android/releases/tag/7.0.3)
+- Updated HyperTrack iOS SDK to [5.0.2](https://github.com/hypertrack/sdk-ios/releases/tag/5.0.2)
 
 ## [11.0.1] - 2023-09-20
 
@@ -31,9 +37,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Updated HyperTrack Android SDK to 7.0.1
+- Updated HyperTrack Android SDK to [7.0.1](https://github.com/hypertrack/sdk-android/releases/tag/7.0.1)
 - Add Android SDK plugins (`location-services-google-19-0-1` and `push-service-firebase`)
-- Updated HyperTrack iOS SDK to 5.0.1
+- Updated HyperTrack iOS SDK to [5.0.1](https://github.com/hypertrack/sdk-ios/releases/tag/5.0.2)
 - The whole HyperTrack API is now static
 - Changed the way to provide publishableKey (you need to add `HyperTrackPublishableKey` `meta-data` item to your `AndroidManifest.xml`)
 - Renamed HyperTrackError types:
@@ -593,6 +599,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial release.
 
+[11.0.3]: https://github.com/hypertrack/sdk-react-native/releases/tag/11.0.3
 [11.0.2]: https://github.com/hypertrack/sdk-react-native/releases/tag/11.0.2
 [11.0.1]: https://github.com/hypertrack/sdk-react-native/releases/tag/11.0.1
 [11.0.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/11.0.0
