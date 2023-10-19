@@ -18,6 +18,7 @@ class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
     ReactContextBaseJavaModule(reactContext) {
 
     private var locateSubscription: HyperTrack.Cancellable? = null
+    private var subscriptions: List<HyperTrack.Cancellable>? = null
 
     override fun getName(): String {
         return NAME
@@ -30,6 +31,13 @@ class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
     @ReactMethod
     fun addListener(eventName: String?) {
         // called when RN app subscribes to an event
+        /**
+         * We init listeners lazily to avoid calling any SDK method before dynamic publishable key
+         * is set.
+         */
+        if (subscriptions == null) {
+            subscriptions = initListeners()
+        }
         when (eventName) {
             EVENT_ERRORS -> {
                 emitEvent(EVENT_ERRORS, serializeErrors(HyperTrack.errors).toWriteableArray())
@@ -46,11 +54,6 @@ class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
             else -> Unit
         }
         // Keep: Required for RN built in Event Emitter Calls.
-    }
-
-    override fun initialize() {
-        super.initialize()
-        initListeners()
     }
 
     @ReactMethod
@@ -131,21 +134,31 @@ class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
         HyperTrackSdkWrapper.setName(args.toHashMap())
     }
 
-    private fun initListeners() {
-        HyperTrack.subscribeToErrors {
-            emitEvent(EVENT_ERRORS, serializeErrors(it).toWriteableArray())
-        }
+    private fun initListeners(): List<HyperTrack.Cancellable> {
+        return mutableListOf<HyperTrack.Cancellable>().also { result ->
+            HyperTrack.subscribeToErrors {
+                emitEvent(EVENT_ERRORS, serializeErrors(it).toWriteableArray())
+            }.also {
+                result.add(it)
+            }
 
-        HyperTrack.subscribeToIsAvailable {
-            emitEvent(EVENT_IS_AVAILABLE, serializeIsAvailable(it).toWritableMap())
-        }
+            HyperTrack.subscribeToIsAvailable {
+                emitEvent(EVENT_IS_AVAILABLE, serializeIsAvailable(it).toWritableMap())
+            }.also {
+                result.add(it)
+            }
 
-        HyperTrack.subscribeToIsTracking {
-            emitEvent(EVENT_IS_TRACKING, serializeIsTracking(it).toWritableMap())
-        }
+            HyperTrack.subscribeToIsTracking {
+                emitEvent(EVENT_IS_TRACKING, serializeIsTracking(it).toWritableMap())
+            }.also {
+                result.add(it)
+            }
 
-        HyperTrack.subscribeToLocation {
-            emitEvent(EVENT_LOCATION, serializeLocationResult(it).toWritableMap())
+            HyperTrack.subscribeToLocation {
+                emitEvent(EVENT_LOCATION, serializeLocationResult(it).toWritableMap())
+            }.also {
+                result.add(it)
+            }
         }
     }
 
