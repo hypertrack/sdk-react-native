@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Event subscription logic to support dynamic publishable key
+- Event subscription to add listeners lazily
 
 ## [11.0.6] - 2023-10-12
 
