@@ -35,7 +35,7 @@ class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
          * We init listeners lazily to avoid calling any SDK method before dynamic publishable key
          * is set.
          */
-        if(subscriptions == null) {
+        if (subscriptions == null) {
             subscriptions = initListeners()
         }
         when (eventName) {
