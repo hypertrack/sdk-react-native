@@ -3,6 +3,13 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [11.0.10] - 2023-11-20
+
+### Changed
+
+- Updated HyperTrack Android SDK to [7.0.9](https://github.com/hypertrack/sdk-android/releases/tag/7.0.9)
+- Updated HyperTrack iOS SDK to [5.0.7](https://github.com/hypertrack/sdk-ios/releases/tag/5.0.7)
+
 ## [11.0.9] - 2023-11-10
 
 ### Changed
@@ -714,3 +721,4 @@ Initial release.
 [11.0.7]: https://github.com/hypertrack/sdk-react-native/releases/tag/11.0.7
 [11.0.8]: https://github.com/hypertrack/sdk-react-native/releases/tag/11.0.8
 [11.0.9]: https://github.com/hypertrack/sdk-react-native/releases/tag/11.0.9
+[11.0.10]: https://github.com/hypertrack/sdk-react-native/releases/tag/11.0.10
