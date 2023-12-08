@@ -16,7 +16,3 @@ const PluginAndroidLocationServicesGoogle = NativeModules.PluginAndroidLocationS
         },
       }
     );
-
-export function multiply(a: number, b: number): Promise<number> {
-  return PluginAndroidLocationServicesGoogle.multiply(a, b);
-}
