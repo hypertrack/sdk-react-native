@@ -1,6 +1,6 @@
 {
-  "name": "hypertrack-sdk-react-native",
-  "version": "11.0.10",
+  "name": "9bdf52-sdk",
+  "version": "12.0.0-alpha.1",
   "description": "React Native HyperTrack SDK is a wrapper around native iOS and Android SDKs that allows to integrate HyperTrack into React Native apps.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
