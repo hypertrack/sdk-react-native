@@ -19,7 +19,7 @@ yarn add hypertrack-sdk-react-native-plugin-android-location-services-google
 yarn add hypertrack-sdk-react-native-plugin-android-push-service-firebase
 ```
 
-[Learn more about plugins](#plugins)
+[Learn more about plugins](https://hypertrack.com/docs/plugins)
 
 ## Sample code
 
@@ -31,38 +31,7 @@ yarn add hypertrack-sdk-react-native-plugin-android-push-service-firebase
 
 ## Requirements
 
-### Android
-
-- Gradle version 6.7.1+
-- compileSdkVersion 31+
-- minSdkVersion 19+
-
-### iOS
-
-- iOS version 12.4+
-
-## Plugins
-
-**The HyperTrack SDK Android version and the plugins versions have to be the same.**
-
-HyperTrack SDK Android uses the [Plugin architecture](https://github.com/hypertrack/sdk-android/blob/master/PLUGINS.md) to be able to adapt to different dependencies and add configurable logic.
-
-Adding the plugin to React Native project will affect only the Android app. If you want to use only the iOS, you don't need to add any of them.
-
-The Android setup for HyperTrack SDK have to include at least one plugin of each of those types:
-
-    - Location Services
-    - Push Service
-
-Check the [plugins list](https://github.com/hypertrack/sdk-android/blob/master/PLUGINS.md#available-plugins) to get the type and description for each of them.
-
-Each HyperTrack SDK Android plugin has the corresponding React Native package.
-
-| React Native Package Name                                                  | HyperTrack SDK Android Plugin Maven Artifact ID |
-| -------------------------------------------------------------------------- | ----------------------------------------------- |
-| hypertrack-sdk-react-native-plugin-android-location-services-google        | location-services-google                        |
-| hypertrack-sdk-react-native-plugin-android-location-services-google-19-0-1 | location-services-google-19-0-1                 |
-| hypertrack-sdk-react-native-plugin-android-push-service-firebase           | push-service-firebase                           |
+[Requirements for React Native HyperTrack SDK](https://hypertrack.com/docs/install-sdk-react-native#requirements)
 
 ## Contributing
 
