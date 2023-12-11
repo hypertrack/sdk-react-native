@@ -205,7 +205,8 @@ export default class HyperTrack {
    *
    * @param callback
    * @returns EmitterSubscription
-   * @example ```js
+   * @example
+   * ```js
    * const subscription = HyperTrack.locate(location => {
    *  ...
    * })
