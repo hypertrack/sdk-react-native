@@ -1,7 +1,7 @@
 {
   "name": "hypertrack-sdk-react-native-plugin-android-location-services-google",
   "version": "12.0.0",
-  "description": "...",
+  "description": "A wrapper around `Location Services Google` plugin for HyperTrack SDK Android that is used with `hypertrack-sdk-react-native`",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "types": "lib/typescript/src/index.d.ts",
@@ -41,14 +41,15 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pavel-kuznetsov-hypertrack/react-native-plugin_android_location_services_google.git"
+    "url": "https://github.com/hypertrack/sdk-react-native.git",
+    "directory": "plugin_android_location_services_google"
   },
-  "author": "pavel-kuznetsov-hypertrack <pavel@hypertrack.io> (https://github.com/pavel-kuznetsov-hypertrack)",
+  "author": "HyperTrack <help@hypertrack.com> (https://hypertrack.com)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/pavel-kuznetsov-hypertrack/react-native-plugin_android_location_services_google/issues"
+    "url": "https://github.com/hypertrack/sdk-react-native/issues"
   },
-  "homepage": "https://github.com/pavel-kuznetsov-hypertrack/react-native-plugin_android_location_services_google#readme",
+  "homepage": "https://github.com/hypertrack/sdk-react-native#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },

@@ -1,7 +1,7 @@
 {
   "name": "hypertrack-sdk-react-native-plugin-android-push-service-firebase",
   "version": "12.0.0",
-  "description": "...",
+  "description": "A wrapper around `Push Service Firebase` plugin for HyperTrack SDK Android that is used with `hypertrack-sdk-react-native`",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "types": "lib/typescript/src/index.d.ts",
@@ -41,14 +41,15 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pavel-kuznetsov-hypertrack/react-native-plugin_android_push_service_firebase.git"
+    "url": "https://github.com/hypertrack/sdk-react-native.git",
+    "directory": "plugin_android_push_service_firebase"
   },
-  "author": "pavel-kuznetsov-hypertrack <pavel@hypertrack.io> (https://github.com/pavel-kuznetsov-hypertrack)",
+  "author": "HyperTrack <help@hypertrack.com> (https://hypertrack.com)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/pavel-kuznetsov-hypertrack/react-native-plugin_android_push_service_firebase/issues"
+    "url": "https://github.com/hypertrack/sdk-react-native/issues"
   },
-  "homepage": "https://github.com/pavel-kuznetsov-hypertrack/react-native-plugin_android_push_service_firebase#readme",
+  "homepage": "https://github.com/hypertrack/sdk-react-native#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },

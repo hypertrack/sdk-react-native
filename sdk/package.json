@@ -42,7 +42,11 @@
     "location",
     "tracking"
   ],
-  "repository": "https://github.com/hypertrack/sdk-react-native",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hypertrack/sdk-react-native.git",
+    "directory": "sdk"
+  },
   "author": "HyperTrack <help@hypertrack.com> (https://hypertrack.com)",
   "license": "MIT",
   "bugs": {
