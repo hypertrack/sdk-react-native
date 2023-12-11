@@ -6,13 +6,15 @@ const LINKING_ERROR =
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo Go\n';
 
-const PluginAndroidLocationServicesGoogle = NativeModules.PluginAndroidLocationServicesGoogle
-  ? NativeModules.PluginAndroidLocationServicesGoogle
-  : new Proxy(
-      {},
-      {
-        get() {
-          throw new Error(LINKING_ERROR);
-        },
-      }
-    );
+// @ts-ignore
+const PluginAndroidLocationServicesGoogle =
+  NativeModules.PluginAndroidLocationServicesGoogle
+    ? NativeModules.PluginAndroidLocationServicesGoogle
+    : new Proxy(
+        {},
+        {
+          get() {
+            throw new Error(LINKING_ERROR);
+          },
+        }
+      );

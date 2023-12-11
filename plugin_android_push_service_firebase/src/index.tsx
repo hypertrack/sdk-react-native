@@ -6,6 +6,7 @@ const LINKING_ERROR =
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo Go\n';
 
+// @ts-ignore
 const PluginAndroidPushServiceFirebase = NativeModules.PluginAndroidPushServiceFirebase
   ? NativeModules.PluginAndroidPushServiceFirebase
   : new Proxy(
