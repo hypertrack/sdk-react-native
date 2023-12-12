@@ -6,34 +6,46 @@
 
 1. Update SDK version constant
 
-   - android
-     - [android/gradle.properties](android/gradle.properties)
-       - HyperTrackSdk_HyperTrackSDKVersion
-   - ios
-     - [hypertrack-sdk-react-native.podspec](hypertrack-sdk-react-native.podspec)
-       - s.dependency 'HyperTrack', '**version**'
+   - Android
+     - Change `<plugin name>_HyperTrackSDKVersion` in:
+       - [sdk/android/gradle.properties](sdk/android/gradle.properties)
+       - [plugin_android_location_services_google/android/gradle.properties](plugin_android_location_services_google/android/gradle.properties)
+       - [plugin_android_location_services_google_19_0_1/android/gradle.properties](plugin_android_location_services_google_19_0_1/android/gradle.properties)
+       - [plugin_android_push_service_firebase/android/gradle.properties](plugin_android_push_service_firebase/android/gradle.properties)
+   - iOS
+     - Change `s.dependency 'HyperTrack', '**version**'` in:
+       - [sdk/hypertrack-sdk-react-native.podspec](sdk/hypertrack-sdk-react-native.podspec)
 
 2. Increment wrapper version
 
-   - [package.json](package.json)
-     - version
+Change `version` value in:
+
+- `hypertrack-sdk-react-native` version in [sdk/package.json](sdk/package.json)
+- `hypertrack-sdk-react-native-plugin-android-location-services-google` in [plugin_android_location_services_google/package.json](plugin_android_location_services_google/package.json)
+- `hypertrack-sdk-react-native-plugin-android-location-services-google-19-0-1` in [plugin_android_location_services_google_19_0_1/package.json](plugin_android_location_services_google_19_0_1/package.json)
+- `hypertrack-sdk-react-native-plugin-android-push-service-firebase` in [plugin_android_push_service_firebase/package.json](plugin_android_push_service_firebase/package.json)
 
 3. Update [CHANGELOG](CHANGELOG.md)
 
    - **Add the release link to the bottom**
 
 4. Update badge in [README](README.md)
-5. Do the release dry run with `just release` and verify that the release is correct (checklist is in the command output)
+
+5. Do the release dry run with `just release` and verify that the release is correct
+
 6. Commit and merge to master
+
 7. Create a Github repo release
+
    - Release title should be the current version tag
-8. Run `npm publish` to publish the package to npm
+
+8. Run `just release publish` to publish the packages to npm:
 
 ### How to change build config
 
 #### Android
 
-Change Android build config in `android/gradle.properties`
+Change Android build config in `gradle.properties` of respective plugins
 
 ## Development workflow
 

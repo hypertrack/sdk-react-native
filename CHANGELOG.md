@@ -3,13 +3,19 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [12.0.0] - 2023-12-12
+
+### Changed
+
+- Now the SDK uses the Plugin architecture. You need to add additionall NPM dependencies for the plugins for the SDK to work properly. See [Plugins](https://hypertrack.com/docs/plugins) and [Migration Guide](https://hypertrack.com/docs/install-sdk-react-native#migration-guide) for more information.
+- Updated HyperTrack Android SDK to [7.0.11](https://github.com/hypertrack/sdk-android/releases/tag/7.0.10)
+
 ## [11.0.11] - 2023-12-11
 
 ### Changed
 
 - Updated HyperTrack Android SDK to [7.0.10](https://github.com/hypertrack/sdk-android/releases/tag/7.0.10)
 - Updated HyperTrack iOS SDK to [5.0.8](https://github.com/hypertrack/sdk-ios/releases/tag/5.0.8)
-
 
 ## [11.0.10] - 2023-11-20
 
@@ -731,3 +737,4 @@ Initial release.
 [11.0.9]: https://github.com/hypertrack/sdk-react-native/releases/tag/11.0.9
 [11.0.10]: https://github.com/hypertrack/sdk-react-native/releases/tag/11.0.10
 [11.0.11]: https://github.com/hypertrack/sdk-react-native/releases/tag/11.0.11
+[12.0.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/12.0.0
