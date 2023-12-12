@@ -1,4 +1,5 @@
 alias b := build
+alias cnm := clear-node-modules
 alias d := docs
 alias gd := get-dependencies
 alias od := open-docs
@@ -9,6 +10,12 @@ build: docs
     yarn -cwd plugin_android_location_services_google prepare
     yarn -cwd plugin_android_location_services_google_19_0_1 prepare
     yarn -cwd plugin_android_push_service_firebase prepare
+
+clear-node-modules:
+    rm -rf sdk/node_modules
+    rm -rf plugin_android_location_services_google/node_modules
+    rm -rf plugin_android_location_services_google_19_0_1/node_modules
+    rm -rf plugin_android_push_service_firebase/node_modules
 
 docs:
     yarn --cwd sdk docs
