@@ -50,7 +50,7 @@ npm publish plugin_android_push_service_firebase
 
 #### Android
 
-Change Android build config in `gradle.properties` of according plugins
+Change Android build config in `gradle.properties` of respective plugins
 
 ## Development workflow
 
