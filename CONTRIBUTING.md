@@ -39,14 +39,7 @@ Change `version` value in:
 
    - Release title should be the current version tag
 
-8. Run `npm publish` for each plugin to publish the package to npm:
-
-```
-npm publish sdk
-npm publish plugin_android_location_services_google
-npm publish plugin_android_location_services_google_19_0_1
-npm publish plugin_android_push_service_firebase
-```
+8. Run `just release publish` to publish the packages to npm:
 
 ### How to change build config
 
