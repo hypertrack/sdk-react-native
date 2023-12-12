@@ -6,13 +6,15 @@
 
 1. Update SDK version constant
 
-   - Change `<plugin name>_HyperTrackSDKVersion` in:
-     - [sdk/android/gradle.properties](sdk/android/gradle.properties)
-     - [plugin_android_location_services_google/android/gradle.properties](plugin_android_location_services_google/android/gradle.properties)
-     - [plugin_android_location_services_google_19_0_1/android/gradle.properties](plugin_android_location_services_google_19_0_1/android/gradle.properties)
-     - [plugin_android_push_service_firebase/android/gradle.properties](plugin_android_push_service_firebase/android/gradle.properties)
-   - Change `s.dependency 'HyperTrack', '**version**'` in:
-     - [sdk/hypertrack-sdk-react-native.podspec](sdk/hypertrack-sdk-react-native.podspec)
+   - Android
+     - Change `<plugin name>_HyperTrackSDKVersion` in:
+       - [sdk/android/gradle.properties](sdk/android/gradle.properties)
+       - [plugin_android_location_services_google/android/gradle.properties](plugin_android_location_services_google/android/gradle.properties)
+       - [plugin_android_location_services_google_19_0_1/android/gradle.properties](plugin_android_location_services_google_19_0_1/android/gradle.properties)
+       - [plugin_android_push_service_firebase/android/gradle.properties](plugin_android_push_service_firebase/android/gradle.properties)
+   - iOS
+     - Change `s.dependency 'HyperTrack', '**version**'` in:
+       - [sdk/hypertrack-sdk-react-native.podspec](sdk/hypertrack-sdk-react-native.podspec)
 
 2. Increment wrapper version
 
