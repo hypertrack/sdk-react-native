@@ -38,10 +38,10 @@ open-docs: docs
 publish:
     #!/usr/bin/env sh
     VERSION=$(just version)
-    # npm publish sdk
-    # npm publish plugin_android_location_services_google
-    # npm publish plugin_android_location_services_google_19_0_1
-    # npm publish plugin_android_push_service_firebase
+    npm publish sdk
+    npm publish plugin_android_location_services_google
+    npm publish plugin_android_location_services_google_19_0_1
+    npm publish plugin_android_push_service_firebase
     open "https://www.npmjs.com/package/hypertrack-sdk-react-native/v/$VERSION"
     open "https://www.npmjs.com/package/hypertrack-plugin-android-location-services-google/v/$VERSION"
     open "https://www.npmjs.com/package/hypertrack-plugin-android-location-services-google-19-0-1/v/$VERSION"
