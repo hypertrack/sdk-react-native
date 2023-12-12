@@ -14,8 +14,8 @@ For information about how to get started with React Native HyperTrack SDK, pleas
 ## Installation
 
 ```
-yarn add hypertrack-sdk-react-native
-yarn add hypertrack-sdk-react-native-plugin-android-location-services-google
+yarn add hypertrack-sdk-react-native && \
+yarn add hypertrack-sdk-react-native-plugin-android-location-services-google && \
 yarn add hypertrack-sdk-react-native-plugin-android-push-service-firebase
 ```
 
