@@ -1,9 +1,15 @@
+# do not create a shorcut for `publlish` command to avoid accidental publishing
 alias b := build
 alias cnm := clear-node-modules
 alias d := docs
 alias gd := get-dependencies
 alias od := open-docs
 alias r := release
+
+# Source: https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
+# \ are escaped
+SEMVER_REGEX := "(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?"
+
 
 build: docs
     yarn -cwd sdk prepare
@@ -29,25 +35,23 @@ get-dependencies:
 open-docs: docs
     open docs/index.html
 
-release guard="dry-run": docs
+publish:
     #!/usr/bin/env sh
-    if [ "{{guard}}" = "publish" ]; then \
-        echo "Publishing 'sdk'"
-        # npm publish sdk
-        echo "Publishing 'plugin_android_location_services_google'"
-        # npm publish plugin_android_location_services_google
-        echo "Publishing 'plugin_android_location_services_google_19_0_1'"
-        # npm publish plugin_android_location_services_google_19_0_1
-        echo "Publishing 'plugin_android_push_service_firebase'"
-        # npm publish plugin_android_push_service_firebase
-    else \
-        echo "Dry run for 'sdk'"
-        # npm publish sdk --dry-run
-        echo "Dry run for 'plugin_android_location_services_google'"
-        # npm publish plugin_android_location_services_google --dry-run
-        echo "Dry run for 'plugin_android_location_services_google_19_0_1'"
-        # npm publish plugin_android_location_services_google_19_0_1 --dry-run
-        echo "Dry run for 'plugin_android_push_service_firebase'"
-        # npm publish plugin_android_push_service_firebase --dry-run
-        echo "THIS IS DRY RUN. Check if everything is ok and then run 'npm publish'."
-    fi
+    VERSION=$(just version)
+    # npm publish sdk
+    # npm publish plugin_android_location_services_google
+    # npm publish plugin_android_location_services_google_19_0_1
+    # npm publish plugin_android_push_service_firebase
+    open "https://www.npmjs.com/package/hypertrack-sdk-react-native/v/$VERSION"
+    open "https://www.npmjs.com/package/hypertrack-plugin-android-location-services-google/v/$VERSION"
+    open "https://www.npmjs.com/package/hypertrack-plugin-android-location-services-google-19-0-1/v/$VERSION"
+    open "https://www.npmjs.com/package/hypertrack-plugin-android-push-service-firebase/v/$VERSION"
+
+release:
+    npm publish sdk --dry-run
+    npm publish plugin_android_location_services_google --dry-run
+    npm publish plugin_android_location_services_google_19_0_1 --dry-run
+    npm publish plugin_android_push_service_firebase --dry-run
+
+version:
+    @cat sdk/package.json | grep version | head -n 1 | grep -o -E '{{SEMVER_REGEX}}'
