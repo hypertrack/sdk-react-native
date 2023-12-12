@@ -16,7 +16,7 @@ SEMVER_REGEX := "(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d
 _ask-confirm:
   @bash -c 'read confirmation; if [[ $confirmation != "y" && $confirmation != "Y" ]]; then echo "Okay 😮‍💨 😅"; exit 1; fi'
 
-build: docs
+build: get-dependencies docs
     yarn --cwd sdk prepare
     yarn --cwd plugin_android_location_services_google prepare
     yarn --cwd plugin_android_location_services_google_19_0_1 prepare
