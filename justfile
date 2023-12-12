@@ -4,18 +4,23 @@ alias cnm := clear-node-modules
 alias d := docs
 alias gd := get-dependencies
 alias od := open-docs
-alias r := release
 
 # Source: https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
 # \ are escaped
 SEMVER_REGEX := "(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?"
 
+# MAKE SURE YOU HAVE 
+# #!/usr/bin/env sh
+# set -e
+# AT THE TOP OF YOUR RECIPE
+_ask-confirm:
+  @bash -c 'read confirmation; if [[ $confirmation != "y" && $confirmation != "Y" ]]; then echo "Okay 😮‍💨 😅"; exit 1; fi'
 
 build: docs
-    yarn -cwd sdk prepare
-    yarn -cwd plugin_android_location_services_google prepare
-    yarn -cwd plugin_android_location_services_google_19_0_1 prepare
-    yarn -cwd plugin_android_push_service_firebase prepare
+    yarn --cwd sdk prepare
+    yarn --cwd plugin_android_location_services_google prepare
+    yarn --cwd plugin_android_location_services_google_19_0_1 prepare
+    yarn --cwd plugin_android_push_service_firebase prepare
 
 clear-node-modules:
     rm -rf sdk/node_modules
@@ -35,23 +40,29 @@ get-dependencies:
 open-docs: docs
     open docs/index.html
 
-publish:
+release publish="dry-run": build
     #!/usr/bin/env sh
+    set -euo pipefail
     VERSION=$(just version)
-    npm publish sdk
-    npm publish plugin_android_location_services_google
-    npm publish plugin_android_location_services_google_19_0_1
-    npm publish plugin_android_push_service_firebase
-    open "https://www.npmjs.com/package/hypertrack-sdk-react-native/v/$VERSION"
-    open "https://www.npmjs.com/package/hypertrack-plugin-android-location-services-google/v/$VERSION"
-    open "https://www.npmjs.com/package/hypertrack-plugin-android-location-services-google-19-0-1/v/$VERSION"
-    open "https://www.npmjs.com/package/hypertrack-plugin-android-push-service-firebase/v/$VERSION"
-
-release:
-    npm publish sdk --dry-run
-    npm publish plugin_android_location_services_google --dry-run
-    npm publish plugin_android_location_services_google_19_0_1 --dry-run
-    npm publish plugin_android_push_service_firebase --dry-run
+    if [ {{publish}} = "publish" ]; then
+        BRANCH=$(git branch --show-current)
+        if [ $BRANCH != "master" ]; then
+            echo "You must be on main branch to publish a new version (current branch: $BRANCH))"
+            exit 1
+        fi
+        echo "Are you sure you want to publish version $VERSION? (y/N)"
+        just _ask-confirm
+        npm publish sdk
+        npm publish plugin_android_location_services_google
+        npm publish plugin_android_location_services_google_19_0_1
+        npm publish plugin_android_push_service_firebase
+        open "https://www.npmjs.com/package/hypertrack-sdk-react-native/v/$VERSION"
+    else
+        npm publish --dry-run sdk
+        npm publish --dry-run plugin_android_location_services_google
+        npm publish --dry-run plugin_android_location_services_google_19_0_1
+        npm publish --dry-run plugin_android_push_service_firebase
+    fi
 
 version:
     @cat sdk/package.json | grep version | head -n 1 | grep -o -E '{{SEMVER_REGEX}}'
