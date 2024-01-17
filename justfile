@@ -54,16 +54,16 @@ release publish="dry-run": build
         fi
         echo "Are you sure you want to publish version $VERSION? (y/N)"
         just _ask-confirm
-        npm publish sdk
-        npm publish plugin_android_location_services_google
-        npm publish plugin_android_location_services_google_19_0_1
-        npm publish plugin_android_push_service_firebase
+        cd sdk && npm publish && cd ..
+        cd plugin_android_location_services_google && npm publish && cd ..
+        cd plugin_android_location_services_google_19_0_1 && npm publish && cd ..
+        cd plugin_android_push_service_firebase && npm publish && cd ..
         open "https://www.npmjs.com/package/hypertrack-sdk-react-native/v/$VERSION"
     else
-        npm publish --dry-run sdk
-        npm publish --dry-run plugin_android_location_services_google
-        npm publish --dry-run plugin_android_location_services_google_19_0_1
-        npm publish --dry-run plugin_android_push_service_firebase
+        cd sdk && npm publish --dry-run && cd ..
+        cd plugin_android_location_services_google && npm publish --dry-run && cd ..
+        cd plugin_android_location_services_google_19_0_1 && npm publish --dry-run && cd ..
+        cd plugin_android_push_service_firebase && npm publish --dry-run && cd ..
     fi
 
 setup: get-dependencies
