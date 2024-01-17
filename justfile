@@ -9,7 +9,7 @@ alias od := open-docs
 # \ are escaped
 SEMVER_REGEX := "(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?"
 
-# MAKE SURE YOU HAVE 
+# MAKE SURE YOU HAVE
 # #!/usr/bin/env sh
 # set -e
 # AT THE TOP OF YOUR RECIPE
@@ -21,6 +21,8 @@ build: get-dependencies docs
     yarn --cwd plugin_android_location_services_google prepare
     yarn --cwd plugin_android_location_services_google_19_0_1 prepare
     yarn --cwd plugin_android_push_service_firebase prepare
+
+clean: clear-node-modules
 
 clear-node-modules:
     rm -rf sdk/node_modules
@@ -52,17 +54,19 @@ release publish="dry-run": build
         fi
         echo "Are you sure you want to publish version $VERSION? (y/N)"
         just _ask-confirm
-        npm publish sdk
-        npm publish plugin_android_location_services_google
-        npm publish plugin_android_location_services_google_19_0_1
-        npm publish plugin_android_push_service_firebase
+        cd sdk && npm publish && cd ..
+        cd plugin_android_location_services_google && npm publish && cd ..
+        cd plugin_android_location_services_google_19_0_1 && npm publish && cd ..
+        cd plugin_android_push_service_firebase && npm publish && cd ..
         open "https://www.npmjs.com/package/hypertrack-sdk-react-native/v/$VERSION"
     else
-        npm publish --dry-run sdk
-        npm publish --dry-run plugin_android_location_services_google
-        npm publish --dry-run plugin_android_location_services_google_19_0_1
-        npm publish --dry-run plugin_android_push_service_firebase
+        cd sdk && npm publish --dry-run && cd ..
+        cd plugin_android_location_services_google && npm publish --dry-run && cd ..
+        cd plugin_android_location_services_google_19_0_1 && npm publish --dry-run && cd ..
+        cd plugin_android_push_service_firebase && npm publish --dry-run && cd ..
     fi
+
+setup: get-dependencies
 
 version:
     @cat sdk/package.json | grep version | head -n 1 | grep -o -E '{{SEMVER_REGEX}}'

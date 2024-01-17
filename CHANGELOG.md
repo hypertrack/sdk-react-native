@@ -3,6 +3,21 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## [12.1.0] - 2024-01-17
+
+### Fixed
+
+- Mitigates SDK cache file corruption that led to some Android devices loading to `device_id` values with all zeroes.
+- [iOS] Optimized querying the Location Manager to reduce impact on battery life and main thread performance.
+- Reduced network traffic.
+
+### Changed
+
+- Updated HyperTrack Android SDK to [7.2.0](https://github.com/hypertrack/sdk-android/releases/tag/7.2.0)
+- Updated HyperTrack iOS SDK to [5.2.0](https://github.com/hypertrack/sdk-ios/releases/tag/5.2.0)
+
 ## [12.0.0] - 2023-12-12
 
 ### Changed
@@ -738,3 +753,4 @@ Initial release.
 [11.0.10]: https://github.com/hypertrack/sdk-react-native/releases/tag/11.0.10
 [11.0.11]: https://github.com/hypertrack/sdk-react-native/releases/tag/11.0.11
 [12.0.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/12.0.0
+[12.1.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/12.1.0
