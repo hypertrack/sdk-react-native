@@ -68,6 +68,32 @@ push-tag:
         echo "You are not on master branch"
     fi
 
+release publish="dry-run": build
+    #!/usr/bin/env sh
+    set -euo pipefail
+    VERSION=$(just version)
+    if [ {{publish}} = "publish" ]; then
+        BRANCH=$(git branch --show-current)
+        if [ $BRANCH != "master" ]; then
+            echo "You must be on main branch to publish a new version (current branch: $BRANCH))"
+            exit 1
+        fi
+        echo "Are you sure you want to publish version $VERSION? (y/N)"
+        just _ask-confirm
+        cd sdk && npm publish && cd ..
+        cd plugin_android_location_services_google && npm publish && cd ..
+        cd plugin_android_location_services_google_19_0_1 && npm publish && cd ..
+        cd plugin_android_push_service_firebase && npm publish && cd ..
+        open "https://www.npmjs.com/package/hypertrack-sdk-react-native/v/$VERSION"
+    else
+        cd sdk && npm publish --dry-run && cd ..
+        cd plugin_android_location_services_google && npm publish --dry-run && cd ..
+        cd plugin_android_location_services_google_19_0_1 && npm publish --dry-run && cd ..
+        cd plugin_android_push_service_firebase && npm publish --dry-run && cd ..
+    fi
+
+setup: get-dependencies
+
 update-readme-android android_version:
     ./scripts/update_file.sh README.md 'Android\%20SDK-.*-brightgreen.svg' 'Android%20SDK-{{android_version}}-brightgreen.svg'
 
@@ -168,29 +194,3 @@ update-wrapper-version-file wrapper_version:
 
 version:
     @cat sdk/package.json | grep version | head -n 1 | grep -o -E '{{SEMVER_REGEX}}'
-
-release publish="dry-run": build
-    #!/usr/bin/env sh
-    set -euo pipefail
-    VERSION=$(just version)
-    if [ {{publish}} = "publish" ]; then
-        BRANCH=$(git branch --show-current)
-        if [ $BRANCH != "master" ]; then
-            echo "You must be on main branch to publish a new version (current branch: $BRANCH))"
-            exit 1
-        fi
-        echo "Are you sure you want to publish version $VERSION? (y/N)"
-        just _ask-confirm
-        cd sdk && npm publish && cd ..
-        cd plugin_android_location_services_google && npm publish && cd ..
-        cd plugin_android_location_services_google_19_0_1 && npm publish && cd ..
-        cd plugin_android_push_service_firebase && npm publish && cd ..
-        open "https://www.npmjs.com/package/hypertrack-sdk-react-native/v/$VERSION"
-    else
-        cd sdk && npm publish --dry-run && cd ..
-        cd plugin_android_location_services_google && npm publish --dry-run && cd ..
-        cd plugin_android_location_services_google_19_0_1 && npm publish --dry-run && cd ..
-        cd plugin_android_push_service_firebase && npm publish --dry-run && cd ..
-    fi
-
-setup: get-dependencies
