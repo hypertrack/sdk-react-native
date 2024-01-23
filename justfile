@@ -40,7 +40,7 @@ clear-node-modules:
     rm -rf plugin_android_push_service_firebase/node_modules
 
 docs:
-    # yarn --cwd sdk docs
+    yarn --cwd sdk docs
 
 get-dependencies:
     yarn --cwd sdk
