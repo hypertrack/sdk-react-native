@@ -70,6 +70,10 @@ internal object HyperTrackSdkWrapper {
         return Success(serializeDeviceId(HyperTrack.deviceID))
     }
 
+    fun getDynamicPublishableKey(): WrapperResult<Serialized> {
+        return Success(serializeDynamicPublishableKey(HyperTrack.publishableKey))
+    }
+
     fun getErrors(): WrapperResult<List<Serialized>> {
         return Success(serializeErrors(HyperTrack.errors))
     }
@@ -108,6 +112,13 @@ internal object HyperTrackSdkWrapper {
         return Success(
             serializeName(HyperTrack.name)
         )
+    }
+
+    fun setDynamicPublishableKey(args: Serialized): WrapperResult<Unit> {
+        return deserializePublishableKey(args)
+            .mapSuccess { publishableKey ->
+                HyperTrack.setPublishableKey(publishableKey)
+            }
     }
 
     fun setIsAvailable(args: Serialized): WrapperResult<Unit> {
