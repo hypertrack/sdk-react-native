@@ -119,7 +119,7 @@ update-sdk-ios-latest wrapper_version commit="true" branch="true":
     LATEST_IOS=$(just latest-ios)
     just update-sdk-ios {{wrapper_version}} $LATEST_IOS {{commit}} {{branch}}
 
-update-sdk wrapper_version ios_version android_version commit="true" branch="true":
+update-sdk wrapper_version ios_version android_version commit="true" branch="true": build
     #!/usr/bin/env sh
     set -euo pipefail
     if [ "{{branch}}" = "true" ] ; then
@@ -141,7 +141,7 @@ update-sdk wrapper_version ios_version android_version commit="true" branch="tru
         git commit -m "Update HyperTrack SDK iOS to {{ios_version}} and Android to {{android_version}}"
     fi
 
-update-sdk-android wrapper_version android_version commit="true" branch="true":
+update-sdk-android wrapper_version android_version commit="true" branch="true": build
     #!/usr/bin/env sh
     set -euo pipefail
     if [ "{{branch}}" = "true" ] ; then
@@ -159,7 +159,7 @@ update-sdk-android wrapper_version android_version commit="true" branch="true":
         git commit -m "Update HyperTrack SDK Android to {{android_version}}"
     fi
 
-update-sdk-ios wrapper_version ios_version commit="true" branch="true":
+update-sdk-ios wrapper_version ios_version commit="true" branch="true": build
     #!/usr/bin/env sh
     set -euo pipefail
     if [ "{{branch}}" = "true" ] ; then
