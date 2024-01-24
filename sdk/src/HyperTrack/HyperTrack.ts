@@ -19,6 +19,7 @@ import type { Result } from './data_types/Result';
 import type { LocationInternal } from './data_types/internal/LocationInternal';
 import type { LocationWithDeviationInternal } from './data_types/internal/LocationWithDeviationInternal';
 import type { Metadata } from './data_types/internal/Metadata';
+import type { DynamicPublishableKey } from './data_types/internal/DynamicPublishableKey';
 
 const EVENT_ERRORS = 'errors';
 const EVENT_IS_AVAILABLE = 'isAvailable';
@@ -122,6 +123,13 @@ export default class HyperTrack {
   static async getDeviceId(): Promise<string> {
     return HyperTrackSdk.getDeviceId().then(
       (deviceId: DeviceId) => deviceId.value
+    );
+  }
+
+  static async getDynamicPublishableKey(): Promise<string> {
+    return HyperTrackSdk.getDynamicPublishableKey().then(
+      (dynamicPublishableKey: DynamicPublishableKey) =>
+        this.deserializeDynamicPublishableKey(dynamicPublishableKey)
     );
   }
 
@@ -229,12 +237,19 @@ export default class HyperTrack {
     return this.locateSubscription;
   }
 
+  static setDynamicPublishableKey(dynamicPublishableKey: string) {
+    HyperTrackSdk.setDynamicPublishableKey({
+      type: 'dynamicPublishableKey',
+      value: dynamicPublishableKey,
+    } as DynamicPublishableKey);
+  }
+
   /**
    * Sets the availability of the device for the Nearby search
    *
    * @param availability true when is available or false when unavailable
    */
-  static async setIsAvailable(isAvailable: boolean) {
+  static setIsAvailable(isAvailable: boolean) {
     HyperTrackSdk.setIsAvailable({
       type: 'isAvailable',
       value: isAvailable,
@@ -246,7 +261,7 @@ export default class HyperTrack {
    *
    * @param {boolean} isTracking
    */
-  static async setIsTracking(isTracking: boolean): Promise<void> {
+  static setIsTracking(isTracking: boolean) {
     HyperTrackSdk.setIsTracking({
       type: 'isTracking',
       value: isTracking,
@@ -258,7 +273,7 @@ export default class HyperTrack {
    *
    * @param {Object} data - Metadata JSON
    */
-  static async setMetadata(data: Object) {
+  static setMetadata(data: Object) {
     HyperTrackSdk.setMetadata({
       type: 'metadata',
       value: data,
@@ -270,7 +285,7 @@ export default class HyperTrack {
    *
    * @param {string} name
    */
-  static async setName(name: string) {
+  static setName(name: string) {
     HyperTrackSdk.setName({
       type: 'name',
       value: name,
@@ -385,6 +400,20 @@ export default class HyperTrack {
         listener(this.deserializeLocationResponse(location));
       }
     );
+  }
+
+  /** @ignore */
+  private static deserializeDynamicPublishableKey(
+    dynamicPublishableKey: DynamicPublishableKey
+  ): string {
+    if (dynamicPublishableKey.type != 'dynamicPublishableKey') {
+      throw new Error(
+        `Invalid dynamicPublishableKey: ${JSON.stringify(
+          dynamicPublishableKey
+        )}`
+      );
+    }
+    return dynamicPublishableKey.value;
   }
 
   /** @ignore */

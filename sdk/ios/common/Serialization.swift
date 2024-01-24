@@ -14,6 +14,18 @@ private let typeMetadata = "metadata"
 private let typeName = "name"
 private let typeSuccess = "success"
 
+func deserializeDynamicPublishableKey(
+    _ args: [String: Any]
+) -> Result<String, FailureResult> {
+    if args[keyType] as? String != "dynamicPublishableKey" {
+        return .failure(.fatalError(getParseError(args, key: keyType)))
+    }
+    guard let value = args[keyValue] as? String else {
+        return .failure(.fatalError(getParseError(args, key: keyValue)))
+    }
+    return .success(value)
+}
+
 func deserializeGeotagData(
     _ args: [String: Any]
 ) -> Result<GeotagData, FailureResult> {
@@ -93,6 +105,13 @@ func serializeDeviceID(_ deviceID: String) -> [String: Any] {
     return [
         keyType: "deviceID",
         keyValue: deviceID,
+    ]
+}
+
+func serializeDynamicPublishableKey(_ dynamicPublishableKey: String) -> [String: Any] {
+    return [
+        keyType: "dynamicPublishableKey",
+        keyValue: dynamicPublishableKey,
     ]
 }
 

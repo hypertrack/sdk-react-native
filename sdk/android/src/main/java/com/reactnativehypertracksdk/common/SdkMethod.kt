@@ -9,6 +9,7 @@ package com.reactnativehypertracksdk.common
 internal enum class SdkMethod {
     addGeotag,
     getDeviceID,
+    getDynamicPublishableKey,
     getErrors,
     getIsAvailable,
     getIsTracking,
@@ -16,6 +17,7 @@ internal enum class SdkMethod {
     getMetadata,
     getName,
     locate,
+    setDynamicPublishableKey,
     setIsAvailable,
     setIsTracking,
     setMetadata,

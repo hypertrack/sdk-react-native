@@ -1,6 +1,6 @@
 {
   "name": "hypertrack-sdk-react-native-plugin-android-location-services-google-19-0-1",
-  "version": "12.1.0",
+  "version": "12.2.0",
   "description": "A wrapper around `Location Services Google 19.0.1` plugin for HyperTrack SDK Android that is used with `hypertrack-sdk-react-native`",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
