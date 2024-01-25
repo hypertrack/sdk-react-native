@@ -31,6 +31,10 @@ func getDeviceID() -> Result<SuccessResult, FailureResult> {
     .success(.dict(serializeDeviceID(HyperTrack.deviceID)))
 }
 
+func getDynamicPublishableKey() -> Result<SuccessResult, FailureResult> {
+    .success(.dict(serializeDynamicPublishableKey(HyperTrack.dynamicPublishableKey)))
+}
+
 func getErrors() -> Result<SuccessResult, FailureResult> {
     .success(.array(serializeErrors(HyperTrack.errors)))
 }
@@ -49,6 +53,13 @@ func getLocation() -> Result<SuccessResult, FailureResult> {
 
 func getIsAvailable() -> Result<SuccessResult, FailureResult> {
     .success(.dict(serializeIsAvailable(HyperTrack.isAvailable)))
+}
+
+func setDynamicPublishableKey(_ args: [String: Any]) -> Result<SuccessResult, FailureResult> {
+    deserializeDynamicPublishableKey(args).flatMap { (dynamicPublishableKey: String) in
+        HyperTrack.dynamicPublishableKey = dynamicPublishableKey
+        return .success(.void)
+    }
 }
 
 func setIsAvailable(_ args: [String: Any]) -> Result<SuccessResult, FailureResult> {

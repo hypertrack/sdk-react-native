@@ -5,12 +5,14 @@ import com.hypertrack.sdk.android.HyperTrack
 import com.hypertrack.sdk.android.HyperTrack.metadata
 import com.hypertrack.sdk.android.Json
 import com.hypertrack.sdk.android.Result
+import com.reactnativehypertracksdk.common.Serialization.deserializeDynamicPublishableKey
 import com.reactnativehypertracksdk.common.Serialization.deserializeIsAvailable
 import com.reactnativehypertracksdk.common.Serialization.deserializeName
 import com.reactnativehypertracksdk.common.Serialization.deserializeGeotagData
 import com.reactnativehypertracksdk.common.Serialization.deserializeIsTracking
 import com.reactnativehypertracksdk.common.Serialization.deserializeMetadata
 import com.reactnativehypertracksdk.common.Serialization.serializeDeviceId
+import com.reactnativehypertracksdk.common.Serialization.serializeDynamicPublishableKey
 import com.reactnativehypertracksdk.common.Serialization.serializeErrors
 import com.reactnativehypertracksdk.common.Serialization.serializeIsAvailable
 import com.reactnativehypertracksdk.common.Serialization.serializeIsTracking
@@ -70,6 +72,10 @@ internal object HyperTrackSdkWrapper {
         return Success(serializeDeviceId(HyperTrack.deviceID))
     }
 
+    fun getDynamicPublishableKey(): WrapperResult<Serialized> {
+        return Success(serializeDynamicPublishableKey(HyperTrack.dynamicPublishableKey))
+    }
+
     fun getErrors(): WrapperResult<List<Serialized>> {
         return Success(serializeErrors(HyperTrack.errors))
     }
@@ -108,6 +114,13 @@ internal object HyperTrackSdkWrapper {
         return Success(
             serializeName(HyperTrack.name)
         )
+    }
+
+    fun setDynamicPublishableKey(args: Serialized): WrapperResult<Unit> {
+        return deserializeDynamicPublishableKey(args)
+            .mapSuccess { publishableKey ->
+                HyperTrack.dynamicPublishableKey = publishableKey
+            }
     }
 
     fun setIsAvailable(args: Serialized): WrapperResult<Unit> {

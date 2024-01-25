@@ -76,6 +76,11 @@ class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
     }
 
     @ReactMethod
+    fun getDynamicPublishableKey(promise: Promise) {
+        HyperTrackSdkWrapper.getDynamicPublishableKey().toPromise(promise)
+    }
+
+    @ReactMethod
     fun getErrors(promise: Promise) {
         HyperTrackSdkWrapper.getErrors().toPromise(promise)
     }
@@ -112,6 +117,11 @@ class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
             emitEvent(EVENT_LOCATE, serializeLocateResult(it).toWritableMap())
         }
         Success(Unit).toPromise(promise)
+    }
+
+    @ReactMethod
+    fun setDynamicPublishableKey(args: ReadableMap) {
+        HyperTrackSdkWrapper.setDynamicPublishableKey(args.toHashMap())
     }
 
     @ReactMethod

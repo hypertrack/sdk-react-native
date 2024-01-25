@@ -84,6 +84,18 @@ class HyperTrackReactNativePlugin: RCTEventEmitter {
         )
     }
 
+    @objc func getDynamicPublishableKey(
+        _ resolve: RCTPromiseResolveBlock,
+        rejecter reject: RCTPromiseRejectBlock
+    ) {
+        sendAsPromise(
+            .success(.dict(["dynamicPublishableKey": HyperTrack.dynamicPublishableKey])),
+            method: .getDynamicPublishableKey,
+            resolve,
+            reject
+        )
+    }
+
     @objc func getErrors(
         _ resolve: RCTPromiseResolveBlock,
         rejecter reject: RCTPromiseRejectBlock
@@ -169,6 +181,21 @@ class HyperTrackReactNativePlugin: RCTEventEmitter {
         sendAsPromise(
             .success(.void),
             method: .locate,
+            resolve,
+            reject
+        )
+    }
+
+    @objc func setDynamicPublishableKey(
+        _ args: NSDictionary,
+        resolver resolve: RCTPromiseResolveBlock,
+        rejecter reject: RCTPromiseRejectBlock
+    ) {
+        sendAsPromise(
+            hypertrack_sdk_react_native.setDynamicPublishableKey(
+                args as! [String: Any]
+            ),
+            method: .setDynamicPublishableKey,
             resolve,
             reject
         )

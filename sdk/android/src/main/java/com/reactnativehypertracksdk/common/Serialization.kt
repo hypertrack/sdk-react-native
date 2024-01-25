@@ -10,6 +10,15 @@ import com.hypertrack.sdk.android.Result
  */
 internal object Serialization {
 
+    fun deserializeDynamicPublishableKey(args: Serialized): WrapperResult<String> {
+        return parse(args) {
+            it.assertValue<String>(key = KEY_TYPE, value = TYPE_DYNAMIC_PUBLISHABLE_KEY)
+            it
+                .get<String>(KEY_VALUE)
+                .getOrThrow()
+        }
+    }
+
     fun deserializeIsAvailable(isAvailable: Map<String, Any?>): WrapperResult<Boolean> {
         return parse(isAvailable) {
             it.assertValue<String>(key = KEY_TYPE, value = TYPE_IS_AVAILABLE)
@@ -63,6 +72,13 @@ internal object Serialization {
         return mapOf(
             KEY_TYPE to TYPE_DEVICE_ID,
             KEY_VALUE to deviceId
+        )
+    }
+
+    fun serializeDynamicPublishableKey(publishableKey: String): Serialized {
+        return mapOf(
+            KEY_TYPE to TYPE_DYNAMIC_PUBLISHABLE_KEY,
+            KEY_VALUE to publishableKey
         )
     }
 
@@ -340,6 +356,7 @@ internal object Serialization {
     private const val TYPE_RESULT_SUCCESS = "success"
 
     private const val TYPE_DEVICE_ID = "deviceID"
+    private const val TYPE_DYNAMIC_PUBLISHABLE_KEY = "dynamicPublishableKey"
     private const val TYPE_ERROR = "error"
     private const val TYPE_IS_AVAILABLE = "isAvailable"
     private const val TYPE_IS_TRACKING = "isTracking"

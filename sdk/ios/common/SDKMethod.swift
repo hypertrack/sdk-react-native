@@ -1,6 +1,7 @@
 enum SDKMethod: String {
     case addGeotag
     case getDeviceID
+    case getDynamicPublishableKey
     case getErrors
     case getIsAvailable
     case getIsTracking
@@ -8,6 +9,7 @@ enum SDKMethod: String {
     case getMetadata
     case getName
     case locate
+    case setDynamicPublishableKey
     case setIsAvailable
     case setIsTracking
     case setMetadata
