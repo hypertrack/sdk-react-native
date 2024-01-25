@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 # Check if params are provided
 if [ $# -ne 3 ]; then
