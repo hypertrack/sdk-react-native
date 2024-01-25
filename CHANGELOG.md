@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [13.0.0] - 2024-01-24
 
+### Added
+
+- New Dynamic publishable key API allows to set the publishable key later in the app lifecycle. It should be used only when there is no other way around it and it's impossible to know the publishable key in advance at the build time. Please contact us if this matches your use case
+
 ### Changed
 
 - Updated HyperTrack SDK iOS to 5.3.0
