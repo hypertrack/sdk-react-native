@@ -51,10 +51,10 @@ sed -i '' -e "11 i\\
 
 if [ -n "$android_version" ]; then
     sed -i '' -e "12 i\\
-- Updated HyperTrack SDK Android to $android_version" $changelog_file
+- Updated HyperTrack SDK Android to [$android_version](https://github.com/hypertrack/sdk-android/releases/tag/$android_version)" $changelog_file
 fi
 
 if [ -n "$ios_version" ]; then
     sed -i '' -e "12 i\\
-- Updated HyperTrack SDK iOS to $ios_version" $changelog_file
+- Updated HyperTrack SDK iOS to [$ios_version](https://github.com/hypertrack/sdk-ios/releases/tag/$ios_version)" $changelog_file
 fi
