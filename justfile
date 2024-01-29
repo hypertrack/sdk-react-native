@@ -1,6 +1,6 @@
 # do not create a shorcut for `publlish` command to avoid accidental publishing
 alias b := build
-alias cnm := clear-node-modules
+alias cnm := _clear-node-modules
 alias d := docs
 alias gd := get-dependencies
 alias od := open-docs
@@ -31,9 +31,9 @@ build: get-dependencies docs
     yarn --cwd plugin_android_location_services_google_19_0_1 prepare
     yarn --cwd plugin_android_push_service_firebase prepare
 
-clean: clear-node-modules
+clean: _clear-node-modules
 
-clear-node-modules:
+_clear-node-modules:
     rm -rf sdk/node_modules
     rm -rf plugin_android_location_services_google/node_modules
     rm -rf plugin_android_location_services_google_19_0_1/node_modules
@@ -48,10 +48,10 @@ get-dependencies:
     yarn --cwd plugin_android_location_services_google_19_0_1
     yarn --cwd plugin_android_push_service_firebase
 
-latest-android:
+_latest-android:
     @curl -s https://s3-us-west-2.amazonaws.com/m2.hypertrack.com/com/hypertrack/sdk-android/maven-metadata-sdk-android.xml | grep latest | grep -o -E '{{SEMVER_REGEX}}' | head -n 1
 
-latest-ios:
+_latest-ios:
     @curl -s https://cocoapods.org/pods/HyperTrack | grep -m 1 -o -E "HyperTrack <span>{{SEMVER_REGEX}}" | grep -o -E '{{SEMVER_REGEX}}' | head -n 1
 
 open-docs: docs
@@ -94,29 +94,29 @@ release publish="dry-run": build
 
 setup: get-dependencies
 
-update-readme-android android_version:
+_update-readme-android android_version:
     ./scripts/update_file.sh README.md 'Android\%20SDK-.*-brightgreen.svg' 'Android%20SDK-{{android_version}}-brightgreen.svg'
 
-update-readme-ios ios_version:
+_update-readme-ios ios_version:
     ./scripts/update_file.sh README.md 'iOS\%20SDK-.*-brightgreen.svg' 'iOS%20SDK-{{ios_version}}-brightgreen.svg'
 
 update-sdk-latest wrapper_version commit="true" branch="true":
     #!/usr/bin/env sh
     set -euo pipefail
-    LATEST_IOS=$(just latest-ios)
-    LATEST_ANDROID=$(just latest-android)
+    LATEST_IOS=$(just _latest-ios)
+    LATEST_ANDROID=$(just _latest-android)
     just update-sdk {{wrapper_version}} $LATEST_IOS $LATEST_ANDROID {{commit}} {{branch}}
 
 update-sdk-android-latest wrapper_version commit="true" branch="true":
     #!/usr/bin/env sh
     set -euo pipefail
-    LATEST_ANDROID=$(just latest-android)
+    LATEST_ANDROID=$(just _latest-android)
     just update-sdk-android {{wrapper_version}} $LATEST_ANDROID {{commit}} {{branch}}
 
 update-sdk-ios-latest wrapper_version commit="true" branch="true":
     #!/usr/bin/env sh
     set -euo pipefail
-    LATEST_IOS=$(just latest-ios)
+    LATEST_IOS=$(just _latest-ios)
     just update-sdk-ios {{wrapper_version}} $LATEST_IOS {{commit}} {{branch}}
 
 update-sdk wrapper_version ios_version android_version commit="true" branch="true": build
@@ -127,14 +127,14 @@ update-sdk wrapper_version ios_version android_version commit="true" branch="tru
     fi
     just version
     echo "New version is {{wrapper_version}}"
-    just update-wrapper-version-file {{wrapper_version}}
+    just _update-wrapper-version-file {{wrapper_version}}
     ./scripts/update_changelog.sh -w {{wrapper_version}} -i {{ios_version}} -a {{android_version}}
     echo "Updating HyperTrack SDK iOS to {{ios_version}}"
-    just update-sdk-ios-version-file {{ios_version}}
-    just update-readme-ios {{ios_version}}
+    just _update-sdk-ios-version-file {{ios_version}}
+    just _update-readme-ios {{ios_version}}
     echo "Updating HyperTrack SDK Android to {{android_version}}"
-    just update-sdk-android-version-file {{android_version}}
-    just update-readme-android {{android_version}}
+    just _update-sdk-android-version-file {{android_version}}
+    just _update-readme-android {{android_version}}
     just docs
     if [ "{{commit}}" = "true" ] ; then
         git add .
@@ -149,9 +149,9 @@ update-sdk-android wrapper_version android_version commit="true" branch="true": 
     fi
     just version
     echo "Updating HyperTrack SDK Android to {{android_version}} on {{wrapper_version}}"
-    just update-wrapper-version-file {{wrapper_version}}
-    just update-sdk-android-version-file {{android_version}}
-    just update-readme-android {{android_version}}
+    just _update-wrapper-version-file {{wrapper_version}}
+    just _update-sdk-android-version-file {{android_version}}
+    just _update-readme-android {{android_version}}
     ./scripts/update_changelog.sh -w {{wrapper_version}} -a {{android_version}}
     just docs
     if [ "{{commit}}" = "true" ] ; then
@@ -167,9 +167,9 @@ update-sdk-ios wrapper_version ios_version commit="true" branch="true": build
     fi
     just version
     echo "Updating HyperTrack SDK iOS to {{ios_version}} on {{wrapper_version}}"
-    just update-wrapper-version-file {{wrapper_version}}
-    just update-sdk-ios-version-file {{ios_version}}
-    just update-readme-ios {{ios_version}}
+    just _update-wrapper-version-file {{wrapper_version}}
+    just _update-sdk-ios-version-file {{ios_version}}
+    just _update-readme-ios {{ios_version}}
     ./scripts/update_changelog.sh -w {{wrapper_version}} -i {{ios_version}}
     just docs
     if [ "{{commit}}" = "true" ] ; then
@@ -177,16 +177,16 @@ update-sdk-ios wrapper_version ios_version commit="true" branch="true": build
         git commit -m "Update HyperTrack SDK iOS to {{ios_version}}"
     fi
 
-update-sdk-android-version-file android_version:
+_update-sdk-android-version-file android_version:
     ./scripts/update_file.sh sdk/android/gradle.properties 'HyperTrackSdk_HyperTrackSDKVersion=.*' 'HyperTrackSdk_HyperTrackSDKVersion={{android_version}}'
     ./scripts/update_file.sh plugin_android_location_services_google/android/gradle.properties 'PluginAndroidLocationServicesGoogle_HyperTrackSDKVersion=.*' 'PluginAndroidLocationServicesGoogle_HyperTrackSDKVersion={{android_version}}'
     ./scripts/update_file.sh plugin_android_location_services_google_19_0_1/android/gradle.properties 'PluginAndroidLocationServicesGoogle1901_HyperTrackSDKVersion=.*' 'PluginAndroidLocationServicesGoogle1901_HyperTrackSDKVersion={{android_version}}'
     ./scripts/update_file.sh plugin_android_push_service_firebase/android/gradle.properties 'PluginAndroidPushServiceFirebase_HyperTrackSDKVersion=.*' 'PluginAndroidPushServiceFirebase_HyperTrackSDKVersion={{android_version}}'
 
-update-sdk-ios-version-file ios_version:
+_update-sdk-ios-version-file ios_version:
     ./scripts/update_file.sh sdk/hypertrack-sdk-react-native.podspec "'HyperTrack', '.*'" "'HyperTrack', '{{ios_version}}'"
 
-update-wrapper-version-file wrapper_version:
+_update-wrapper-version-file wrapper_version:
     ./scripts/update_file.sh sdk/package.json '"version": ".*"' '"version": "{{wrapper_version}}"'
     ./scripts/update_file.sh plugin_android_location_services_google/package.json '"version": ".*"' '"version": "{{wrapper_version}}"'
     ./scripts/update_file.sh plugin_android_location_services_google_19_0_1/package.json '"version": ".*"' '"version": "{{wrapper_version}}"'
