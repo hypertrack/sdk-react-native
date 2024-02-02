@@ -52,7 +52,7 @@ export default class HyperTrack {
   /**
    * Adds a new geotag
    *
-   * @param {Object} data - Geotad data JSON
+   * @param {Object} data - Geotag data JSON
    * @returns current location if success or LocationError if failure
    */
   static async addGeotag(
@@ -62,7 +62,7 @@ export default class HyperTrack {
   /**
    * Adds a new geotag with expected location
    *
-   * @param {Object} data - Geotad data JSON
+   * @param {Object} data - Geotag data JSON
    * @param {Location} expectedLocation - Expected location
    * @returns location with deviation if success or LocationError if failure
    */
