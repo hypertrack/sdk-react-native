@@ -89,7 +89,7 @@ class HyperTrackReactNativePlugin: RCTEventEmitter {
         rejecter reject: RCTPromiseRejectBlock
     ) {
         sendAsPromise(
-            .success(.dict(["dynamicPublishableKey": HyperTrack.dynamicPublishableKey])),
+            hypertrack_sdk_react_native.getDynamicPublishableKey(),
             method: .getDynamicPublishableKey,
             resolve,
             reject
