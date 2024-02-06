@@ -5,6 +5,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [13.2.0] - 2024-02-06
+
+### Fixed
+
+- Fixed a serialization issue with dynamic publishable key implementation
+
 ## [13.1.0] - 2024-01-29
 
 ### Changed

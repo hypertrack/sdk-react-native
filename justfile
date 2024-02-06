@@ -186,6 +186,8 @@ _update-sdk-android-version-file android_version:
 _update-sdk-ios-version-file ios_version:
     ./scripts/update_file.sh sdk/hypertrack-sdk-react-native.podspec "'HyperTrack', '.*'" "'HyperTrack', '{{ios_version}}'"
 
+update-wrapper-version version: (_update-wrapper-version-file version)
+
 _update-wrapper-version-file wrapper_version:
     ./scripts/update_file.sh sdk/package.json '"version": ".*"' '"version": "{{wrapper_version}}"'
     ./scripts/update_file.sh plugin_android_location_services_google/package.json '"version": ".*"' '"version": "{{wrapper_version}}"'
