@@ -52,7 +52,7 @@ export default class HyperTrack {
   /**
    * Adds a new geotag
    *
-   * @param {Object} data - Geotad data JSON
+   * @param {Object} data - Geotag data JSON
    * @returns current location if success or LocationError if failure
    */
   static async addGeotag(
@@ -62,7 +62,7 @@ export default class HyperTrack {
   /**
    * Adds a new geotag with expected location
    *
-   * @param {Object} data - Geotad data JSON
+   * @param {Object} data - Geotag data JSON
    * @param {Location} expectedLocation - Expected location
    * @returns location with deviation if success or LocationError if failure
    */
@@ -406,7 +406,7 @@ export default class HyperTrack {
   private static deserializeDynamicPublishableKey(
     dynamicPublishableKey: DynamicPublishableKey
   ): string {
-    if (dynamicPublishableKey.type != 'dynamicPublishableKey') {
+    if (dynamicPublishableKey.type !== 'dynamicPublishableKey') {
       throw new Error(
         `Invalid dynamicPublishableKey: ${JSON.stringify(
           dynamicPublishableKey
@@ -421,7 +421,7 @@ export default class HyperTrack {
     errors: HyperTrackErrorInternal[]
   ): HyperTrackError[] {
     let res = errors.map((error: HyperTrackErrorInternal) => {
-      if (error.type != 'error') {
+      if (error.type !== 'error') {
         throw new Error('Invalid error type');
       }
       return Object.keys(HyperTrackError).find(
@@ -512,7 +512,7 @@ export default class HyperTrack {
 
   /** @ignore */
   private static deserializeMetadata(metadata: Metadata): Object {
-    if (metadata.type != 'metadata') {
+    if (metadata.type !== 'metadata') {
       throw new Error(`Invalid metadata: ${JSON.stringify(metadata)}`);
     }
     return metadata.value;
@@ -520,7 +520,7 @@ export default class HyperTrack {
 
   /** @ignore */
   private static deserializeName(name: Name): string {
-    if (name.type != 'name') {
+    if (name.type !== 'name') {
       throw new Error(`Invalid name: ${JSON.stringify(name)}`);
     }
     return name.value;
@@ -530,9 +530,9 @@ export default class HyperTrack {
   private static isLocation(obj: Location): obj is Location {
     return (
       'latitude' in obj &&
-      typeof obj.latitude == 'number' &&
+      typeof obj.latitude === 'number' &&
       'longitude' in obj &&
-      typeof obj.longitude == 'number'
+      typeof obj.longitude === 'number'
     );
   }
 }
