@@ -791,4 +791,5 @@ Initial release.
 [12.1.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/12.1.0
 [13.0.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/13.0.0
 [13.1.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/13.1.0
+[13.2.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/13.2.0
 [13.2.1]: https://github.com/hypertrack/sdk-react-native/releases/tag/13.2.1
