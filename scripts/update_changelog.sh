@@ -1,6 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
+ios_version=""
+android_version=""
+
 while [ "$#" -gt 0 ]; do
     case "$1" in
     -w)
