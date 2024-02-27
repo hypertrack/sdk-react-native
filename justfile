@@ -5,6 +5,8 @@ alias d := docs
 alias gd := get-dependencies
 alias od := open-docs
 alias pt := push-tag
+alias ogp := open-github-prs
+alias ogr := open-github-releases
 alias r := release
 alias us := update-sdk
 alias usa := update-sdk-android
@@ -56,6 +58,12 @@ _latest-ios:
 
 open-docs: docs
     open docs/index.html
+
+open-github-prs:
+    open "https://github.com/hypertrack/sdk-react-native/pulls"
+
+open-github-releases:
+    open "https://github.com/hypertrack/sdk-react-native/releases"
 
 push-tag:
     #!/usr/bin/env sh
