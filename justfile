@@ -5,6 +5,8 @@ alias d := docs
 alias gd := get-dependencies
 alias od := open-docs
 alias pt := push-tag
+alias ogp := open-github-prs
+alias ogr := open-github-releases
 alias r := release
 alias us := update-sdk
 alias usa := update-sdk-android
@@ -57,6 +59,16 @@ _latest-ios:
 open-docs: docs
     open docs/index.html
 
+_open-github-release-data:
+    code CHANGELOG.md
+    just open-github-releases
+
+open-github-prs:
+    open "https://github.com/hypertrack/sdk-react-native/pulls"
+
+open-github-releases:
+    open "https://github.com/hypertrack/sdk-react-native/releases"
+
 push-tag:
     #!/usr/bin/env sh
     set -euo pipefail
@@ -64,6 +76,7 @@ push-tag:
         VERSION=$(just version)
         git tag $VERSION
         git push origin $VERSION
+        just _open-github-release-data
     else
         echo "You are not on master branch"
     fi
@@ -140,6 +153,9 @@ update-sdk wrapper_version ios_version android_version commit="true" branch="tru
         git add .
         git commit -m "Update HyperTrack SDK iOS to {{ios_version}} and Android to {{android_version}}"
     fi
+    if [ "{{branch}}" = "true" ] && [ "{{commit}}" = "true" ] ; then
+        just open-github-prs
+    fi
 
 update-sdk-android wrapper_version android_version commit="true" branch="true": build
     #!/usr/bin/env sh
@@ -158,6 +174,9 @@ update-sdk-android wrapper_version android_version commit="true" branch="true": 
         git add .
         git commit -m "Update HyperTrack SDK Android to {{android_version}}"
     fi
+    if [ "{{branch}}" = "true" ] && [ "{{commit}}" = "true" ] ; then
+        just open-github-prs
+    fi
 
 update-sdk-ios wrapper_version ios_version commit="true" branch="true": build
     #!/usr/bin/env sh
@@ -175,6 +194,9 @@ update-sdk-ios wrapper_version ios_version commit="true" branch="true": build
     if [ "{{commit}}" = "true" ] ; then
         git add .
         git commit -m "Update HyperTrack SDK iOS to {{ios_version}}"
+    fi
+    if [ "{{branch}}" = "true" ] && [ "{{commit}}" = "true" ] ; then
+        just open-github-prs
     fi
 
 _update-sdk-android-version-file android_version:
