@@ -20,6 +20,7 @@ import type { LocationInternal } from './data_types/internal/LocationInternal';
 import type { LocationWithDeviationInternal } from './data_types/internal/LocationWithDeviationInternal';
 import type { Metadata } from './data_types/internal/Metadata';
 import type { DynamicPublishableKey } from './data_types/internal/DynamicPublishableKey';
+import type { OrderStatus } from './data_types/OrderStatus';
 
 const EVENT_ERRORS = 'errors';
 const EVENT_IS_AVAILABLE = 'isAvailable';
@@ -52,6 +53,37 @@ export default class HyperTrack {
   /**
    * Adds a new geotag
    *
+   * @param {string} orderHandle - Order handle
+   * @param {OrderStatus} orderStatus - Order status
+   * @param {Object} data - Geotag data JSON
+   * @returns current location if success or LocationError if failure
+   */
+  static async addGeotag(
+    orderHandle: string,
+    orderStatus: OrderStatus,
+    data: Object
+  ): Promise<Result<Location, LocationError>>;
+
+  /**
+   * Adds a new geotag with expected location
+   *
+   * @param {string} orderHandle - Order handle
+   * @param {OrderStatus} orderStatus - Order status
+   * @param {Object} data - Geotag data JSON
+   * @param {Location} expectedLocation - Expected location
+   * @returns location with deviation if success or LocationError if failure
+   */
+  static async addGeotag(
+    orderHandle: string,
+    orderStatus: OrderStatus,
+    data: Object,
+    expectedLocation: Location
+  ): Promise<Result<LocationWithDeviation, LocationError>>;
+
+  /**
+   * @deprecated
+   * Adds a new geotag
+   *
    * @param {Object} data - Geotag data JSON
    * @returns current location if success or LocationError if failure
    */
@@ -60,6 +92,7 @@ export default class HyperTrack {
   ): Promise<Result<Location, LocationError>>;
 
   /**
+   * @deprecated
    * Adds a new geotag with expected location
    *
    * @param {Object} data - Geotag data JSON
