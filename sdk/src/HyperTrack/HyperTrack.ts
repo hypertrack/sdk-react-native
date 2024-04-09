@@ -107,28 +107,41 @@ export default class HyperTrack {
   static async addGeotag(
     ...args: any[]
   ): Promise<Result<Location | LocationWithDeviation, LocationError>> {
-    if (args.length === 1 && typeof args[0] === 'object') {
+    if (
+      args.length === 3 &&
+      typeof args[0] === 'string' &&
+      HyperTrack.isOrderStatus(args[1]) &&
+      typeof args[2] === 'object'
+    ) {
+      // addGeotag(orderHandle: string, orderStatus: OrderStatus, data: Object)
       return HyperTrackSdk.addGeotag({
-        data: args[0],
+        orderHandle: args[0],
+        orderStatus: args[1],
+        data: args[2],
         expectedLocation: undefined,
       } as GeotagData).then(
         (locationResponse: Result<LocationInternal, LocationErrorInternal>) => {
           return this.deserializeLocationResponse(locationResponse);
         }
       );
-    } else if (
-      args.length === 2 &&
-      typeof args[0] === 'object' &&
-      HyperTrack.isLocation(args[1])
+    }
+    if (
+      args.length === 4 &&
+      typeof args[0] === 'string' &&
+      HyperTrack.isOrderStatus(args[1]) &&
+      typeof args[2] === 'object' &&
+      HyperTrack.isLocation(args[3])
     ) {
-      let expectedLocation = args[1] as Location;
+      // addGeotag(orderHandle: string, orderStatus: OrderStatus, data: Object, expectedLocation: Location)
       return HyperTrackSdk.addGeotag({
-        data: args[0],
+        orderHandle: args[0],
+        orderStatus: args[1],
+        data: args[2],
         expectedLocation: {
           type: 'location',
           value: {
-            latitude: expectedLocation.latitude,
-            longitude: expectedLocation.longitude,
+            latitude: args[3].latitude,
+            longitude: args[3].longitude,
           },
         } as LocationInternal,
       } as GeotagData).then(
@@ -143,9 +156,47 @@ export default class HyperTrack {
           );
         }
       );
-    } else {
-      throw new Error('Invalid arguments');
     }
+    if (args.length === 1 && typeof args[0] === 'object') {
+      // addGeotag(data: Object)
+      return HyperTrackSdk.addGeotag({
+        data: args[0],
+        expectedLocation: undefined,
+      } as GeotagData).then(
+        (locationResponse: Result<LocationInternal, LocationErrorInternal>) => {
+          return this.deserializeLocationResponse(locationResponse);
+        }
+      );
+    }
+    if (
+      args.length === 2 &&
+      typeof args[0] === 'object' &&
+      HyperTrack.isLocation(args[1])
+    ) {
+      // addGeotag(data: Object, expectedLocation: Location)
+      return HyperTrackSdk.addGeotag({
+        data: args[0],
+        expectedLocation: {
+          type: 'location',
+          value: {
+            latitude: args[1].latitude,
+            longitude: args[1].longitude,
+          },
+        } as LocationInternal,
+      } as GeotagData).then(
+        (
+          locationResponse: Result<
+            LocationWithDeviationInternal,
+            LocationErrorInternal
+          >
+        ) => {
+          return this.deserializeLocationWithDeviationResponse(
+            locationResponse
+          );
+        }
+      );
+    }
+    throw new Error(`Invalid addGeotag() arguments: ${JSON.stringify(args)}`);
   }
 
   /**
@@ -567,5 +618,10 @@ export default class HyperTrack {
       'longitude' in obj &&
       typeof obj.longitude === 'number'
     );
+  }
+
+  /** @ignore */
+  private static isOrderStatus(obj: OrderStatus): obj is OrderStatus {
+    return 'type' in obj && obj.type.startsWith('orderStatus');
   }
 }
