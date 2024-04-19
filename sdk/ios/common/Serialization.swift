@@ -32,16 +32,41 @@ func deserializeGeotagData(
     guard let data = args[keyGeotagData] as? [String: Any] else {
         return .failure(.fatalError(getParseError(args, key: keyGeotagData)))
     }
+    let orderHandle = args["orderHandle"] as? String
+    let orderStatusData = args["orderStatus"] as? [String: Any]
+    let orderStatusResult: Result<HyperTrack.OrderStatus, FailureResult>? = if let orderStatusData = orderStatusData {
+        deserializeOrderStatus(orderStatusData)
+    } else {
+        nil
+    }
+    if case let .failure(failure) = orderStatusResult {
+        return .failure(failure)
+    }
+    let orderStatus: HyperTrack.OrderStatus? = if case let .success(orderStatus) = orderStatusResult {
+        orderStatus
+    } else {
+        nil
+    }
     if let expectedLocationData = args[keyExpectedLocation] as? [String: Any] {
         let expectedLocation = deserializeLocation(expectedLocationData)
         switch expectedLocation {
         case let .failure(failure):
             return .failure(failure)
         case let .success(expectedLocation):
-            return .success(.init(data: data, expectedLocation: expectedLocation))
+            return .success(.init(
+                data: data,
+                expectedLocation: expectedLocation,
+                orderHandle: orderHandle,
+                orderStatus: orderStatus
+            ))
         }
     } else {
-        return .success(.init(data: data, expectedLocation: nil))
+        return .success(.init(
+            data: data,
+            expectedLocation: nil,
+            orderHandle: orderHandle,
+            orderStatus: orderStatus
+        ))
     }
 }
 
@@ -99,6 +124,25 @@ func deserializeName(_ data: [String: Any]) -> Result<String, FailureResult> {
         return .failure(.fatalError(getParseError(data, key: keyValue)))
     }
     return .success(value)
+}
+
+func deserializeOrderStatus(_ data: [String: Any]) -> Result<HyperTrack.OrderStatus, FailureResult> {
+    guard let type = data[keyType] as? String else {
+        return .failure(.fatalError(getParseError(data, key: keyType)))
+    }
+    switch type {
+    case "orderStatusClockIn":
+        return .success(.clockIn)
+    case "orderStatusClockOut":
+        return .success(.clockOut)
+    case "orderStatusCustom":
+        guard let value = data[keyValue] as? String else {
+            return .failure(.fatalError(getParseError(data, key: keyValue)))
+        }
+        return .success(.custom(value))
+    default:
+        return .failure(.fatalError(getParseError(data, key: keyType)))
+    }
 }
 
 func serializeDeviceID(_ deviceID: String) -> [String: Any] {

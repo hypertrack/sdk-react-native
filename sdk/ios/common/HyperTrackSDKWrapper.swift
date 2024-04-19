@@ -14,12 +14,41 @@ enum FailureResult: Error {
 func addGeotag(_ args: [String: Any]) -> Result<SuccessResult, FailureResult> {
     return deserializeGeotagData(args).flatMap { geotagData in
         if let metadata: HyperTrack.JSON.Object = toJSON(geotagData.data) {
+            let expectedLocation = geotagData.expectedLocation
+            let orderHandle = geotagData.orderHandle
+            let orderStatus = geotagData.orderStatus
+
             if let expectedLocation = geotagData.expectedLocation {
-                let result = HyperTrack.addGeotag(metadata, expectedLocation: expectedLocation)
-                return .success(.dict(serializeLocationWithDeviationResult(result)))
+                if orderHandle != nil || orderStatus != nil {
+                    if orderHandle == nil || orderStatus == nil {
+                        return .failure(.error("orderHandle and orderStatus must be provided"))
+                    }
+                    let result = HyperTrack.addGeotag(
+                        orderHandle: orderHandle!,
+                        orderStatus: orderStatus!,
+                        metadata: metadata,
+                        expectedLocation: expectedLocation
+                    )
+                    return .success(.dict(serializeLocationWithDeviationResult(result)))
+                } else {
+                    let result = HyperTrack.addGeotag(metadata, expectedLocation: expectedLocation)
+                    return .success(.dict(serializeLocationWithDeviationResult(result)))
+                }
             } else {
-                let result = HyperTrack.addGeotag(metadata)
-                return .success(.dict(serializeLocationResult(result)))
+                if orderHandle != nil || orderStatus != nil {
+                    if orderHandle == nil || orderStatus == nil {
+                        return .failure(.error("orderHandle and orderStatus must be provided"))
+                    }
+                    let result = HyperTrack.addGeotag(
+                        orderHandle: orderHandle!,
+                        orderStatus: orderStatus!,
+                        metadata: metadata
+                    )
+                    return .success(.dict(serializeLocationResult(result)))
+                } else {
+                    let result = HyperTrack.addGeotag(metadata)
+                    return .success(.dict(serializeLocationResult(result)))
+                }
             }
         } else {
             return .failure(.error("Failed to deserialize geotag metadata"))
