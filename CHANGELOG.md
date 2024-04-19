@@ -13,8 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Updated HyperTrack SDK iOS to [5.5.0](https://github.com/hypertrack/sdk-ios/releases/tag/5.5.0)
-- Updated HyperTrack SDK Android to [7.5.1](https://github.com/hypertrack/sdk-android/releases/tag/7.5.1)
+- Updated HyperTrack SDK iOS to [5.5.1](https://github.com/hypertrack/sdk-ios/releases/tag/5.5.0)
+- Updated HyperTrack SDK Android to [7.5.2](https://github.com/hypertrack/sdk-android/releases/tag/7.5.1)
 
 ## [13.2.3] - 2024-02-27
 
