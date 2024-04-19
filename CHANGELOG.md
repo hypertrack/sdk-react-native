@@ -7,13 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [13.3.0] - 2024-04-19
 
-### Changed
-
-- Updated HyperTrack SDK iOS to [5.5.1](https://github.com/hypertrack/sdk-ios/releases/tag/5.5.1)
-- Updated HyperTrack SDK Android to [7.5.2](https://github.com/hypertrack/sdk-android/releases/tag/7.5.2)
-
-## [13.3.0] - 2024-04-08
-
 ### Added
 
 - New `addGeotag` method that have `orderHandle` and `orderStatus` parameters. You can use this API when users need to clock in/out of work in your app to honor their work time (see [Clock in/out Tagging](https://hypertrack.com/docs/clock-inout-tracking#add-clock-inout-events-to-a-shift-timeline) guide for more info)
@@ -825,5 +818,4 @@ Initial release.
 [13.2.1]: https://github.com/hypertrack/sdk-react-native/releases/tag/13.2.1
 [13.2.2]: https://github.com/hypertrack/sdk-react-native/releases/tag/13.2.2
 [13.2.3]: https://github.com/hypertrack/sdk-react-native/releases/tag/13.2.3
-[13.3.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/13.3.0
 [13.3.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/13.3.0
