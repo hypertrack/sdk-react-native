@@ -5,15 +5,18 @@
 root = true
 
 [*]
-
 indent_style = space
 indent_size = 2
-
 end_of_line = lf
 charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
 
-[*.{kt,kts}]
-indent_style = space
+[**/*.{kt,kts}]
 indent_size = 4
+indent_style = space
+ktlint_standard_enum-entry-name-case = disabled
+ktlint_standard_max-line-length = disabled
+ktlint_standard_no-wildcard-imports = disabled
+ktlint_standard_no-consecutive-blank-lines = disabled
+ktlint_standard_no-consecutive-comments = disabled

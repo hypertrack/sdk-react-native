@@ -2,6 +2,7 @@
 alias b := build
 alias cnm := _clear-node-modules
 alias d := docs
+alias f := format
 alias gd := get-dependencies
 alias od := open-docs
 alias pt := push-tag
@@ -41,7 +42,7 @@ _clear-node-modules:
     rm -rf plugin_android_location_services_google_19_0_1/node_modules
     rm -rf plugin_android_push_service_firebase/node_modules
 
-docs:
+docs: format
     yarn --cwd sdk docs
 
 get-dependencies:
@@ -55,6 +56,9 @@ _latest-android:
 
 _latest-ios:
     @curl -s https://cocoapods.org/pods/HyperTrack | grep -m 1 -o -E "HyperTrack <span>{{SEMVER_REGEX}}" | grep -o -E '{{SEMVER_REGEX}}' | head -n 1
+
+format: 
+    ktlint --format sdk/android/src/main/java/
 
 open-docs: docs
     open docs/index.html

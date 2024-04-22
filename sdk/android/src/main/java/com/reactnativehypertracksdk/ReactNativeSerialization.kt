@@ -5,8 +5,8 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.WritableArray
 import com.facebook.react.bridge.WritableMap
 import com.reactnativehypertracksdk.common.Failure
-import com.reactnativehypertracksdk.common.WrapperResult
 import com.reactnativehypertracksdk.common.Success
+import com.reactnativehypertracksdk.common.WrapperResult
 
 @Suppress("UNCHECKED_CAST")
 internal fun <T> WrapperResult<T>.toPromise(promise: Promise) {
@@ -98,7 +98,7 @@ internal fun Map<String, Any?>.toWritableMap(): WritableMap {
                 is Double -> {
                     putDouble(key, value)
                 }
-                
+
                 is Float -> {
                     putDouble(key, value.toDouble())
                 }
