@@ -32,10 +32,11 @@ internal object Serialization {
                 expectedLocationData?.let {
                     deserializeLocation(it).getOrThrow()
                 }
-            val orderHandle =
+            val orderHandleData =
                 it
-                    .getOptional<String>(KEY_GEOTAG_ORDER_HANDLE)
+                    .getOptional<Map<String, Any?>>(KEY_GEOTAG_ORDER_HANDLE)
                     .getOrThrow()
+            val orderHandle = orderHandleData?.let { deserializeOrderHandle(it).getOrThrow() }
             val orderStatusData =
                 it
                     .getOptional<Map<String, Any?>>(KEY_GEOTAG_ORDER_STATUS)
@@ -229,6 +230,15 @@ internal object Serialization {
         }
     }
 
+    private fun deserializeOrderHandle(map: Map<String, Any?>): WrapperResult<String> {
+        return parse(map) {
+            it.assertValue<String>(key = KEY_TYPE, value = TYPE_ORDER_HANDLE)
+            it
+                .get<String>(KEY_VALUE)
+                .getOrThrow()
+        }
+    }
+
     private fun deserializeOrderStatus(map: Map<String, Any?>): WrapperResult<HyperTrack.OrderStatus> {
         return parse(map) {
             when (it.get<String>(KEY_TYPE).getOrThrow()) {
@@ -396,6 +406,7 @@ internal object Serialization {
     private const val TYPE_LOCATION_ERROR_NOT_RUNNING = "notRunning"
     private const val TYPE_LOCATION_ERROR_STARTING = "starting"
 
+    private const val TYPE_ORDER_HANDLE = "orderHandle"
     private const val TYPE_GEOTAG_ORDER_STATUS_CLOCK_IN = "orderStatusClockIn"
     private const val TYPE_GEOTAG_ORDER_STATUS_CLOCK_OUT = "orderStatusClockOut"
     private const val TYPE_GEOTAG_ORDER_STATUS_CUSTOM = "orderStatusCustom"

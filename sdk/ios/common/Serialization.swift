@@ -32,7 +32,21 @@ func deserializeGeotagData(
     guard let data = args[keyGeotagData] as? [String: Any] else {
         return .failure(.fatalError(getParseError(args, key: keyGeotagData)))
     }
-    let orderHandle = args["orderHandle"] as? String
+    let orderHandleData = args["orderHandle"] as? [String: Any]
+    let orderHandleResult: Result<HyperTrack.OrderHandle, FailureResult>? = if let orderHandleData = orderHandleData {
+        deserializeOrderHandle(orderHandleData)
+    } else {
+        nil
+    }
+    if case let .failure(failure) = orderHandleResult {
+        return .failure(failure)
+    }
+    let orderHandle: HyperTrack.OrderHandle? = if case let .success(orderHandle) = orderHandleResult {
+        orderHandle
+    } else {
+        nil
+    }
+
     let orderStatusData = args["orderStatus"] as? [String: Any]
     let orderStatusResult: Result<HyperTrack.OrderStatus, FailureResult>? = if let orderStatusData = orderStatusData {
         deserializeOrderStatus(orderStatusData)
@@ -47,6 +61,7 @@ func deserializeGeotagData(
     } else {
         nil
     }
+
     if let expectedLocationData = args[keyExpectedLocation] as? [String: Any] {
         let expectedLocation = deserializeLocation(expectedLocationData)
         switch expectedLocation {

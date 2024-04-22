@@ -21,6 +21,7 @@ import type { LocationWithDeviationInternal } from './data_types/internal/Locati
 import type { Metadata } from './data_types/internal/Metadata';
 import type { DynamicPublishableKey } from './data_types/internal/DynamicPublishableKey';
 import type { OrderStatus } from './data_types/OrderStatus';
+import type { OrderHandle } from './data_types/internal/OrderHandle';
 
 const EVENT_ERRORS = 'errors';
 const EVENT_IS_AVAILABLE = 'isAvailable';
@@ -115,7 +116,10 @@ export default class HyperTrack {
     ) {
       // addGeotag(orderHandle: string, orderStatus: OrderStatus, data: Object)
       return HyperTrackSdk.addGeotag({
-        orderHandle: args[0],
+        orderHandle: {
+          type: 'orderHandle',
+          value: args[0],
+        } as OrderHandle,
         orderStatus: args[1],
         data: args[2],
         expectedLocation: undefined,
@@ -134,7 +138,10 @@ export default class HyperTrack {
     ) {
       // addGeotag(orderHandle: string, orderStatus: OrderStatus, data: Object, expectedLocation: Location)
       return HyperTrackSdk.addGeotag({
-        orderHandle: args[0],
+        orderHandle: {
+          type: 'orderHandle',
+          value: args[0],
+        } as OrderHandle,
         orderStatus: args[1],
         data: args[2],
         expectedLocation: {
