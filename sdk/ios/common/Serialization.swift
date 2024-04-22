@@ -33,7 +33,7 @@ func deserializeGeotagData(
         return .failure(.fatalError(getParseError(args, key: keyGeotagData)))
     }
     let orderHandleData = args["orderHandle"] as? [String: Any]
-    let orderHandleResult: Result<HyperTrack.OrderHandle, FailureResult>? = if let orderHandleData = orderHandleData {
+    let orderHandleResult: Result<String, FailureResult>? = if let orderHandleData = orderHandleData {
         deserializeOrderHandle(orderHandleData)
     } else {
         nil
@@ -41,7 +41,7 @@ func deserializeGeotagData(
     if case let .failure(failure) = orderHandleResult {
         return .failure(failure)
     }
-    let orderHandle: HyperTrack.OrderHandle? = if case let .success(orderHandle) = orderHandleResult {
+    let orderHandle: String? = if case let .success(orderHandle) = orderHandleResult {
         orderHandle
     } else {
         nil
@@ -133,6 +133,16 @@ func deserializeMetadata(_ data: [String: Any]) -> Result<[String: Any], Failure
 
 func deserializeName(_ data: [String: Any]) -> Result<String, FailureResult> {
     if data[keyType] as? String != typeName {
+        return .failure(.fatalError(getParseError(data, key: keyType)))
+    }
+    guard let value = data[keyValue] as? String else {
+        return .failure(.fatalError(getParseError(data, key: keyValue)))
+    }
+    return .success(value)
+}
+
+func deserializeOrderHandle(_ data: [String: Any]) -> Result<String, FailureResult> {
+    if data[keyType] as? String != "orderHandle" {
         return .failure(.fatalError(getParseError(data, key: keyType)))
     }
     guard let value = data[keyValue] as? String else {
