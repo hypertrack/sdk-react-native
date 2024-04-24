@@ -9,7 +9,6 @@ import com.hypertrack.sdk.android.Result
  * to Map<String, T> or List<T> where T is any JSON-compatible type
  */
 internal object Serialization {
-
     fun deserializeDynamicPublishableKey(args: Serialized): WrapperResult<String> {
         return parse(args) {
             it.assertValue<String>(key = KEY_TYPE, value = TYPE_DYNAMIC_PUBLISHABLE_KEY)
@@ -21,27 +20,33 @@ internal object Serialization {
 
     fun deserializeGeotagData(map: Map<String, Any?>): WrapperResult<GeotagData> {
         return parse(map) {
-            val data = it
-                .get<Map<String, Any?>>(KEY_GEOTAG_DATA)
-                .getOrThrow()
-            val expectedLocationData = it
-                .getOptional<Map<String, Any?>>(KEY_GEOTAG_EXPECTED_LOCATION)
-                .getOrThrow()
-            val expectedLocation = expectedLocationData?.let {
-                deserializeLocation(it).getOrThrow()
-            }
-            val orderHandle = it
-                .getOptional<String>(KEY_GEOTAG_ORDER_HANDLE)
-                .getOrThrow()
-            val orderStatusData = it
-                .getOptional<Map<String, Any?>>(KEY_GEOTAG_ORDER_STATUS)
-                .getOrThrow()
+            val data =
+                it
+                    .get<Map<String, Any?>>(KEY_GEOTAG_DATA)
+                    .getOrThrow()
+            val expectedLocationData =
+                it
+                    .getOptional<Map<String, Any?>>(KEY_GEOTAG_EXPECTED_LOCATION)
+                    .getOrThrow()
+            val expectedLocation =
+                expectedLocationData?.let {
+                    deserializeLocation(it).getOrThrow()
+                }
+            val orderHandleData =
+                it
+                    .getOptional<Map<String, Any?>>(KEY_GEOTAG_ORDER_HANDLE)
+                    .getOrThrow()
+            val orderHandle = orderHandleData?.let { deserializeOrderHandle(it).getOrThrow() }
+            val orderStatusData =
+                it
+                    .getOptional<Map<String, Any?>>(KEY_GEOTAG_ORDER_STATUS)
+                    .getOrThrow()
             val orderStatus = orderStatusData?.let { deserializeOrderStatus(it).getOrThrow() }
             GeotagData(
                 data = data,
                 expectedLocation = expectedLocation,
                 orderHandle = orderHandle,
-                orderStatus = orderStatus
+                orderStatus = orderStatus,
             )
         }
     }
@@ -85,33 +90,34 @@ internal object Serialization {
     fun serializeDeviceId(deviceId: String): Map<String, Any?> {
         return mapOf(
             KEY_TYPE to TYPE_DEVICE_ID,
-            KEY_VALUE to deviceId
+            KEY_VALUE to deviceId,
         )
     }
 
     fun serializeDynamicPublishableKey(publishableKey: String): Serialized {
         return mapOf(
             KEY_TYPE to TYPE_DYNAMIC_PUBLISHABLE_KEY,
-            KEY_VALUE to publishableKey
+            KEY_VALUE to publishableKey,
         )
     }
 
     fun serializeError(error: HyperTrack.Error): Map<String, String> {
         return mapOf(
             KEY_TYPE to TYPE_ERROR,
-            KEY_VALUE to when (error) {
-                HyperTrack.Error.BlockedFromRunning -> "blockedFromRunning"
-                HyperTrack.Error.InvalidPublishableKey -> "invalidPublishableKey"
-                HyperTrack.Error.Location.Mocked -> "location.mocked"
-                HyperTrack.Error.Location.ServicesDisabled -> "location.servicesDisabled"
-                HyperTrack.Error.Location.ServicesUnavailable -> "location.servicesUnavailable"
-                HyperTrack.Error.Location.SignalLost -> "location.signalLost"
-                HyperTrack.Error.NoExemptionFromBackgroundStartRestrictions -> "noExemptionFromBackgroundStartRestrictions"
-                HyperTrack.Error.Permissions.Location.Denied -> "permissions.location.denied"
-                HyperTrack.Error.Permissions.Location.InsufficientForBackground -> "permissions.location.insufficientForBackground"
-                HyperTrack.Error.Permissions.Location.ReducedAccuracy -> "permissions.location.reducedAccuracy"
-                HyperTrack.Error.Permissions.Notifications.Denied -> "permissions.notifications.denied"
-            }
+            KEY_VALUE to
+                when (error) {
+                    HyperTrack.Error.BlockedFromRunning -> "blockedFromRunning"
+                    HyperTrack.Error.InvalidPublishableKey -> "invalidPublishableKey"
+                    HyperTrack.Error.Location.Mocked -> "location.mocked"
+                    HyperTrack.Error.Location.ServicesDisabled -> "location.servicesDisabled"
+                    HyperTrack.Error.Location.ServicesUnavailable -> "location.servicesUnavailable"
+                    HyperTrack.Error.Location.SignalLost -> "location.signalLost"
+                    HyperTrack.Error.NoExemptionFromBackgroundStartRestrictions -> "noExemptionFromBackgroundStartRestrictions"
+                    HyperTrack.Error.Permissions.Location.Denied -> "permissions.location.denied"
+                    HyperTrack.Error.Permissions.Location.InsufficientForBackground -> "permissions.location.insufficientForBackground"
+                    HyperTrack.Error.Permissions.Location.ReducedAccuracy -> "permissions.location.reducedAccuracy"
+                    HyperTrack.Error.Permissions.Notifications.Denied -> "permissions.notifications.denied"
+                },
         )
     }
 
@@ -124,20 +130,18 @@ internal object Serialization {
     fun serializeIsAvailable(isAvailable: Boolean): Map<String, Any?> {
         return mapOf(
             KEY_TYPE to TYPE_IS_AVAILABLE,
-            KEY_VALUE to isAvailable
+            KEY_VALUE to isAvailable,
         )
     }
 
     fun serializeIsTracking(isTracking: Boolean): Map<String, Any?> {
         return mapOf(
             KEY_TYPE to TYPE_IS_TRACKING,
-            KEY_VALUE to isTracking
+            KEY_VALUE to isTracking,
         )
     }
 
-    fun serializeLocateResult(
-        locationResult: Result<HyperTrack.Location, Set<HyperTrack.Error>>
-    ): Map<String, Any?> {
+    fun serializeLocateResult(locationResult: Result<HyperTrack.Location, Set<HyperTrack.Error>>): Map<String, Any?> {
         return when (locationResult) {
             is Result.Failure -> {
                 serializeFailure(serializeErrors(locationResult.failure))
@@ -149,9 +153,7 @@ internal object Serialization {
         }
     }
 
-    fun serializeLocationResult(
-        locationResult: Result<HyperTrack.Location, HyperTrack.LocationError>
-    ): Map<String, Any?> {
+    fun serializeLocationResult(locationResult: Result<HyperTrack.Location, HyperTrack.LocationError>): Map<String, Any?> {
         return when (locationResult) {
             is Result.Failure -> {
                 serializeLocationErrorFailure(locationResult.failure)
@@ -171,54 +173,55 @@ internal object Serialization {
         return serializeSuccess(serializeLocation(location))
     }
 
-    fun serializeLocationWithDeviationSuccess(
-        locationWithDeviation: HyperTrack.LocationWithDeviation,
-    ): Map<String, Any?> {
+    fun serializeLocationWithDeviationSuccess(locationWithDeviation: HyperTrack.LocationWithDeviation): Map<String, Any?> {
         return serializeSuccess(
             serializeLocationWithDeviation(
-                locationWithDeviation
-            )
+                locationWithDeviation,
+            ),
         )
     }
 
     fun serializeLocation(location: HyperTrack.Location): Map<String, Any?> {
         return mapOf(
             KEY_TYPE to TYPE_LOCATION,
-            KEY_VALUE to mapOf(
-                KEY_LATITUDE to location.latitude,
-                KEY_LONGITUDE to location.longitude
-            )
+            KEY_VALUE to
+                mapOf(
+                    KEY_LATITUDE to location.latitude,
+                    KEY_LONGITUDE to location.longitude,
+                ),
         )
     }
-
 
     fun serializeMetadata(metadata: Map<String, Any?>): Map<String, Any?> {
         return mapOf(
             KEY_TYPE to TYPE_METADATA,
-            KEY_VALUE to metadata
+            KEY_VALUE to metadata,
         )
     }
 
     fun serializeName(name: String): Map<String, Any?> {
         return mapOf(
             KEY_TYPE to TYPE_NAME,
-            KEY_VALUE to name
+            KEY_VALUE to name,
         )
     }
 
     private fun deserializeLocation(map: Map<String, Any?>): WrapperResult<Location> {
         return parse(map) {
             it.assertValue<String>(key = KEY_TYPE, value = TYPE_LOCATION)
-            val value = it
-                .get<Map<String, Any?>>(KEY_VALUE)
-                .getOrThrow()
+            val value =
+                it
+                    .get<Map<String, Any?>>(KEY_VALUE)
+                    .getOrThrow()
             parse(value) { parser ->
-                val latitude = parser
-                    .get<Double>(KEY_LATITUDE)
-                    .getOrThrow()
-                val longitude = parser
-                    .get<Double>(KEY_LONGITUDE)
-                    .getOrThrow()
+                val latitude =
+                    parser
+                        .get<Double>(KEY_LATITUDE)
+                        .getOrThrow()
+                val longitude =
+                    parser
+                        .get<Double>(KEY_LONGITUDE)
+                        .getOrThrow()
                 Location("api").also {
                     it.latitude = latitude
                     it.longitude = longitude
@@ -227,52 +230,59 @@ internal object Serialization {
         }
     }
 
-    private fun deserializeOrderStatus(
-        map: Map<String, Any?>
-    ): WrapperResult<HyperTrack.OrderStatus> {
+    private fun deserializeOrderHandle(map: Map<String, Any?>): WrapperResult<String> {
+        return parse(map) {
+            it.assertValue<String>(key = KEY_TYPE, value = TYPE_ORDER_HANDLE)
+            it
+                .get<String>(KEY_VALUE)
+                .getOrThrow()
+        }
+    }
+
+    private fun deserializeOrderStatus(map: Map<String, Any?>): WrapperResult<HyperTrack.OrderStatus> {
         return parse(map) {
             when (it.get<String>(KEY_TYPE).getOrThrow()) {
                 TYPE_GEOTAG_ORDER_STATUS_CLOCK_IN -> HyperTrack.OrderStatus.ClockIn
                 TYPE_GEOTAG_ORDER_STATUS_CLOCK_OUT -> HyperTrack.OrderStatus.ClockOut
-                TYPE_GEOTAG_ORDER_STATUS_CUSTOM -> HyperTrack.OrderStatus.Custom(
-                    it.get<String>(KEY_VALUE).getOrThrow()
-                )
+                TYPE_GEOTAG_ORDER_STATUS_CUSTOM ->
+                    HyperTrack.OrderStatus.Custom(
+                        it.get<String>(KEY_VALUE).getOrThrow(),
+                    )
 
                 else -> throw Error("Unknown order status: $map")
             }
         }
     }
 
-    private fun serializeLocationWithDeviation(
-        locationWithDeviation: HyperTrack.LocationWithDeviation,
-    ): Map<String, Any?> {
+    private fun serializeLocationWithDeviation(locationWithDeviation: HyperTrack.LocationWithDeviation): Map<String, Any?> {
         return mapOf(
             KEY_TYPE to TYPE_LOCATION_WITH_DEVIATION,
-            KEY_VALUE to mapOf(
-                KEY_LOCATION to serializeLocation(locationWithDeviation.location),
-                KEY_DEVIATION to locationWithDeviation.deviation
-            )
+            KEY_VALUE to
+                mapOf(
+                    KEY_LOCATION to serializeLocation(locationWithDeviation.location),
+                    KEY_DEVIATION to locationWithDeviation.deviation,
+                ),
         )
     }
 
     private fun serializeFailure(failure: List<Map<String, Any?>>): Map<String, Any?> {
         return mapOf(
             KEY_TYPE to TYPE_RESULT_FAILURE,
-            KEY_VALUE to failure
+            KEY_VALUE to failure,
         )
     }
 
     private fun serializeFailure(failure: Map<String, Any?>): Map<String, Any?> {
         return mapOf(
             KEY_TYPE to TYPE_RESULT_FAILURE,
-            KEY_VALUE to failure
+            KEY_VALUE to failure,
         )
     }
 
     private fun serializeSuccess(success: Map<String, Any?>): Map<String, Any?> {
         return mapOf(
             KEY_TYPE to TYPE_RESULT_SUCCESS,
-            KEY_VALUE to success
+            KEY_VALUE to success,
         )
     }
 
@@ -289,8 +299,9 @@ internal object Serialization {
             is HyperTrack.LocationError.Errors -> {
                 mapOf(
                     KEY_TYPE to TYPE_LOCATION_ERROR_ERRORS,
-                    KEY_VALUE to locationError.errors
-                        .map { serializeError(it) }
+                    KEY_VALUE to
+                        locationError.errors
+                            .map { serializeError(it) },
                 )
             }
         }
@@ -298,7 +309,7 @@ internal object Serialization {
 
     fun <T> parse(
         source: Map<String, Any?>,
-        parseFunction: (Parser) -> T
+        parseFunction: (Parser) -> T,
     ): WrapperResult<T> {
         val parser = Parser(source)
         return try {
@@ -313,20 +324,18 @@ internal object Serialization {
                     ParsingExceptions(source, parser.exceptions + e)
                 } else {
                     e
-                }
+                },
             )
         }
     }
 
     internal class Parser(
-        private val source: Map<String, Any?>
+        private val source: Map<String, Any?>,
     ) {
         private val _exceptions = mutableListOf<Exception>()
         val exceptions: List<Exception> = _exceptions
 
-        inline fun <reified T> get(
-            key: String
-        ): WrapperResult<T> {
+        inline fun <reified T> get(key: String): WrapperResult<T> {
             return try {
                 Success(source[key]!! as T)
             } catch (e: Exception) {
@@ -334,14 +343,12 @@ internal object Serialization {
                     ParsingException(key, e)
                         .also {
                             _exceptions.add(it)
-                        }
+                        },
                 )
             }
         }
 
-        inline fun <reified T> getOptional(
-            key: String
-        ): WrapperResult<T?> {
+        inline fun <reified T> getOptional(key: String): WrapperResult<T?> {
             return try {
                 Success(source[key] as T?)
             } catch (e: Exception) {
@@ -349,14 +356,14 @@ internal object Serialization {
                     ParsingException(key, e)
                         .also {
                             _exceptions.add(it)
-                        }
+                        },
                 )
             }
         }
 
         inline fun <reified T> assertValue(
             key: String,
-            value: Any
+            value: Any,
         ) {
             if (source[key] != value) {
                 _exceptions.add(Exception("Assertion failed: $key != $value"))
@@ -366,17 +373,17 @@ internal object Serialization {
 
     internal data class ParsingExceptions(
         val source: Any,
-        val exceptions: List<Exception>
+        val exceptions: List<Exception>,
     ) : Throwable(
-        exceptions.joinToString("\n")
-            .let {
-                "Invalid input:\n\n${source}\n\n$it"
-            }
-    )
+            exceptions.joinToString("\n")
+                .let {
+                    "Invalid input:\n\n${source}\n\n$it"
+                },
+        )
 
     internal class ParsingException(
         key: String,
-        exception: Exception
+        exception: Exception,
     ) : Exception("Invalid value for '$key': $exception", exception)
 
     private const val KEY_TYPE = "type"
@@ -399,6 +406,7 @@ internal object Serialization {
     private const val TYPE_LOCATION_ERROR_NOT_RUNNING = "notRunning"
     private const val TYPE_LOCATION_ERROR_STARTING = "starting"
 
+    private const val TYPE_ORDER_HANDLE = "orderHandle"
     private const val TYPE_GEOTAG_ORDER_STATUS_CLOCK_IN = "orderStatusClockIn"
     private const val TYPE_GEOTAG_ORDER_STATUS_CLOCK_OUT = "orderStatusClockOut"
     private const val TYPE_GEOTAG_ORDER_STATUS_CUSTOM = "orderStatusCustom"

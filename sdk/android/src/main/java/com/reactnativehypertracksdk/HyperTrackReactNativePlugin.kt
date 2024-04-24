@@ -10,13 +10,11 @@ import com.reactnativehypertracksdk.common.Serialization.serializeErrors
 import com.reactnativehypertracksdk.common.Serialization.serializeIsAvailable
 import com.reactnativehypertracksdk.common.Serialization.serializeIsTracking
 import com.reactnativehypertracksdk.common.Serialization.serializeLocateResult
-import com.reactnativehypertracksdk.common.Serialization.serializeLocation
 import com.reactnativehypertracksdk.common.Serialization.serializeLocationResult
 
 @ReactModule(name = HyperTrackReactNativePlugin.NAME)
 class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
     ReactContextBaseJavaModule(reactContext) {
-
     private var locateSubscription: HyperTrack.Cancellable? = null
     private var subscriptions: List<HyperTrack.Cancellable>? = null
 
@@ -66,7 +64,10 @@ class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
      */
 
     @ReactMethod
-    fun addGeotag(args: ReadableMap, promise: Promise) {
+    fun addGeotag(
+        args: ReadableMap,
+        promise: Promise,
+    ) {
         HyperTrackSdkWrapper.addGeotag(args.toHashMap()).toPromise(promise)
     }
 
@@ -113,9 +114,10 @@ class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
     @ReactMethod
     fun locate(promise: Promise) {
         locateSubscription?.cancel()
-        locateSubscription = HyperTrack.locate {
-            emitEvent(EVENT_LOCATE, serializeLocateResult(it).toWritableMap())
-        }
+        locateSubscription =
+            HyperTrack.locate {
+                emitEvent(EVENT_LOCATE, serializeLocateResult(it).toWritableMap())
+            }
         Success(Unit).toPromise(promise)
     }
 
@@ -172,14 +174,20 @@ class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
         }
     }
 
-    private fun emitEvent(event: String, data: WritableMap) {
+    private fun emitEvent(
+        event: String,
+        data: WritableMap,
+    ) {
         reactApplicationContext
             .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
             .emit(event, data)
     }
 
     @Suppress("SameParameterValue")
-    private fun emitEvent(event: String, data: WritableArray) {
+    private fun emitEvent(
+        event: String,
+        data: WritableArray,
+    ) {
         reactApplicationContext
             .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
             .emit(event, data)
