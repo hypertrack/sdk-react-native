@@ -216,6 +216,21 @@ class HyperTrackReactNativePlugin: RCTEventEmitter {
         )
     }
 
+    @objc func setIsTracking(
+        _ args: NSDictionary,
+        resolver resolve: RCTPromiseResolveBlock,
+        rejecter reject: RCTPromiseRejectBlock
+    ) {
+        sendAsPromise(
+            hypertrack_sdk_react_native.setIsTracking(
+                args as! [String: Any]
+            ),
+            method: .setIsTracking,
+            resolve,
+            reject
+        )
+    }
+
     @objc func setMetadata(
         _ args: NSDictionary,
         resolver resolve: RCTPromiseResolveBlock,
@@ -244,16 +259,16 @@ class HyperTrackReactNativePlugin: RCTEventEmitter {
         )
     }
 
-    @objc func setIsTracking(
+    @objc func setWorkerHandle(
         _ args: NSDictionary,
         resolver resolve: RCTPromiseResolveBlock,
         rejecter reject: RCTPromiseRejectBlock
     ) {
         sendAsPromise(
-            hypertrack_sdk_react_native.setIsTracking(
+            hypertrack_sdk_react_native.setWorkerHandle(
                 args as! [String: Any]
             ),
-            method: .setIsTracking,
+            method: .setWorkerHandle,
             resolve,
             reject
         )

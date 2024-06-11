@@ -146,6 +146,11 @@ class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
         HyperTrackSdkWrapper.setName(args.toHashMap())
     }
 
+    @ReactMethod
+    fun setWorkerHandle(args: ReadableMap) {
+        HyperTrackSdkWrapper.setWorkerHandle(args.toHashMap())
+    }
+
     private fun initListeners(): List<HyperTrack.Cancellable> {
         return mutableListOf<HyperTrack.Cancellable>().also { result ->
             HyperTrack.subscribeToErrors {

@@ -22,4 +22,5 @@ internal enum class SdkMethod {
     setIsTracking,
     setMetadata,
     setName,
+    setWorkerHandle,
 }

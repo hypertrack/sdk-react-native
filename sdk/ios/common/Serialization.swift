@@ -170,6 +170,16 @@ func deserializeOrderStatus(_ data: [String: Any]) -> Result<HyperTrack.OrderSta
     }
 }
 
+func deserializeWorkerHandle(_ data: [String: Any]) -> Result<String, FailureResult> {
+    if data[keyType] as? String != "workerHandle" {
+        return .failure(.fatalError(getParseError(data, key: keyType)))
+    }
+    guard let value = data[keyValue] as? String else {
+        return .failure(.fatalError(getParseError(data, key: keyValue)))
+    }
+    return .success(value)
+}
+
 func serializeDeviceID(_ deviceID: String) -> [String: Any] {
     return [
         keyType: "deviceID",

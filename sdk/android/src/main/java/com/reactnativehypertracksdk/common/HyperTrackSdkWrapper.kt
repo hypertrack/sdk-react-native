@@ -9,6 +9,7 @@ import com.reactnativehypertracksdk.common.Serialization.deserializeIsAvailable
 import com.reactnativehypertracksdk.common.Serialization.deserializeIsTracking
 import com.reactnativehypertracksdk.common.Serialization.deserializeMetadata
 import com.reactnativehypertracksdk.common.Serialization.deserializeName
+import com.reactnativehypertracksdk.common.Serialization.deserializeWorkerHandle
 import com.reactnativehypertracksdk.common.Serialization.serializeDeviceId
 import com.reactnativehypertracksdk.common.Serialization.serializeDynamicPublishableKey
 import com.reactnativehypertracksdk.common.Serialization.serializeErrors
@@ -172,6 +173,13 @@ internal object HyperTrackSdkWrapper {
         return deserializeName(args)
             .mapSuccess { name ->
                 HyperTrack.name = name
+            }
+    }
+
+    fun setWorkerHandle(args: Serialized): WrapperResult<Unit> {
+        return deserializeWorkerHandle(args)
+            .mapSuccess { workerHandle ->
+                HyperTrack.setWorkerHandle(workerHandle)
             }
     }
 }

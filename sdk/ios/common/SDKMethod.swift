@@ -14,4 +14,5 @@ enum SDKMethod: String {
     case setIsTracking
     case setMetadata
     case setName
+    case setWorkerHandle
 }

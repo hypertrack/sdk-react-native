@@ -126,6 +126,12 @@ func setName(_ args: [String: Any]) -> Result<SuccessResult, FailureResult> {
     }
 }
 
+func setWorkerHandle(_ args: [String: Any]) -> Result<SuccessResult, FailureResult> {
+    deserializeWorkerHandle(args).flatMap { workerHandle in
+        .success(asVoid(HyperTrack.workerHandle = workerHandle))
+    }
+}
+
 func asVoid(_: Void) -> SuccessResult {
     .void
 }

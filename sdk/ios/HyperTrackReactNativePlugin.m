@@ -60,4 +60,8 @@ RCT_EXTERN_METHOD(setName:(NSDictionary *)args
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(setWorkerHandle:(NSDictionary *)args
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
 @end
