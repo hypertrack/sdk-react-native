@@ -215,6 +215,13 @@ internal object Serialization {
         )
     }
 
+    fun serializeWorkerHandle(workerHandle: String): Map<String, Any?> {
+        return mapOf(
+            KEY_TYPE to TYPE_WORKER_HANDLE,
+            KEY_VALUE to workerHandle,
+        )
+    }
+
     private fun deserializeLocation(map: Map<String, Any?>): WrapperResult<Location> {
         return parse(map) {
             it.assertValue<String>(key = KEY_TYPE, value = TYPE_LOCATION)

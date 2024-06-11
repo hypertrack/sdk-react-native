@@ -112,6 +112,11 @@ class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
     }
 
     @ReactMethod
+    fun getWorkerHandle(promise: Promise) {
+        HyperTrackSdkWrapper.getWorkerHandle().toPromise(promise)
+    }
+
+    @ReactMethod
     fun locate(promise: Promise) {
         locateSubscription?.cancel()
         locateSubscription =

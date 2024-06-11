@@ -16,6 +16,7 @@ internal enum class SdkMethod {
     getLocation,
     getMetadata,
     getName,
+    getWorkerHandle,
     locate,
     setDynamicPublishableKey,
     setIsAvailable,

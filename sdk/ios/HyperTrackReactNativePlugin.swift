@@ -168,6 +168,18 @@ class HyperTrackReactNativePlugin: RCTEventEmitter {
         )
     }
 
+    @objc func getWorkerHandle(
+        _ resolve: RCTPromiseResolveBlock,
+        rejecter reject: RCTPromiseRejectBlock
+    ) {
+        sendAsPromise(
+            hypertrack_sdk_react_native.getWorkerHandle(),
+            method: .getWorkerHandle,
+            resolve,
+            reject
+        )
+    }
+
     @objc func locate(
         _ resolve: RCTPromiseResolveBlock,
         rejecter reject: RCTPromiseRejectBlock

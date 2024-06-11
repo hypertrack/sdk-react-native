@@ -294,6 +294,19 @@ export default class HyperTrack {
   }
 
   /**
+   * A primary identifier that uniquely identifies the worker outside of HyperTrack.
+   * Example: email, phone number, database id
+   * It is usually obtained and set when the worker logs into the app.
+   * Set it to an empty string "" when the worker logs out of the app to un-bind the device from the worker and
+   * avoid unintentional tracking.
+   */
+  static async getWorkerHandle(): Promise<string> {
+    return HyperTrackSdk.getWorkerHandle().then(
+      (workerHandle: WorkerHandle) => workerHandle.value
+    );
+  }
+
+  /**
    * Requests one-time location update and returns the location once it is available, or error.
    *
    * Only one locate subscription can be active at a time. If you re-subscribe, the old EmitterSubscription
