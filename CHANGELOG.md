@@ -9,7 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `setWorkerHandle` and `getWorkerHandle` methods to set and get worker handle for the device. It is used to link the tracked device with the worker (like email or user id).
+- New `setWorkerHandle` and `getWorkerHandle` can be used to identify workers
+  - We observed our customers identify worker devices via `HyperTrack.metadata`, so we decided to make it a first class citizen in our API.
+  - If you previously used `metadata` to identify workers, we suggest using `workerHandle` for this purpose instead.
 
 ### Changed
 
