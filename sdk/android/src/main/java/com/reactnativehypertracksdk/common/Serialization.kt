@@ -87,6 +87,15 @@ internal object Serialization {
         }
     }
 
+    fun deserializeWorkerHandle(map: Map<String, Any?>): WrapperResult<String> {
+        return parse(map) {
+            it.assertValue<String>(key = KEY_TYPE, value = TYPE_WORKER_HANDLE)
+            it
+                .get<String>(KEY_VALUE)
+                .getOrThrow()
+        }
+    }
+
     fun serializeDeviceId(deviceId: String): Map<String, Any?> {
         return mapOf(
             KEY_TYPE to TYPE_DEVICE_ID,
@@ -203,6 +212,13 @@ internal object Serialization {
         return mapOf(
             KEY_TYPE to TYPE_NAME,
             KEY_VALUE to name,
+        )
+    }
+
+    fun serializeWorkerHandle(workerHandle: String): Map<String, Any?> {
+        return mapOf(
+            KEY_TYPE to TYPE_WORKER_HANDLE,
+            KEY_VALUE to workerHandle,
         )
     }
 
@@ -397,10 +413,11 @@ internal object Serialization {
     private const val TYPE_ERROR = "error"
     private const val TYPE_IS_AVAILABLE = "isAvailable"
     private const val TYPE_IS_TRACKING = "isTracking"
-    private const val TYPE_METADATA = "metadata"
-    private const val TYPE_NAME = "name"
     private const val TYPE_LOCATION = "location"
     private const val TYPE_LOCATION_WITH_DEVIATION = "locationWithDeviation"
+    private const val TYPE_METADATA = "metadata"
+    private const val TYPE_NAME = "name"
+    private const val TYPE_WORKER_HANDLE = "workerHandle"
 
     private const val TYPE_LOCATION_ERROR_ERRORS = "errors"
     private const val TYPE_LOCATION_ERROR_NOT_RUNNING = "notRunning"

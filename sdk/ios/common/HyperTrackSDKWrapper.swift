@@ -68,6 +68,18 @@ func getErrors() -> Result<SuccessResult, FailureResult> {
     .success(.array(serializeErrors(HyperTrack.errors)))
 }
 
+func getIsAvailable() -> Result<SuccessResult, FailureResult> {
+    .success(.dict(serializeIsAvailable(HyperTrack.isAvailable)))
+}
+
+func getIsTracking() -> Result<SuccessResult, FailureResult> {
+    .success(.dict(serializeIsTracking(HyperTrack.isTracking)))
+}
+
+func getLocation() -> Result<SuccessResult, FailureResult> {
+    .success(.dict(serializeLocationResult(HyperTrack.location)))
+}
+
 func getMetadata() -> Result<SuccessResult, FailureResult> {
     .success(.dict(serializeMetadata(HyperTrack.metadata)))
 }
@@ -76,12 +88,8 @@ func getName() -> Result<SuccessResult, FailureResult> {
     .success(.dict(serializeName(HyperTrack.name)))
 }
 
-func getLocation() -> Result<SuccessResult, FailureResult> {
-    .success(.dict(serializeLocationResult(HyperTrack.location)))
-}
-
-func getIsAvailable() -> Result<SuccessResult, FailureResult> {
-    .success(.dict(serializeIsAvailable(HyperTrack.isAvailable)))
+func getWorkerHandle() -> Result<SuccessResult, FailureResult> {
+    .success(.dict(serializeWorkerHandle(HyperTrack.workerHandle)))
 }
 
 func setDynamicPublishableKey(_ args: [String: Any]) -> Result<SuccessResult, FailureResult> {
@@ -96,10 +104,6 @@ func setIsAvailable(_ args: [String: Any]) -> Result<SuccessResult, FailureResul
         HyperTrack.isAvailable = isAvailable
         return .success(.void)
     }
-}
-
-func getIsTracking() -> Result<SuccessResult, FailureResult> {
-    .success(.dict(serializeIsTracking(HyperTrack.isTracking)))
 }
 
 func setIsTracking(_ args: [String: Any]) -> Result<SuccessResult, FailureResult> {
@@ -123,6 +127,12 @@ func setMetadata(_ args: [String: Any]) -> Result<SuccessResult, FailureResult> 
 func setName(_ args: [String: Any]) -> Result<SuccessResult, FailureResult> {
     deserializeName(args).flatMap { name in
         .success(asVoid(HyperTrack.name = name))
+    }
+}
+
+func setWorkerHandle(_ args: [String: Any]) -> Result<SuccessResult, FailureResult> {
+    deserializeWorkerHandle(args).flatMap { workerHandle in
+        .success(asVoid(HyperTrack.workerHandle = workerHandle))
     }
 }
 

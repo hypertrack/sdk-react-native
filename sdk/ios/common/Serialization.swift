@@ -13,6 +13,7 @@ private let typeLocation = "location"
 private let typeMetadata = "metadata"
 private let typeName = "name"
 private let typeSuccess = "success"
+private let typeWorkerHandle = "workerHandle"
 
 func deserializeDynamicPublishableKey(
     _ args: [String: Any]
@@ -170,6 +171,16 @@ func deserializeOrderStatus(_ data: [String: Any]) -> Result<HyperTrack.OrderSta
     }
 }
 
+func deserializeWorkerHandle(_ data: [String: Any]) -> Result<String, FailureResult> {
+    if data[keyType] as? String != typeWorkerHandle {
+        return .failure(.fatalError(getParseError(data, key: keyType)))
+    }
+    guard let value = data[keyValue] as? String else {
+        return .failure(.fatalError(getParseError(data, key: keyValue)))
+    }
+    return .success(value)
+}
+
 func serializeDeviceID(_ deviceID: String) -> [String: Any] {
     return [
         keyType: "deviceID",
@@ -224,6 +235,12 @@ func serializeError(_ error: HyperTrack.Error) -> [String: Any] {
         keyType: typeError,
         keyValue: value,
     ]
+}
+
+func serializeErrors(_ errors: Set<HyperTrack.Error>) -> [[String: Any]] {
+    return errors.map { error in
+        serializeError(error)
+    }
 }
 
 func serializeIsAvailable(_ isAvailable: Bool) -> [String: Any] {
@@ -341,10 +358,11 @@ func serializeName(_ name: String) -> [String: Any] {
     ]
 }
 
-func serializeErrors(_ errors: Set<HyperTrack.Error>) -> [[String: Any]] {
-    return errors.map { error in
-        serializeError(error)
-    }
+func serializeWorkerHandle(_ workerHandle: String) -> [String: Any] {
+    return [
+        keyType: typeWorkerHandle,
+        keyValue: workerHandle,
+    ]
 }
 
 private func toMap(_ object: HyperTrack.JSON.Object) -> [String: Any] {

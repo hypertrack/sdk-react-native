@@ -22,6 +22,7 @@ import type { Metadata } from './data_types/internal/Metadata';
 import type { DynamicPublishableKey } from './data_types/internal/DynamicPublishableKey';
 import type { OrderStatus } from './data_types/OrderStatus';
 import type { OrderHandle } from './data_types/internal/OrderHandle';
+import type { WorkerHandle } from './data_types/internal/WorkerHandle';
 
 const EVENT_ERRORS = 'errors';
 const EVENT_IS_AVAILABLE = 'isAvailable';
@@ -293,6 +294,19 @@ export default class HyperTrack {
   }
 
   /**
+   * A primary identifier that uniquely identifies the worker outside of HyperTrack.
+   * Example: email, phone number, database id
+   * It is usually obtained and set when the worker logs into the app.
+   * Set it to an empty string "" when the worker logs out of the app to un-bind the device from the worker and
+   * avoid unintentional tracking.
+   */
+  static async getWorkerHandle(): Promise<string> {
+    return HyperTrackSdk.getWorkerHandle().then(
+      (workerHandle: WorkerHandle) => workerHandle.value
+    );
+  }
+
+  /**
    * Requests one-time location update and returns the location once it is available, or error.
    *
    * Only one locate subscription can be active at a time. If you re-subscribe, the old EmitterSubscription
@@ -381,6 +395,22 @@ export default class HyperTrack {
       type: 'name',
       value: name,
     } as Name);
+  }
+
+  /**
+   * A primary identifier that uniquely identifies the worker outside of HyperTrack.
+   * Example: email, phone number, database id
+   * It is usually obtained and set when the worker logs into the app.
+   * Set it to an empty string "" when the worker logs out of the app to un-bind the device from the worker and
+   * avoid unintentional tracking.
+   *
+   * @param {string} workerHandle
+   */
+  static setWorkerHandle(workerHandle: string) {
+    HyperTrackSdk.setWorkerHandle({
+      type: 'workerHandle',
+      value: workerHandle,
+    } as WorkerHandle);
   }
 
   /**
