@@ -11,6 +11,7 @@ import com.reactnativehypertracksdk.common.Serialization.serializeIsAvailable
 import com.reactnativehypertracksdk.common.Serialization.serializeIsTracking
 import com.reactnativehypertracksdk.common.Serialization.serializeLocateResult
 import com.reactnativehypertracksdk.common.Serialization.serializeLocationResult
+import com.reactnativehypertracksdk.common.Serialization.serializeOrders
 
 @ReactModule(name = HyperTrackReactNativePlugin.NAME)
 class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
@@ -112,6 +113,11 @@ class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
     }
 
     @ReactMethod
+    fun getOrders(promise: Promise) {
+        HyperTrackSdkWrapper.getOrders().toPromise(promise)
+    }
+
+    @ReactMethod
     fun getWorkerHandle(promise: Promise) {
         HyperTrackSdkWrapper.getWorkerHandle().toPromise(promise)
     }
@@ -181,6 +187,12 @@ class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
             }.also {
                 result.add(it)
             }
+
+            HyperTrack.subscribeToOrders {
+                emitEvent(EVENT_ORDERS, serializeOrders(it).toWriteableArray())
+            }.also {
+                result.add(it)
+            }
         }
     }
 
@@ -209,6 +221,7 @@ class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
         private const val EVENT_IS_TRACKING = "isTracking"
         private const val EVENT_LOCATE = "locate"
         private const val EVENT_LOCATION = "location"
+        private const val EVENT_ORDERS = "orders"
 
         const val NAME = "HyperTrackReactNativePlugin"
     }

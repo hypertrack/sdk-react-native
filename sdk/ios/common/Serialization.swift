@@ -358,6 +358,18 @@ func serializeName(_ name: String) -> [String: Any] {
     ]
 }
 
+func serializeOrders(_ orders: [HyperTrack.Order]) -> [String: Any] {
+    return [
+        keyType: "orders",
+        keyValue: orders.map { order in
+            [
+                "orderHandle": order.orderHandle,
+                "isInsideGeofence": order.isInsideGeofence,
+            ]
+        },
+    ]
+}
+
 func serializeWorkerHandle(_ workerHandle: String) -> [String: Any] {
     return [
         keyType: typeWorkerHandle,

@@ -23,12 +23,15 @@ import type { DynamicPublishableKey } from './data_types/internal/DynamicPublish
 import type { OrderStatus } from './data_types/OrderStatus';
 import type { OrderHandle } from './data_types/internal/OrderHandle';
 import type { WorkerHandle } from './data_types/internal/WorkerHandle';
+import { Order } from './data_types/Order';
+import { OrdersInternal } from './data_types/internal/OrdersInternal';
 
 const EVENT_ERRORS = 'errors';
 const EVENT_IS_AVAILABLE = 'isAvailable';
 const EVENT_IS_TRACKING = 'isTracking';
 const EVENT_LOCATE = 'locate';
 const EVENT_LOCATION = 'location';
+const EVENT_ORDERS = 'orders';
 
 const LINKING_ERROR =
   `The package 'hypertrack-sdk-react-native' doesn't seem to be linked. Make sure: \n\n` +
@@ -293,6 +296,12 @@ export default class HyperTrack {
     });
   }
 
+  static async getOrders(): Promise<Map<string, Order>> {
+    return HyperTrackSdk.getOrders().then((orders: OrdersInternal) => {
+      return this.deserializeOrders(orders);
+    });
+  }
+
   /**
    * A primary identifier that uniquely identifies the worker outside of HyperTrack.
    * Example: email, phone number, database id
@@ -523,6 +532,14 @@ export default class HyperTrack {
     );
   }
 
+  static subscribeToOrders(
+    listener: (orders: Map<string, Order>) => void
+  ): EmitterSubscription {
+    return EventEmitter.addListener(EVENT_ORDERS, (orders: OrdersInternal) => {
+      listener(this.deserializeOrders(orders));
+    });
+  }
+
   /** @ignore */
   private static deserializeDynamicPublishableKey(
     dynamicPublishableKey: DynamicPublishableKey
@@ -645,6 +662,21 @@ export default class HyperTrack {
       throw new Error(`Invalid name: ${JSON.stringify(name)}`);
     }
     return name.value;
+  }
+
+  /** @ignore */
+  private static deserializeOrders(orders: OrdersInternal): Map<string, Order> {
+    if (orders.type !== 'orders') {
+      throw new Error(`Invalid orders: ${JSON.stringify(orders)}`);
+    }
+    let result = new Map<string, Order>();
+    Object.entries(orders.value).forEach(([key, value]) => {
+      result.set(key, {
+        orderHandle: value.orderHandle,
+        isInsideGeofence: value.isInsideGeofence,
+      });
+    });
+    return result;
   }
 
   /** @ignore */

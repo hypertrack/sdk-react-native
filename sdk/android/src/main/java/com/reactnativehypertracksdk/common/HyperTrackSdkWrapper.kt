@@ -21,6 +21,7 @@ import com.reactnativehypertracksdk.common.Serialization.serializeLocationSucces
 import com.reactnativehypertracksdk.common.Serialization.serializeLocationWithDeviationSuccess
 import com.reactnativehypertracksdk.common.Serialization.serializeMetadata
 import com.reactnativehypertracksdk.common.Serialization.serializeName
+import com.reactnativehypertracksdk.common.Serialization.serializeOrders
 import com.reactnativehypertracksdk.common.Serialization.serializeWorkerHandle
 
 typealias Serialized = Map<String, Any?>
@@ -138,6 +139,11 @@ internal object HyperTrackSdkWrapper {
             serializeName(HyperTrack.name),
         )
     }
+
+    fun getOrders: WrapperResult<Serialized> {
+        return Success(
+            serializeOrders(HyperTrack.orders)
+        )
 
     fun getWorkerHandle(): WrapperResult<Serialized> {
         return Success(

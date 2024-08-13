@@ -215,6 +215,18 @@ internal object Serialization {
         )
     }
 
+    fun serializeOrders(orders: List<HyperTrack.Order>): Map<String, Any?> {
+        return mapOf(
+            KEY_TYPE to TYPE_ORDERS,
+            KEY_VALUE to orders.map { 
+                mapOf(
+                    KEY_ORDER_HANDLE to order.orderHandle,
+                    KEY_IS_INSIDE_GEOFENCE to order.isInsideGeofence,
+                )
+            },
+        )
+    }
+
     fun serializeWorkerHandle(workerHandle: String): Map<String, Any?> {
         return mapOf(
             KEY_TYPE to TYPE_WORKER_HANDLE,
@@ -417,6 +429,7 @@ internal object Serialization {
     private const val TYPE_LOCATION_WITH_DEVIATION = "locationWithDeviation"
     private const val TYPE_METADATA = "metadata"
     private const val TYPE_NAME = "name"
+    private const val TYPE_ORDERS = "orders"
     private const val TYPE_WORKER_HANDLE = "workerHandle"
 
     private const val TYPE_LOCATION_ERROR_ERRORS = "errors"
@@ -436,5 +449,7 @@ internal object Serialization {
     private const val KEY_GEOTAG_EXPECTED_LOCATION = "expectedLocation"
     private const val KEY_GEOTAG_ORDER_HANDLE = "orderHandle"
     private const val KEY_GEOTAG_ORDER_STATUS = "orderStatus"
+    private const val KEY_IS_INSIDE_GEOFENCE = "isInsideGeofence"
     private const val KEY_LOCATION = "location"
+    private const val KEY_ORDER_HANDLE = "orderHandle"
 }
