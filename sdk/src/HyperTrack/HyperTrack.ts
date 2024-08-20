@@ -2,7 +2,7 @@ import {
   NativeModules,
   Platform,
   NativeEventEmitter,
-  EmitterSubscription,
+  type EmitterSubscription,
 } from 'react-native';
 import { HyperTrackError } from './data_types/HyperTrackError';
 import type { IsAvailable } from './data_types/internal/IsAvailable';
@@ -23,8 +23,8 @@ import type { DynamicPublishableKey } from './data_types/internal/DynamicPublish
 import type { OrderStatus } from './data_types/OrderStatus';
 import type { OrderHandle } from './data_types/internal/OrderHandle';
 import type { WorkerHandle } from './data_types/internal/WorkerHandle';
-import { Order } from './data_types/Order';
-import { OrdersInternal } from './data_types/internal/OrdersInternal';
+import type { Order } from './data_types/Order';
+import type { OrdersInternal } from './data_types/internal/OrdersInternal';
 
 const EVENT_ERRORS = 'errors';
 const EVENT_IS_AVAILABLE = 'isAvailable';
