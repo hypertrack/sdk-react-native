@@ -56,7 +56,7 @@ class HyperTrackReactNativePlugin: RCTEventEmitter {
         case eventLocation:
             sendEvent(withName: eventLocation, body: serializeLocationResult(HyperTrack.location))
         case eventOrders:
-            sendEvent(withName: eventOrders, body: serializeOrders(HyperTrack.orders))
+            sendEvent(withName: eventOrders, body: serializeOrders(Array(HyperTrack.orders)))
         default:
             return
         }
@@ -316,7 +316,10 @@ class HyperTrackReactNativePlugin: RCTEventEmitter {
         let locationSubscription = HyperTrack.subscribeToLocation { locationResult in
             self.sendEvent(withName: self.eventLocation, body: serializeLocationResult(locationResult))
         }
-        return Subscriptions(locationSubscription: locationSubscription, isAvailableSubscription: isAvailableSubscription, isTrackingSubscription: isTrackingSubscription, errorsSubscription: errorsSubscription)
+        let ordersSubscription = HyperTrack.subscribeToOrders { orders in
+            self.sendEvent(withName: self.eventOrders, body: serializeOrders(Array(orders)))
+        }
+        return Subscriptions(locationSubscription: locationSubscription, isAvailableSubscription: isAvailableSubscription, isTrackingSubscription: isTrackingSubscription, errorsSubscription: errorsSubscription, ordersSubscription: ordersSubscription)
     }
 }
 

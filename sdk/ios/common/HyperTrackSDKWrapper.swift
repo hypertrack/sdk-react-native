@@ -89,7 +89,7 @@ func getName() -> Result<SuccessResult, FailureResult> {
 }
 
 func getOrders() -> Result<SuccessResult, FailureResult> {
-    .success(.dict(serializeOrders(HyperTrack.orders)))
+    .success(.dict(serializeOrders(Array(HyperTrack.orders))))
 }
 
 func getWorkerHandle() -> Result<SuccessResult, FailureResult> {
