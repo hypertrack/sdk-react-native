@@ -44,7 +44,7 @@ _clear-node-modules:
     rm -rf plugin_android_push_service_firebase/node_modules
 
 copy-native-code-from-quickstart:
-    cp -rf ../quickstart-react-native/node_modules/hypertrack-sdk-react-native/android/src/main/java/com/reactnativehypertracksdk/common sdk/android/src/main/java/com/reactnativehypertracksdk
+    cp -rf ../quickstart-react-native/node_modules/hypertrack-sdk-react-native/android/src/main/java/com/reactnativehypertracksdk sdk/android/src/main/java/com
 
 docs: format
     yarn --cwd sdk docs

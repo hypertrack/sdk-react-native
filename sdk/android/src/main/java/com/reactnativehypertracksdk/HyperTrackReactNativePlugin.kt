@@ -1,17 +1,23 @@
 package com.reactnativehypertracksdk
 
-import com.facebook.react.bridge.*
+import com.facebook.react.bridge.Promise
+import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.ReactContextBaseJavaModule
+import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.bridge.ReadableMap
+import com.facebook.react.bridge.WritableArray
+import com.facebook.react.bridge.WritableMap
 import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.modules.core.DeviceEventManagerModule
-import com.hypertrack.sdk.*
 import com.hypertrack.sdk.android.HyperTrack
-import com.reactnativehypertracksdk.common.*
+import com.reactnativehypertracksdk.common.HyperTrackSdkWrapper
 import com.reactnativehypertracksdk.common.Serialization.serializeErrors
 import com.reactnativehypertracksdk.common.Serialization.serializeIsAvailable
 import com.reactnativehypertracksdk.common.Serialization.serializeIsTracking
 import com.reactnativehypertracksdk.common.Serialization.serializeLocateResult
 import com.reactnativehypertracksdk.common.Serialization.serializeLocationResult
 import com.reactnativehypertracksdk.common.Serialization.serializeOrders
+import com.reactnativehypertracksdk.common.Success
 
 @ReactModule(name = HyperTrackReactNativePlugin.NAME)
 class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
@@ -41,15 +47,28 @@ class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
             EVENT_ERRORS -> {
                 emitEvent(EVENT_ERRORS, serializeErrors(HyperTrack.errors).toWriteableArray())
             }
+
             EVENT_IS_AVAILABLE -> {
-                emitEvent(EVENT_IS_AVAILABLE, serializeIsAvailable(HyperTrack.isAvailable).toWritableMap())
+                emitEvent(
+                    EVENT_IS_AVAILABLE,
+                    serializeIsAvailable(HyperTrack.isAvailable).toWritableMap()
+                )
             }
+
             EVENT_IS_TRACKING -> {
-                emitEvent(EVENT_IS_TRACKING, serializeIsTracking(HyperTrack.isTracking).toWritableMap())
+                emitEvent(
+                    EVENT_IS_TRACKING,
+                    serializeIsTracking(HyperTrack.isTracking).toWritableMap()
+                )
             }
+
             EVENT_LOCATION -> {
-                emitEvent(EVENT_LOCATION, serializeLocationResult(HyperTrack.location).toWritableMap())
+                emitEvent(
+                    EVENT_LOCATION,
+                    serializeLocationResult(HyperTrack.location).toWritableMap()
+                )
             }
+
             else -> Unit
         }
         // Keep: Required for RN built in Event Emitter Calls.
@@ -189,7 +208,7 @@ class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
             }
 
             HyperTrack.subscribeToOrders {
-                emitEvent(EVENT_ORDERS, serializeOrders(it).toWriteableArray())
+                emitEvent(EVENT_ORDERS, serializeOrders(it.values).toWritableMap())
             }.also {
                 result.add(it)
             }
