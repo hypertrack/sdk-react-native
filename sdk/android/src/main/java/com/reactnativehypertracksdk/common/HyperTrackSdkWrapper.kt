@@ -140,10 +140,11 @@ internal object HyperTrackSdkWrapper {
         )
     }
 
-    fun getOrders: WrapperResult<Serialized> {
+    fun getOrders(): WrapperResult<Serialized> {
         return Success(
-            serializeOrders(HyperTrack.orders)
+            serializeOrders(HyperTrack.orders.values)
         )
+    }
 
     fun getWorkerHandle(): WrapperResult<Serialized> {
         return Success(
