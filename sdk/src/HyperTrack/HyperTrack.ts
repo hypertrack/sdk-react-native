@@ -591,6 +591,22 @@ export default class HyperTrack {
   }
 
   /** @ignore */
+  private static deserializeIsInsideGeofence(isInsideGeofence: Result<boolean, LocationErrorInternal>): Result<boolean, LocationError> {
+    switch (isInsideGeofence.type) {
+      case 'success':
+        return {
+          type: 'success',
+          value: isInsideGeofence.value,
+        };
+      case 'failure':
+        return {
+          type: 'failure',
+          value: this.deserializeLocationError(isInsideGeofence.value),
+        };
+    }
+  }
+
+  /** @ignore */
   private static deserializeLocateResponse(
     response: Result<LocationInternal, HyperTrackErrorInternal[]>
   ): Result<Location, HyperTrackError[]> {
@@ -693,7 +709,7 @@ export default class HyperTrack {
     Object.entries(orders.value).forEach(([key, value]) => {
       result.set(key, {
         orderHandle: value.orderHandle,
-        isInsideGeofence: value.isInsideGeofence,
+        isInsideGeofence: this.deserializeIsInsideGeofence(value.isInsideGeofence),
       });
     });
     return result;
