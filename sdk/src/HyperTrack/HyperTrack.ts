@@ -25,6 +25,7 @@ import type { OrderHandle } from './data_types/internal/OrderHandle';
 import type { WorkerHandle } from './data_types/internal/WorkerHandle';
 import type { Order } from './data_types/Order';
 import type { OrdersInternal } from './data_types/internal/OrdersInternal';
+import type { OrderInternal } from './data_types/internal/OrderInternal';
 
 const EVENT_ERRORS = 'errors';
 const EVENT_IS_AVAILABLE = 'isAvailable';
@@ -591,7 +592,9 @@ export default class HyperTrack {
   }
 
   /** @ignore */
-  private static deserializeIsInsideGeofence(isInsideGeofence: Result<boolean, LocationErrorInternal>): Result<boolean, LocationError> {
+  private static deserializeIsInsideGeofence(
+    isInsideGeofence: Result<boolean, LocationErrorInternal>
+  ): Result<boolean, LocationError> {
     switch (isInsideGeofence.type) {
       case 'success':
         return {
@@ -706,12 +709,22 @@ export default class HyperTrack {
       throw new Error(`Invalid orders: ${JSON.stringify(orders)}`);
     }
     let result = new Map<string, Order>();
-    Object.entries(orders.value).forEach(([key, value]) => {
-      result.set(key, {
-        orderHandle: value.orderHandle,
-        isInsideGeofence: this.deserializeIsInsideGeofence(value.isInsideGeofence),
+    Object.entries(orders.value)
+      .map(([_, value]: [string, OrderInternal]) => {
+        return value;
+      })
+      .sort(
+        (first: OrderInternal, second: OrderInternal) =>
+          first.index - second.index
+      )
+      .forEach((orderInternal: OrderInternal) => {
+        result.set(orderInternal.orderHandle, {
+          orderHandle: orderInternal.orderHandle,
+          isInsideGeofence: this.deserializeIsInsideGeofence(
+            orderInternal.isInsideGeofence
+          ),
+        } as Order);
       });
-    });
     return result;
   }
 
