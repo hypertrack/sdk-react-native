@@ -296,6 +296,11 @@ export default class HyperTrack {
     });
   }
 
+  /**
+   * Gets the active orders for the device
+   *
+   * @returns {string} Device name
+   */
   static async getOrders(): Promise<Map<string, Order>> {
     return HyperTrackSdk.getOrders().then((orders: OrdersInternal) => {
       return this.deserializeOrders(orders);
@@ -532,6 +537,21 @@ export default class HyperTrack {
     );
   }
 
+  /**
+   * Subscribe to order changes
+   *
+   * @param listener
+   * @returns EmitterSubscription
+   * @example
+   * ```js
+   * const subscription = HyperTrack.subscribeToOrders(orders => {
+   *   ...
+   * })
+   *
+   * // later, to stop listening
+   * subscription.remove()
+   * ```
+   */
   static subscribeToOrders(
     listener: (orders: Map<string, Order>) => void
   ): EmitterSubscription {
