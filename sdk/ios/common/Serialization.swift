@@ -250,7 +250,7 @@ func serializeIsAvailable(_ isAvailable: Bool) -> [String: Any] {
     ]
 }
 
-func serializeIsInsideGeofence(_ isInsideGeofence: Result<Bool, HyperTrack.Error>): [String: Any] {
+func serializeIsInsideGeofence(_ isInsideGeofence: Result<Bool, HyperTrack.Location.Error>) -> [String: Any] {
     switch isInsideGeofence {
     case let .success(success):
         return [
