@@ -142,7 +142,7 @@ internal object HyperTrackSdkWrapper {
 
     fun getOrders(): WrapperResult<Serialized> {
         return Success(
-            serializeOrders(HyperTrack.orders.values)
+            serializeOrders(HyperTrack.orders.values),
         )
     }
 

@@ -114,19 +114,19 @@ internal object Serialization {
         return mapOf(
             KEY_TYPE to TYPE_ERROR,
             KEY_VALUE to
-                    when (error) {
-                        HyperTrack.Error.BlockedFromRunning -> "blockedFromRunning"
-                        HyperTrack.Error.InvalidPublishableKey -> "invalidPublishableKey"
-                        HyperTrack.Error.Location.Mocked -> "location.mocked"
-                        HyperTrack.Error.Location.ServicesDisabled -> "location.servicesDisabled"
-                        HyperTrack.Error.Location.ServicesUnavailable -> "location.servicesUnavailable"
-                        HyperTrack.Error.Location.SignalLost -> "location.signalLost"
-                        HyperTrack.Error.NoExemptionFromBackgroundStartRestrictions -> "noExemptionFromBackgroundStartRestrictions"
-                        HyperTrack.Error.Permissions.Location.Denied -> "permissions.location.denied"
-                        HyperTrack.Error.Permissions.Location.InsufficientForBackground -> "permissions.location.insufficientForBackground"
-                        HyperTrack.Error.Permissions.Location.ReducedAccuracy -> "permissions.location.reducedAccuracy"
-                        HyperTrack.Error.Permissions.Notifications.Denied -> "permissions.notifications.denied"
-                    },
+                when (error) {
+                    HyperTrack.Error.BlockedFromRunning -> "blockedFromRunning"
+                    HyperTrack.Error.InvalidPublishableKey -> "invalidPublishableKey"
+                    HyperTrack.Error.Location.Mocked -> "location.mocked"
+                    HyperTrack.Error.Location.ServicesDisabled -> "location.servicesDisabled"
+                    HyperTrack.Error.Location.ServicesUnavailable -> "location.servicesUnavailable"
+                    HyperTrack.Error.Location.SignalLost -> "location.signalLost"
+                    HyperTrack.Error.NoExemptionFromBackgroundStartRestrictions -> "noExemptionFromBackgroundStartRestrictions"
+                    HyperTrack.Error.Permissions.Location.Denied -> "permissions.location.denied"
+                    HyperTrack.Error.Permissions.Location.InsufficientForBackground -> "permissions.location.insufficientForBackground"
+                    HyperTrack.Error.Permissions.Location.ReducedAccuracy -> "permissions.location.reducedAccuracy"
+                    HyperTrack.Error.Permissions.Notifications.Denied -> "permissions.notifications.denied"
+                },
         )
     }
 
@@ -207,13 +207,14 @@ internal object Serialization {
     fun serializeOrders(orders: Collection<HyperTrack.Order>): Serialized {
         return mapOf(
             KEY_TYPE to TYPE_ORDERS,
-            KEY_VALUE to orders.mapIndexed { index, order ->
-                mapOf(
-                    KEY_ORDER_HANDLE to order.orderHandle,
-                    KEY_ORDER_INDEX to index,
-                    KEY_ORDER_IS_INSIDE_GEOFENCE to serializeIsInsideGeofence(order.isInsideGeofence),
-                )
-            },
+            KEY_VALUE to
+                orders.mapIndexed { index, order ->
+                    mapOf(
+                        KEY_ORDER_HANDLE to order.orderHandle,
+                        KEY_ORDER_INDEX to index,
+                        KEY_ORDER_IS_INSIDE_GEOFENCE to serializeIsInsideGeofence(order.isInsideGeofence),
+                    )
+                },
         )
     }
 
@@ -293,10 +294,10 @@ internal object Serialization {
         return mapOf(
             KEY_TYPE to TYPE_LOCATION,
             KEY_VALUE to
-                    mapOf(
-                        KEY_LATITUDE to location.latitude,
-                        KEY_LONGITUDE to location.longitude,
-                    ),
+                mapOf(
+                    KEY_LATITUDE to location.latitude,
+                    KEY_LONGITUDE to location.longitude,
+                ),
         )
     }
 
@@ -304,10 +305,10 @@ internal object Serialization {
         return mapOf(
             KEY_TYPE to TYPE_LOCATION_WITH_DEVIATION,
             KEY_VALUE to
-                    mapOf(
-                        KEY_LOCATION to serializeLocation(locationWithDeviation.location),
-                        KEY_DEVIATION to locationWithDeviation.deviation,
-                    ),
+                mapOf(
+                    KEY_LOCATION to serializeLocation(locationWithDeviation.location),
+                    KEY_DEVIATION to locationWithDeviation.deviation,
+                ),
         )
     }
 
@@ -346,8 +347,8 @@ internal object Serialization {
                 mapOf(
                     KEY_TYPE to TYPE_LOCATION_ERROR_ERRORS,
                     KEY_VALUE to
-                            locationError.errors
-                                .map { serializeError(it) },
+                        locationError.errors
+                            .map { serializeError(it) },
                 )
             }
         }
@@ -421,11 +422,11 @@ internal object Serialization {
         val source: Any,
         val exceptions: List<Exception>,
     ) : Throwable(
-        exceptions.joinToString("\n")
-            .let {
-                "Invalid input:\n\n${source}\n\n$it"
-            },
-    )
+            exceptions.joinToString("\n")
+                .let {
+                    "Invalid input:\n\n${source}\n\n$it"
+                },
+        )
 
     internal class ParsingException(
         key: String,
