@@ -1,5 +1,6 @@
 # do not create a shorcut for `publlish` command to avoid accidental publishing
 alias b := build
+alias cncfq := copy-native-code-from-quickstart
 alias cnm := _clear-node-modules
 alias d := docs
 alias f := format
@@ -41,6 +42,9 @@ _clear-node-modules:
     rm -rf plugin_android_location_services_google/node_modules
     rm -rf plugin_android_location_services_google_19_0_1/node_modules
     rm -rf plugin_android_push_service_firebase/node_modules
+
+copy-native-code-from-quickstart:
+    cp -rf ../quickstart-react-native/node_modules/hypertrack-sdk-react-native/android/src/main/java/com/reactnativehypertracksdk/common sdk/android/src/main/java/com/reactnativehypertracksdk
 
 docs: format
     yarn --cwd sdk docs
