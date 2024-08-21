@@ -8,6 +8,7 @@ enum SDKMethod: String {
     case getLocation
     case getMetadata
     case getName
+    case getOrders
     case getWorkerHandle
     case locate
     case setDynamicPublishableKey
