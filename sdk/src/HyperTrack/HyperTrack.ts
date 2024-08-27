@@ -367,7 +367,7 @@ export default class HyperTrack {
   /**
    * Sets the availability of the device for the Nearby search
    *
-   * @param availability true when is available or false when unavailable
+   * @param isAvailable true when is available or false when unavailable
    */
   static setIsAvailable(isAvailable: boolean) {
     HyperTrackSdk.setIsAvailable({
