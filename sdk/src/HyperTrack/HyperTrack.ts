@@ -298,9 +298,10 @@ export default class HyperTrack {
   }
 
   /**
-   * Gets the active orders for the device
+   * Gets the active orders for the worker. The orders are sorted with the ordering in 
+   * which the worker should complete them.
    *
-   * @returns {string} Device name
+   * @returns {Map<string, Order>} Map of orders
    */
   static async getOrders(): Promise<Map<string, Order>> {
     return HyperTrackSdk.getOrders().then((orders: OrdersInternal) => {
@@ -539,7 +540,7 @@ export default class HyperTrack {
   }
 
   /**
-   * Subscribe to order changes
+   * Subscribe to changes in the orders assigned to the worker
    *
    * @param listener
    * @returns EmitterSubscription
