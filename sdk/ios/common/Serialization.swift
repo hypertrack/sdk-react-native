@@ -255,7 +255,10 @@ func serializeIsInsideGeofence(_ isInsideGeofence: Result<Bool, HyperTrack.Locat
     case let .success(success):
         return [
             keyType: typeSuccess,
-            keyValue: success,
+            keyValue: [
+                keyType: "isInsideGeofence",
+                keyValue: success,
+            ],
         ]
     case let .failure(failure):
         return [
