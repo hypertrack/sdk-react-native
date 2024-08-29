@@ -1,6 +1,6 @@
 {
   "name": "hypertrack-sdk-react-native",
-  "version": "13.4.0",
+  "version": "13.5.0",
   "description": "React Native HyperTrack SDK is a wrapper around native iOS and Android SDKs that allows to integrate HyperTrack into React Native apps.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -81,7 +81,7 @@
     "typedoc": "^0.25.4",
     "typedoc-plugin-merge-modules": "^5.1.0",
     "typedoc-plugin-rename-defaults": "^0.7.0",
-    "typescript": "^4.5.2"
+    "typescript": "^5.5.0"
   },
   "resolutions": {
     "@types/react": "17.0.21"

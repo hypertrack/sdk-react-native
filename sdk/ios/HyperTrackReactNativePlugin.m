@@ -37,8 +37,11 @@ RCT_EXTERN_METHOD(getMetadata:(RCTPromiseResolveBlock)resolve
 RCT_EXTERN_METHOD(getName:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(getOrders:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(getWorkerHandle:(RCTPromiseResolveBlock)resolve
-                    rejecter:(RCTPromiseRejectBlock)reject)
+                  rejecter:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(locate:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)

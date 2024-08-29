@@ -88,6 +88,10 @@ func getName() -> Result<SuccessResult, FailureResult> {
     .success(.dict(serializeName(HyperTrack.name)))
 }
 
+func getOrders() -> Result<SuccessResult, FailureResult> {
+    .success(.dict(serializeOrders(Array(HyperTrack.orders))))
+}
+
 func getWorkerHandle() -> Result<SuccessResult, FailureResult> {
     .success(.dict(serializeWorkerHandle(HyperTrack.workerHandle)))
 }

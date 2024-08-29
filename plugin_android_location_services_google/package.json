@@ -1,6 +1,6 @@
 {
   "name": "hypertrack-sdk-react-native-plugin-android-location-services-google",
-  "version": "13.4.0",
+  "version": "13.5.0",
   "description": "A wrapper around `Location Services Google` plugin for HyperTrack SDK Android that is used with `hypertrack-sdk-react-native`",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -72,7 +72,7 @@
     "react-native-builder-bob": "^0.20.0",
     "release-it": "^15.0.0",
     "turbo": "^1.10.7",
-    "typescript": "^5.0.2"
+    "typescript": "^5.5.0"
   },
   "resolutions": {
     "@types/react": "17.0.21"

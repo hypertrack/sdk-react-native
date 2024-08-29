@@ -250,6 +250,24 @@ func serializeIsAvailable(_ isAvailable: Bool) -> [String: Any] {
     ]
 }
 
+func serializeIsInsideGeofence(_ isInsideGeofence: Result<Bool, HyperTrack.Location.Error>) -> [String: Any] {
+    switch isInsideGeofence {
+    case let .success(success):
+        return [
+            keyType: typeSuccess,
+            keyValue: [
+                keyType: "isInsideGeofence",
+                keyValue: success,
+            ],
+        ]
+    case let .failure(failure):
+        return [
+            keyType: typeFailure,
+            keyValue: serializeLocationError(failure),
+        ]
+    }
+}
+
 func serializeIsTracking(_ isTracking: Bool) -> [String: Any] {
     return [
         keyType: typeIsTracking,
@@ -355,6 +373,18 @@ func serializeName(_ name: String) -> [String: Any] {
     return [
         keyType: typeName,
         keyValue: name,
+    ]
+}
+
+func serializeOrders(_ orders: [HyperTrack.Order]) -> [String: Any] {
+    return [
+        keyType: "orders",
+        keyValue: orders.map { order in
+            [
+                "orderHandle": order.orderHandle,
+                "isInsideGeofence": serializeIsInsideGeofence(order.isInsideGeofence),
+            ]
+        },
     ]
 }
 

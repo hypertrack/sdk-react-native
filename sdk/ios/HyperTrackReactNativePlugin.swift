@@ -5,6 +5,7 @@ struct Subscriptions {
     let isAvailableSubscription: HyperTrack.Cancellable
     let isTrackingSubscription: HyperTrack.Cancellable
     let errorsSubscription: HyperTrack.Cancellable
+    let ordersSubscription: HyperTrack.Cancellable
 }
 
 @objc(HyperTrackReactNativePlugin)
@@ -14,6 +15,7 @@ class HyperTrackReactNativePlugin: RCTEventEmitter {
     private let eventIsTracking = "isTracking"
     private let eventLocate = "locate"
     private let eventLocation = "location"
+    private let eventOrders = "orders"
 
     private var subscriptions: Subscriptions? = nil
     private var locateSubscription: HyperTrack.Cancellable? = nil
@@ -29,6 +31,7 @@ class HyperTrackReactNativePlugin: RCTEventEmitter {
             eventIsTracking,
             eventLocate,
             eventLocation,
+            eventOrders,
         ]
     }
 
@@ -52,6 +55,8 @@ class HyperTrackReactNativePlugin: RCTEventEmitter {
             sendEvent(withName: eventErrors, body: serializeErrors(HyperTrack.errors))
         case eventLocation:
             sendEvent(withName: eventLocation, body: serializeLocationResult(HyperTrack.location))
+        case eventOrders:
+            sendEvent(withName: eventOrders, body: serializeOrders(Array(HyperTrack.orders)))
         default:
             return
         }
@@ -163,6 +168,18 @@ class HyperTrackReactNativePlugin: RCTEventEmitter {
         sendAsPromise(
             hypertrack_sdk_react_native.getName(),
             method: .getName,
+            resolve,
+            reject
+        )
+    }
+
+    @objc func getOrders(
+        _ resolve: RCTPromiseResolveBlock,
+        rejecter reject: RCTPromiseRejectBlock
+    ) {
+        sendAsPromise(
+            hypertrack_sdk_react_native.getOrders(),
+            method: .getOrders,
             resolve,
             reject
         )
@@ -299,7 +316,10 @@ class HyperTrackReactNativePlugin: RCTEventEmitter {
         let locationSubscription = HyperTrack.subscribeToLocation { locationResult in
             self.sendEvent(withName: self.eventLocation, body: serializeLocationResult(locationResult))
         }
-        return Subscriptions(locationSubscription: locationSubscription, isAvailableSubscription: isAvailableSubscription, isTrackingSubscription: isTrackingSubscription, errorsSubscription: errorsSubscription)
+        let ordersSubscription = HyperTrack.subscribeToOrders { orders in
+            self.sendEvent(withName: self.eventOrders, body: serializeOrders(Array(orders)))
+        }
+        return Subscriptions(locationSubscription: locationSubscription, isAvailableSubscription: isAvailableSubscription, isTrackingSubscription: isTrackingSubscription, errorsSubscription: errorsSubscription, ordersSubscription: ordersSubscription)
     }
 }
 

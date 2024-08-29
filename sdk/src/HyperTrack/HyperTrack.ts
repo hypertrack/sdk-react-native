@@ -2,7 +2,7 @@ import {
   NativeModules,
   Platform,
   NativeEventEmitter,
-  EmitterSubscription,
+  type EmitterSubscription,
 } from 'react-native';
 import { HyperTrackError } from './data_types/HyperTrackError';
 import type { IsAvailable } from './data_types/internal/IsAvailable';
@@ -23,12 +23,16 @@ import type { DynamicPublishableKey } from './data_types/internal/DynamicPublish
 import type { OrderStatus } from './data_types/OrderStatus';
 import type { OrderHandle } from './data_types/internal/OrderHandle';
 import type { WorkerHandle } from './data_types/internal/WorkerHandle';
+import type { Order } from './data_types/Order';
+import type { OrdersInternal } from './data_types/internal/OrdersInternal';
+import type { OrderInternal } from './data_types/internal/OrderInternal';
 
 const EVENT_ERRORS = 'errors';
 const EVENT_IS_AVAILABLE = 'isAvailable';
 const EVENT_IS_TRACKING = 'isTracking';
 const EVENT_LOCATE = 'locate';
 const EVENT_LOCATION = 'location';
+const EVENT_ORDERS = 'orders';
 
 const LINKING_ERROR =
   `The package 'hypertrack-sdk-react-native' doesn't seem to be linked. Make sure: \n\n` +
@@ -294,6 +298,18 @@ export default class HyperTrack {
   }
 
   /**
+   * Gets the active orders for the worker. The orders are sorted with the ordering in 
+   * which the worker should complete them.
+   *
+   * @returns {Map<string, Order>} Map of orders
+   */
+  static async getOrders(): Promise<Map<string, Order>> {
+    return HyperTrackSdk.getOrders().then((orders: OrdersInternal) => {
+      return this.deserializeOrders(orders);
+    });
+  }
+
+  /**
    * A primary identifier that uniquely identifies the worker outside of HyperTrack.
    * Example: email, phone number, database id
    * It is usually obtained and set when the worker logs into the app.
@@ -352,7 +368,7 @@ export default class HyperTrack {
   /**
    * Sets the availability of the device for the Nearby search
    *
-   * @param availability true when is available or false when unavailable
+   * @param isAvailable true when is available or false when unavailable
    */
   static setIsAvailable(isAvailable: boolean) {
     HyperTrackSdk.setIsAvailable({
@@ -523,6 +539,29 @@ export default class HyperTrack {
     );
   }
 
+  /**
+   * Subscribe to changes in the orders assigned to the worker
+   *
+   * @param listener
+   * @returns EmitterSubscription
+   * @example
+   * ```js
+   * const subscription = HyperTrack.subscribeToOrders(orders => {
+   *   ...
+   * })
+   *
+   * // later, to stop listening
+   * subscription.remove()
+   * ```
+   */
+  static subscribeToOrders(
+    listener: (orders: Map<string, Order>) => void
+  ): EmitterSubscription {
+    return EventEmitter.addListener(EVENT_ORDERS, (orders: OrdersInternal) => {
+      listener(this.deserializeOrders(orders));
+    });
+  }
+
   /** @ignore */
   private static deserializeDynamicPublishableKey(
     dynamicPublishableKey: DynamicPublishableKey
@@ -551,6 +590,24 @@ export default class HyperTrack {
       ) as HyperTrackError;
     });
     return res;
+  }
+
+  /** @ignore */
+  private static deserializeIsInsideGeofence(
+    isInsideGeofence: Result<boolean, LocationErrorInternal>
+  ): Result<boolean, LocationError> {
+    switch (isInsideGeofence.type) {
+      case 'success':
+        return {
+          type: 'success',
+          value: isInsideGeofence.value,
+        };
+      case 'failure':
+        return {
+          type: 'failure',
+          value: this.deserializeLocationError(isInsideGeofence.value),
+        };
+    }
   }
 
   /** @ignore */
@@ -645,6 +702,31 @@ export default class HyperTrack {
       throw new Error(`Invalid name: ${JSON.stringify(name)}`);
     }
     return name.value;
+  }
+
+  /** @ignore */
+  private static deserializeOrders(orders: OrdersInternal): Map<string, Order> {
+    if (orders.type !== 'orders') {
+      throw new Error(`Invalid orders: ${JSON.stringify(orders)}`);
+    }
+    let result = new Map<string, Order>();
+    Object.entries(orders.value)
+      .map(([_, value]: [string, OrderInternal]) => {
+        return value;
+      })
+      .sort(
+        (first: OrderInternal, second: OrderInternal) =>
+          first.index - second.index
+      )
+      .forEach((orderInternal: OrderInternal) => {
+        result.set(orderInternal.orderHandle, {
+          orderHandle: orderInternal.orderHandle,
+          isInsideGeofence: this.deserializeIsInsideGeofence(
+            orderInternal.isInsideGeofence
+          ),
+        } as Order);
+      });
+    return result;
   }
 
   /** @ignore */
