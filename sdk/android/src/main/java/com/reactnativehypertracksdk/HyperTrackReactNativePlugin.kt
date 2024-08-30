@@ -51,21 +51,21 @@ class HyperTrackReactNativePlugin(reactContext: ReactApplicationContext?) :
             EVENT_IS_AVAILABLE -> {
                 emitEvent(
                     EVENT_IS_AVAILABLE,
-                    serializeIsAvailable(HyperTrack.isAvailable).toWritableMap()
+                    serializeIsAvailable(HyperTrack.isAvailable).toWritableMap(),
                 )
             }
 
             EVENT_IS_TRACKING -> {
                 emitEvent(
                     EVENT_IS_TRACKING,
-                    serializeIsTracking(HyperTrack.isTracking).toWritableMap()
+                    serializeIsTracking(HyperTrack.isTracking).toWritableMap(),
                 )
             }
 
             EVENT_LOCATION -> {
                 emitEvent(
                     EVENT_LOCATION,
-                    serializeLocationResult(HyperTrack.location).toWritableMap()
+                    serializeLocationResult(HyperTrack.location).toWritableMap(),
                 )
             }
 
