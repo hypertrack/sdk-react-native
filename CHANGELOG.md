@@ -7,9 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [13.5.1] - 2024-09-02
 
-### Changed
+### Fixed
 
-- Updated HyperTrack SDK iOS to [5.7.0](https://github.com/hypertrack/sdk-ios/releases/tag/5.7.0)
+- Serialization issue with `Order.isInsideGeofence`
 
 ## [13.5.0] - 2024-08-21
 
