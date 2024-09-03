@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Support for on-device geofencing via new `HyperTrack.orders["my_order"].isInsideGeofence` property
+- Support for on-device geofencing via new `HyperTrack.orders.get("my_order_handle").isInsideGeofence` property
   - To learn more about how to best use this new feature see our guide here: [Verify shift presence before starting work](https://developer.hypertrack.com/docs/clock-in-out-tagging#verify-shift-presence-before-starting-work)
 
 Example use for worker clock in:
