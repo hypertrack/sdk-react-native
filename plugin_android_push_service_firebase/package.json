@@ -1,6 +1,6 @@
 {
   "name": "hypertrack-sdk-react-native-plugin-android-push-service-firebase",
-  "version": "13.5.0",
+  "version": "13.5.1",
   "description": "A wrapper around `Push Service Firebase` plugin for HyperTrack SDK Android that is used with `hypertrack-sdk-react-native`",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -81,7 +81,6 @@
     "react": "*",
     "react-native": "*"
   },
-  "packageManager": "yarn@3.6.1",
   "engines": {
     "node": ">= 18.0.0"
   },

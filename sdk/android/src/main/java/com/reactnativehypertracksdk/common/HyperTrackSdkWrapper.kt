@@ -31,8 +31,8 @@ typealias Serialized = Map<String, Any?>
  * It receives serialized params.
  */
 internal object HyperTrackSdkWrapper {
-    fun addGeotag(args: Serialized): WrapperResult<Serialized> {
-        return deserializeGeotagData(args)
+    fun addGeotag(args: Serialized): WrapperResult<Serialized> =
+        deserializeGeotagData(args)
             .flatMapSuccess { geotag ->
                 // TODO: return proper error if JSON is wrong
                 val geotagMetadata = Json.fromMap(geotag.data)!!
@@ -60,18 +60,17 @@ internal object HyperTrackSdkWrapper {
                         )
                     } else {
                         HyperTrack.addGeotag(geotagMetadata, expectedLocation)
-                    }
-                        .let {
-                            when (it) {
-                                is Result.Failure -> {
-                                    serializeLocationErrorFailure(it.failure)
-                                }
+                    }.let {
+                        when (it) {
+                            is Result.Failure -> {
+                                serializeLocationErrorFailure(it.failure)
+                            }
 
-                                is Result.Success -> {
-                                    serializeLocationWithDeviationSuccess(it.success)
-                                }
+                            is Result.Success -> {
+                                serializeLocationWithDeviationSuccess(it.success)
                             }
                         }
+                    }
                 } else {
                     if (orderHandle != null || orderStatus != null) {
                         if (orderHandle == null || orderStatus == null) {
@@ -84,116 +83,94 @@ internal object HyperTrackSdkWrapper {
                         )
                     } else {
                         HyperTrack.addGeotag(geotagMetadata)
-                    }
-                        .let { serializeLocationResult(it) }
+                    }.let { serializeLocationResult(it) }
                 }.let {
                     Success(it)
                 }
             }
-    }
 
-    fun getDeviceId(): WrapperResult<Serialized> {
-        return Success(serializeDeviceId(HyperTrack.deviceID))
-    }
+    fun getDeviceId(): WrapperResult<Serialized> = Success(serializeDeviceId(HyperTrack.deviceID))
 
-    fun getDynamicPublishableKey(): WrapperResult<Serialized> {
-        return Success(serializeDynamicPublishableKey(HyperTrack.dynamicPublishableKey))
-    }
+    fun getDynamicPublishableKey(): WrapperResult<Serialized> = Success(serializeDynamicPublishableKey(HyperTrack.dynamicPublishableKey))
 
-    fun getErrors(): WrapperResult<List<Serialized>> {
-        return Success(serializeErrors(HyperTrack.errors))
-    }
+    fun getErrors(): WrapperResult<List<Serialized>> = Success(serializeErrors(HyperTrack.errors))
 
-    fun getIsAvailable(): WrapperResult<Serialized> {
-        return Success(
+    fun getIsAvailable(): WrapperResult<Serialized> =
+        Success(
             serializeIsAvailable(HyperTrack.isAvailable),
         )
-    }
 
-    fun getIsTracking(): WrapperResult<Serialized> {
-        return Success(
+    fun getIsTracking(): WrapperResult<Serialized> =
+        Success(
             serializeIsTracking(HyperTrack.isTracking),
         )
-    }
 
-    fun getLocation(): WrapperResult<Serialized> {
-        return HyperTrack
+    fun getLocation(): WrapperResult<Serialized> =
+        HyperTrack
             .location
             .let {
                 when (it) {
                     is Result.Failure -> serializeLocationErrorFailure(it.failure)
                     is Result.Success -> serializeLocationSuccess(it.success)
                 }
-            }
-            .let { Success(it) }
-    }
+            }.let { Success(it) }
 
-    fun getMetadata(): WrapperResult<Serialized> {
-        return Success(
+    fun getMetadata(): WrapperResult<Serialized> =
+        Success(
             serializeMetadata(HyperTrack.metadata.toMap()),
         )
-    }
 
-    fun getName(): WrapperResult<Serialized> {
-        return Success(
+    fun getName(): WrapperResult<Serialized> =
+        Success(
             serializeName(HyperTrack.name),
         )
-    }
 
-    fun getOrders(): WrapperResult<Serialized> {
-        return Success(
+    fun getOrders(): WrapperResult<Serialized> =
+        Success(
             serializeOrders(HyperTrack.orders.values),
         )
-    }
 
-    fun getWorkerHandle(): WrapperResult<Serialized> {
-        return Success(
+    fun getWorkerHandle(): WrapperResult<Serialized> =
+        Success(
             serializeWorkerHandle(HyperTrack.workerHandle),
         )
-    }
 
-    fun setDynamicPublishableKey(args: Serialized): WrapperResult<Unit> {
-        return deserializeDynamicPublishableKey(args)
+    fun setDynamicPublishableKey(args: Serialized): WrapperResult<Unit> =
+        deserializeDynamicPublishableKey(args)
             .mapSuccess { publishableKey ->
                 HyperTrack.dynamicPublishableKey = publishableKey
             }
-    }
 
-    fun setIsAvailable(args: Serialized): WrapperResult<Unit> {
-        return deserializeIsAvailable(args)
+    fun setIsAvailable(args: Serialized): WrapperResult<Unit> =
+        deserializeIsAvailable(args)
             .mapSuccess { isAvailable ->
                 HyperTrack.isAvailable = isAvailable
             }
-    }
 
-    fun setIsTracking(args: Serialized): WrapperResult<Unit> {
-        return deserializeIsTracking(args)
+    fun setIsTracking(args: Serialized): WrapperResult<Unit> =
+        deserializeIsTracking(args)
             .mapSuccess { isTracking ->
                 HyperTrack.isTracking = isTracking
             }
-    }
 
-    fun setMetadata(args: Serialized): WrapperResult<Unit> {
-        return deserializeMetadata(args)
+    fun setMetadata(args: Serialized): WrapperResult<Unit> =
+        deserializeMetadata(args)
             .flatMapSuccess { metadata ->
                 WrapperResult.tryAsResult {
                     // TODO: return proper error if JSON is wrong
                     HyperTrack.metadata = Json.fromMap(metadata)!!
                 }
             }
-    }
 
-    fun setName(args: Serialized): WrapperResult<Unit> {
-        return deserializeName(args)
+    fun setName(args: Serialized): WrapperResult<Unit> =
+        deserializeName(args)
             .mapSuccess { name ->
                 HyperTrack.name = name
             }
-    }
 
-    fun setWorkerHandle(args: Serialized): WrapperResult<Unit> {
-        return deserializeWorkerHandle(args)
+    fun setWorkerHandle(args: Serialized): WrapperResult<Unit> =
+        deserializeWorkerHandle(args)
             .mapSuccess { workerHandle ->
                 HyperTrack.workerHandle = workerHandle
             }
-    }
 }

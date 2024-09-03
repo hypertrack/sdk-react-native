@@ -29,7 +29,7 @@ SEMVER_REGEX := "(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d
 _ask-confirm:
   @bash -c 'read confirmation; if [[ $confirmation != "y" && $confirmation != "Y" ]]; then echo "Okay 😮‍💨 😅"; exit 1; fi'
 
-build: get-dependencies docs
+build: get-dependencies docs format
     yarn --cwd sdk prepare
     yarn --cwd plugin_android_location_services_google prepare
     yarn --cwd plugin_android_location_services_google_19_0_1 prepare
@@ -62,6 +62,7 @@ _latest-ios:
     @curl -s https://cocoapods.org/pods/HyperTrack | grep -m 1 -o -E "HyperTrack <span>{{SEMVER_REGEX}}" | grep -o -E '{{SEMVER_REGEX}}' | head -n 1
 
 format: 
+    brew upgrade ktlint
     ktlint --format sdk/android/src/main/java/
 
 open-docs: docs

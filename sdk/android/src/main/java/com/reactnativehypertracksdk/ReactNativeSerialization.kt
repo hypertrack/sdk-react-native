@@ -60,8 +60,8 @@ internal fun <T> WrapperResult<T>.toPromise(promise: Promise) {
 }
 
 @Suppress("UNCHECKED_CAST")
-internal fun List<Any>.toWriteableArray(): WritableArray {
-    return Arguments.createArray().also { writableArray ->
+internal fun List<Any>.toWriteableArray(): WritableArray =
+    Arguments.createArray().also { writableArray ->
         forEach {
             when (it) {
                 is String -> {
@@ -78,7 +78,6 @@ internal fun List<Any>.toWriteableArray(): WritableArray {
             }
         }
     }
-}
 
 @Suppress("UNCHECKED_CAST")
 internal fun Map<String, Any?>.toWritableMap(): WritableMap {
