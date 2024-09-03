@@ -21,27 +21,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Example use for worker clock in:
 
 ```typescript
-function handlePresence(isInsideResult: Result<boolean, LocationError>) {
-  switch (isInsideResult.type) {
-    case "success":
-      if (isInsideResult.value) {
+// check worker presence synchronously
+let activeOrders = await HyperTrack.getOrders()
+let currentOrder = activeOrders.get("current_order")
+if (currentOrder !== undefined) { handlePresence(currentOrder) }
+else { console.log("'current_order' not found") }
+
+// or subscribe to the changes in orders to get the status updates
+HyperTrack.subscribeToOrders(orders => {
+  let let currentOrder = activeOrders.get("current_order")
+  if (currentOrder !== undefined) { handlePresence(currentOrder) }
+  else { console.log("'current_order' not found") }
+})
+
+// handle worker presence inside the order destination geofence
+function handlePresence(isInsideGeofence: Result<boolean, LocationError>) {
+  switch (isInsideGeofence.type) {
+    case 'success':
+      if (isInsideGeofence.value) {
         // allow worker to clock in for the shift
       } else {
         // "to clock in you must be at order destination"
       }
       break;
-    case "failure":
-    // resolve any tracking errors to obtain geofence presence
+    case 'failure':
+      // resolve errors to check for presence
+      break;
   }
 }
-
-// check if a worker is inside an order's geofence
-handlePresence(HyperTrack.orders.get("my_order").isInsideGeofence);
-
-// or, listen to order.isInsideGeofence changes
-HyperTrack.subscribeToOrders((orders) => {
-  handlePresence(orders.get("my_order").isInsideGeofence);
-});
 ```
 
 ### Changed
