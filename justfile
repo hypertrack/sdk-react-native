@@ -31,6 +31,7 @@ _ask-confirm:
 
 build: get-dependencies docs format
     yarn --cwd sdk prepare
+    yarn --cwd plugin_android_activity_service_google prepare
     yarn --cwd plugin_android_location_services_google prepare
     yarn --cwd plugin_android_location_services_google_19_0_1 prepare
     yarn --cwd plugin_android_push_service_firebase prepare
@@ -39,6 +40,7 @@ clean: _clear-node-modules
 
 _clear-node-modules:
     rm -rf sdk/node_modules
+    rm -rf plugin_android_activity_service_google/node_modules
     rm -rf plugin_android_location_services_google/node_modules
     rm -rf plugin_android_location_services_google_19_0_1/node_modules
     rm -rf plugin_android_push_service_firebase/node_modules
@@ -51,6 +53,7 @@ docs: format
 
 get-dependencies:
     yarn --cwd sdk
+    yarn --cwd plugin_android_activity_service_google
     yarn --cwd plugin_android_location_services_google
     yarn --cwd plugin_android_location_services_google_19_0_1
     yarn --cwd plugin_android_push_service_firebase
@@ -103,12 +106,14 @@ release publish="dry-run": build
         echo "Are you sure you want to publish version $VERSION? (y/N)"
         just _ask-confirm
         cd sdk && npm publish && cd ..
+        cd plugin_android_activity_service_google && npm publish && cd ..
         cd plugin_android_location_services_google && npm publish && cd ..
         cd plugin_android_location_services_google_19_0_1 && npm publish && cd ..
         cd plugin_android_push_service_firebase && npm publish && cd ..
         open "https://www.npmjs.com/package/hypertrack-sdk-react-native/v/$VERSION"
     else
         cd sdk && npm publish --dry-run && cd ..
+        cd plugin_android_activity_service_google && npm publish --dry-run && cd ..
         cd plugin_android_location_services_google && npm publish --dry-run && cd ..
         cd plugin_android_location_services_google_19_0_1 && npm publish --dry-run && cd ..
         cd plugin_android_push_service_firebase && npm publish --dry-run && cd ..
@@ -210,6 +215,7 @@ update-sdk-ios wrapper_version ios_version commit="true" branch="true": build
 
 _update-sdk-android-version-file android_version:
     ./scripts/update_file.sh sdk/android/gradle.properties 'HyperTrackSdk_HyperTrackSDKVersion=.*' 'HyperTrackSdk_HyperTrackSDKVersion={{android_version}}'
+    ./scripts/update_file.sh plugin_android_activity_service_google/android/gradle.properties 'PluginAndroidActivityServiceGoogle_HyperTrackSDKVersion=.*' 'PluginAndroidActivityServiceGoogle_HyperTrackSDKVersion={{android_version}}'
     ./scripts/update_file.sh plugin_android_location_services_google/android/gradle.properties 'PluginAndroidLocationServicesGoogle_HyperTrackSDKVersion=.*' 'PluginAndroidLocationServicesGoogle_HyperTrackSDKVersion={{android_version}}'
     ./scripts/update_file.sh plugin_android_location_services_google_19_0_1/android/gradle.properties 'PluginAndroidLocationServicesGoogle1901_HyperTrackSDKVersion=.*' 'PluginAndroidLocationServicesGoogle1901_HyperTrackSDKVersion={{android_version}}'
     ./scripts/update_file.sh plugin_android_push_service_firebase/android/gradle.properties 'PluginAndroidPushServiceFirebase_HyperTrackSDKVersion=.*' 'PluginAndroidPushServiceFirebase_HyperTrackSDKVersion={{android_version}}'
@@ -221,6 +227,7 @@ update-wrapper-version version: (_update-wrapper-version-file version)
 
 _update-wrapper-version-file wrapper_version:
     ./scripts/update_file.sh sdk/package.json '"version": ".*"' '"version": "{{wrapper_version}}"'
+    ./scripts/update_file.sh plugin_android_activity_service_google/package.json '"version": ".*"' '"version": "{{wrapper_version}}"'
     ./scripts/update_file.sh plugin_android_location_services_google/package.json '"version": ".*"' '"version": "{{wrapper_version}}"'
     ./scripts/update_file.sh plugin_android_location_services_google_19_0_1/package.json '"version": ".*"' '"version": "{{wrapper_version}}"'
     ./scripts/update_file.sh plugin_android_push_service_firebase/package.json '"version": ".*"' '"version": "{{wrapper_version}}"'

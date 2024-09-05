@@ -1,10 +1,10 @@
 {
-  "name": "hypertrack-sdk-react-native",
+  "name": "hypertrack-sdk-react-native-plugin-android-activity-service-google",
   "version": "13.6.0",
-  "description": "React Native HyperTrack SDK is a wrapper around native iOS and Android SDKs that allows to integrate HyperTrack into React Native apps.",
+  "description": "A wrapper around `Activity Service Google` plugin for HyperTrack SDK Android that is used with `hypertrack-sdk-react-native`",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
-  "types": "lib/typescript/index.d.ts",
+  "types": "lib/typescript/src/index.d.ts",
   "react-native": "src/index",
   "source": "src/index",
   "files": [
@@ -13,39 +13,35 @@
     "android",
     "ios",
     "cpp",
-    "hypertrack-sdk-react-native.podspec",
-    "LICENSE.txt",
-    "README.md",
-    "CHANGELOG.md",
-    "CONTRIBUTING.md",
-    "!lib/typescript/example",
-    "!android/build",
+    "*.podspec",
     "!ios/build",
+    "!android/build",
+    "!android/gradle",
+    "!android/gradlew",
+    "!android/gradlew.bat",
+    "!android/local.properties",
     "!**/__tests__",
     "!**/__fixtures__",
-    "!**/__mocks__"
+    "!**/__mocks__",
+    "!**/.*"
   ],
   "scripts": {
     "test": "jest",
-    "typescript": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
     "prepare": "bob build",
-    "release": "release-it",
-    "docs": "typedoc --options typedoc.json -out ../docs",
-    "bootstrap": "yarn && yarn docs"
+    "release": "release-it"
   },
   "keywords": [
     "react-native",
     "ios",
-    "android",
-    "hypertrack",
-    "location",
-    "tracking"
+    "android"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/hypertrack/sdk-react-native.git",
-    "directory": "sdk"
+    "directory": "plugin_android_activity_service_google"
   },
   "author": "HyperTrack <help@hypertrack.com> (https://hypertrack.com)",
   "license": "MIT",
@@ -57,30 +53,25 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.18.2",
     "@commitlint/config-conventional": "^17.0.2",
-    "@react-native-community/eslint-config": "^3.0.2",
-    "@release-it/bumper": "^4.0.0",
-    "@release-it/conventional-changelog": "^5.1.0",
+    "@react-native/eslint-config": "^0.72.2",
+    "@release-it/conventional-changelog": "^5.0.0",
     "@types/jest": "^28.1.2",
     "@types/react": "~17.0.21",
     "@types/react-native": "^0.70.0",
-    "@typescript-eslint/parser": "^5.30.5",
-    "auto-changelog": "^2.4.0",
     "commitlint": "^17.0.2",
+    "del-cli": "^5.0.0",
     "eslint": "^8.4.1",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "^28.1.1",
     "pod-install": "^0.1.0",
     "prettier": "^2.0.5",
-    "react": "^18.0.0",
-    "react-native": "^0.70.0",
-    "react-native-builder-bob": "^0.18.3",
-    "release-it": "^15.4.1",
-    "typedoc": "^0.25.4",
-    "typedoc-plugin-merge-modules": "^5.1.0",
-    "typedoc-plugin-rename-defaults": "^0.7.0",
+    "react": "18.2.0",
+    "react-native": "0.73.0",
+    "react-native-builder-bob": "^0.20.0",
+    "release-it": "^15.0.0",
+    "turbo": "^1.10.7",
     "typescript": "^5.5.0"
   },
   "resolutions": {
@@ -90,9 +81,13 @@
     "react": "*",
     "react-native": "*"
   },
+  "engines": {
+    "node": ">= 18.0.0"
+  },
   "jest": {
     "preset": "react-native",
     "modulePathIgnorePatterns": [
+      "<rootDir>/example/node_modules",
       "<rootDir>/lib/"
     ]
   },
@@ -103,27 +98,25 @@
   },
   "release-it": {
     "git": {
-      "changelog": "auto-changelog --stdout --commit-limit false --unreleased --template https://raw.githubusercontent.com/release-it/release-it/master/templates/changelog-compact.hbs",
-      "commitMessage": "Release ${version}",
-      "requireCleanWorkingDir": false,
-      "tagName": "${version}",
-      "requireCommits": true
+      "commitMessage": "chore: release ${version}",
+      "tagName": "v${version}"
+    },
+    "npm": {
+      "publish": true
     },
     "github": {
       "release": true
     },
-    "hooks": {
-      "after:bump": "auto-changelog --package --commit-limit false --template https://raw.githubusercontent.com/release-it/release-it/master/templates/keepachangelog.hbs"
-    },
-    "npm": {
-      "publish": true
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": "angular"
+      }
     }
   },
   "eslintConfig": {
     "root": true,
-    "parser": "@typescript-eslint/parser",
     "extends": [
-      "@react-native-community",
+      "@react-native",
       "prettier"
     ],
     "rules": {
