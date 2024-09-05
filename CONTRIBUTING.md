@@ -9,6 +9,7 @@
    - Android
      - Change `<plugin name>_HyperTrackSDKVersion` in:
        - [sdk/android/gradle.properties](sdk/android/gradle.properties)
+       - [plugin_android_activity_service_google/android/gradle.properties](plugin_android_activity_service_google/android/gradle.properties)
        - [plugin_android_location_services_google/android/gradle.properties](plugin_android_location_services_google/android/gradle.properties)
        - [plugin_android_location_services_google_19_0_1/android/gradle.properties](plugin_android_location_services_google_19_0_1/android/gradle.properties)
        - [plugin_android_push_service_firebase/android/gradle.properties](plugin_android_push_service_firebase/android/gradle.properties)
@@ -21,6 +22,7 @@
 Change `version` value in:
 
 - `hypertrack-sdk-react-native` version in [sdk/package.json](sdk/package.json)
+- `hypertrack-sdk-react-native-plugin-android-activity-service-google` in [plugin_android_activity_service_google/package.json](plugin_android_activity_service_google/package.json)
 - `hypertrack-sdk-react-native-plugin-android-location-services-google` in [plugin_android_location_services_google/package.json](plugin_android_location_services_google/package.json)
 - `hypertrack-sdk-react-native-plugin-android-location-services-google-19-0-1` in [plugin_android_location_services_google_19_0_1/package.json](plugin_android_location_services_google_19_0_1/package.json)
 - `hypertrack-sdk-react-native-plugin-android-push-service-firebase` in [plugin_android_push_service_firebase/package.json](plugin_android_push_service_firebase/package.json)
