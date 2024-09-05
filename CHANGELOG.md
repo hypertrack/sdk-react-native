@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [13.6.0] - 2024-09-05
 
+### Added
+
+- New Activity service plugin (See [Plugins](https://hypertrack.com/docs/plugins)): `hypertrack-sdk-react-native-plugin-android-activity-service-google`
+
 ### Changed
 
 - Updated HyperTrack SDK iOS to [5.8.0](https://github.com/hypertrack/sdk-ios/releases/tag/5.8.0)
