@@ -9,7 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- New Activity service plugin (See [Plugins](https://hypertrack.com/docs/plugins)): `hypertrack-sdk-react-native-plugin-android-activity-service-google`
+- Support for Motion & Activity detection
+  - If your app asks for the Motion & Activity permission (for iOS) or the Activity Recognition permission (for Android) and the user grants it, you will have better activity detection in polylines
+  - Use new Activity service plugin `hypertrack-sdk-react-native-plugin-android-activity-service-google` (See [Plugins](https://hypertrack.com/docs/plugins))
 
 ### Changed
 
