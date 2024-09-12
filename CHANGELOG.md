@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [13.6.1] - 2024-09-11
 
+### Fixed
+
+- Fixed issue that prevented device registration if the Activity Service plugin wasn't provided
+
 ### Changed
 
 - Updated HyperTrack SDK Android to [7.8.2](https://github.com/hypertrack/sdk-android/releases/tag/7.8.2)
