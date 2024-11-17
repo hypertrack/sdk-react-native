@@ -5,6 +5,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [13.6.4] - 2024-11-17
+
+### Fixed
+
+- Dependency conflict for `RCT-Folly` library when New Architecture is enabled (removed the fixed folly version)
+
 ## [13.6.3] - 2024-11-13
 
 ### Changed
@@ -962,3 +968,4 @@ Initial release.
 [13.6.1]: https://github.com/hypertrack/sdk-react-native/releases/tag/13.6.1
 [13.6.2]: https://github.com/hypertrack/sdk-react-native/releases/tag/13.6.2
 [13.6.3]: https://github.com/hypertrack/sdk-react-native/releases/tag/13.6.3
+[13.6.4]: https://github.com/hypertrack/sdk-react-native/releases/tag/13.6.4
