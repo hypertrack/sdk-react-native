@@ -5,6 +5,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [13.8.0] - 2025-01-21
+
+### Changed
+
+- Updated HyperTrack SDK iOS to [5.10.0](https://github.com/hypertrack/sdk-ios/releases/tag/5.10.0)
+- Updated HyperTrack SDK Android to [7.10.0](https://github.com/hypertrack/sdk-android/releases/tag/7.10.0)
+
 ## [13.7.1] - 2024-12-05
 
 ### Changed
@@ -985,3 +992,4 @@ Initial release.
 [13.6.4]: https://github.com/hypertrack/sdk-react-native/releases/tag/13.6.4
 [13.7.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/13.7.0
 [13.7.1]: https://github.com/hypertrack/sdk-react-native/releases/tag/13.7.1
+[13.8.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/13.8.0
