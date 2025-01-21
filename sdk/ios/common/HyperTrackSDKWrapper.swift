@@ -56,6 +56,10 @@ func addGeotag(_ args: [String: Any]) -> Result<SuccessResult, FailureResult> {
     }
 }
 
+func getAllowMockLocation() -> Result<SuccessResult, FailureResult> {
+    .success(.dict(serializeAllowMockLocation(HyperTrack.allowMockLocation)))
+}
+
 func getDeviceID() -> Result<SuccessResult, FailureResult> {
     .success(.dict(serializeDeviceID(HyperTrack.deviceID)))
 }
@@ -94,6 +98,13 @@ func getOrders() -> Result<SuccessResult, FailureResult> {
 
 func getWorkerHandle() -> Result<SuccessResult, FailureResult> {
     .success(.dict(serializeWorkerHandle(HyperTrack.workerHandle)))
+}
+
+func setAllowMockLocation(_ args: [String: Any]) -> Result<SuccessResult, FailureResult> {
+    deserializeAllowMockLocation(args).flatMap { (allowMockLocation: Bool) in
+        HyperTrack.allowMockLocation = allowMockLocation
+        return .success(.void)
+    }
 }
 
 func setDynamicPublishableKey(_ args: [String: Any]) -> Result<SuccessResult, FailureResult> {

@@ -91,6 +91,11 @@ class HyperTrackReactNativePlugin(
     }
 
     @ReactMethod
+    fun getAllowMockLocation(promise: Promise) {
+        HyperTrackSdkWrapper.getAllowMockLocation().toPromise(promise)
+    }
+
+    @ReactMethod
     fun getDeviceId(promise: Promise) {
         HyperTrackSdkWrapper.getDeviceId().toPromise(promise)
     }
@@ -148,6 +153,11 @@ class HyperTrackReactNativePlugin(
                 emitEvent(EVENT_LOCATE, serializeLocateResult(it).toWritableMap())
             }
         Success(Unit).toPromise(promise)
+    }
+
+    @ReactMethod
+    fun setAllowMockLocation(args: ReadableMap) {
+        HyperTrackSdkWrapper.setAllowMockLocation(args.toHashMap())
     }
 
     @ReactMethod
