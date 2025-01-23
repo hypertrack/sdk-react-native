@@ -5,6 +5,7 @@ private let keyGeotagData = "data"
 private let keyType = "type"
 private let keyValue = "value"
 
+private let typeAllowMockLocation = "allowMockLocation"
 private let typeError = "error"
 private let typeFailure = "failure"
 private let typeIsAvailable = "isAvailable"
@@ -14,6 +15,18 @@ private let typeMetadata = "metadata"
 private let typeName = "name"
 private let typeSuccess = "success"
 private let typeWorkerHandle = "workerHandle"
+
+func deserializeAllowMockLocation(
+    _ args: [String: Any]
+) -> Result<Bool, FailureResult> {
+    if args[keyType] as? String != typeAllowMockLocation {
+        return .failure(.fatalError(getParseError(args, key: keyType)))
+    }
+    guard let value = args[keyValue] as? Bool else {
+        return .failure(.fatalError(getParseError(args, key: keyValue)))
+    }
+    return .success(value)
+}
 
 func deserializeDynamicPublishableKey(
     _ args: [String: Any]
@@ -179,6 +192,13 @@ func deserializeWorkerHandle(_ data: [String: Any]) -> Result<String, FailureRes
         return .failure(.fatalError(getParseError(data, key: keyValue)))
     }
     return .success(value)
+}
+
+func serializeAllowMockLocation(_ allowMockLocation: Bool) -> [String: Any] {
+    return [
+        keyType: typeAllowMockLocation,
+        keyValue: allowMockLocation,
+    ]
 }
 
 func serializeDeviceID(_ deviceID: String) -> [String: Any] {

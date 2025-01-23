@@ -5,6 +5,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [13.8.0] - 2025-01-21
+
+### Added
+
+- New `HyperTrack.getAllowMockLocation()` and `HyperTrack.setAllowMockLocation()` methods which can be used to allow mocking location data.
+  - Check the [Test with mock locations](https://hypertrack.com/docs/mock-location) guide for more information.
+  - Note: To avoid issues related to race conditions in your code use this API **only if** modifying the compiled `HyperTrackAllowMockLocation` AndroidManifest.xml/Info.plist value is insufficient for your needs.
+    - Example: if for some reason you aren't able to recompile with `HyperTrackAllowMockLocation` set to `YES`/`true` for your prod app QA mock location tests and need to set up the value in runtime.
+
+### Changed
+
+- Updated HyperTrack SDK iOS to [5.10.0](https://github.com/hypertrack/sdk-ios/releases/tag/5.10.0)
+- Updated HyperTrack SDK Android to [7.10.0](https://github.com/hypertrack/sdk-android/releases/tag/7.10.0)
+
 ## [13.7.1] - 2024-12-05
 
 ### Changed
@@ -985,3 +999,4 @@ Initial release.
 [13.6.4]: https://github.com/hypertrack/sdk-react-native/releases/tag/13.6.4
 [13.7.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/13.7.0
 [13.7.1]: https://github.com/hypertrack/sdk-react-native/releases/tag/13.7.1
+[13.8.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/13.8.0

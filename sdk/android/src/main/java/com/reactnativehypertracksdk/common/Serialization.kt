@@ -9,6 +9,14 @@ import com.hypertrack.sdk.android.Result
  * to Map<String, T> or List<T> where T is any JSON-compatible type
  */
 internal object Serialization {
+    fun deserializeAllowMockLocation(allowMockLocation: Serialized): WrapperResult<Boolean> =
+        parse(allowMockLocation) {
+            it.assertValue<String>(key = KEY_TYPE, value = TYPE_ALLOW_MOCK_LOCATION)
+            it
+                .get<Boolean>(KEY_VALUE)
+                .getOrThrow()
+        }
+
     fun deserializeDynamicPublishableKey(args: Serialized): WrapperResult<String> =
         parse(args) {
             it.assertValue<String>(key = KEY_TYPE, value = TYPE_DYNAMIC_PUBLISHABLE_KEY)
@@ -88,6 +96,12 @@ internal object Serialization {
                 .get<String>(KEY_VALUE)
                 .getOrThrow()
         }
+
+    fun serializeAllowMockLocation(allowMockLocation: Boolean): Serialized =
+        mapOf(
+            KEY_TYPE to TYPE_ALLOW_MOCK_LOCATION,
+            KEY_VALUE to allowMockLocation,
+        )
 
     fun serializeDeviceId(deviceId: String): Serialized =
         mapOf(
@@ -404,6 +418,7 @@ internal object Serialization {
     private const val TYPE_RESULT_FAILURE = "failure"
     private const val TYPE_RESULT_SUCCESS = "success"
 
+    private const val TYPE_ALLOW_MOCK_LOCATION = "allowMockLocation"
     private const val TYPE_DEVICE_ID = "deviceID"
     private const val TYPE_DYNAMIC_PUBLISHABLE_KEY = "dynamicPublishableKey"
     private const val TYPE_ERROR = "error"

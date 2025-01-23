@@ -3,6 +3,7 @@ package com.reactnativehypertracksdk.common
 import com.hypertrack.sdk.android.HyperTrack
 import com.hypertrack.sdk.android.Json
 import com.hypertrack.sdk.android.Result
+import com.reactnativehypertracksdk.common.Serialization.deserializeAllowMockLocation
 import com.reactnativehypertracksdk.common.Serialization.deserializeDynamicPublishableKey
 import com.reactnativehypertracksdk.common.Serialization.deserializeGeotagData
 import com.reactnativehypertracksdk.common.Serialization.deserializeIsAvailable
@@ -10,6 +11,7 @@ import com.reactnativehypertracksdk.common.Serialization.deserializeIsTracking
 import com.reactnativehypertracksdk.common.Serialization.deserializeMetadata
 import com.reactnativehypertracksdk.common.Serialization.deserializeName
 import com.reactnativehypertracksdk.common.Serialization.deserializeWorkerHandle
+import com.reactnativehypertracksdk.common.Serialization.serializeAllowMockLocation
 import com.reactnativehypertracksdk.common.Serialization.serializeDeviceId
 import com.reactnativehypertracksdk.common.Serialization.serializeDynamicPublishableKey
 import com.reactnativehypertracksdk.common.Serialization.serializeErrors
@@ -89,6 +91,8 @@ internal object HyperTrackSdkWrapper {
                 }
             }
 
+    fun getAllowMockLocation(): WrapperResult<Serialized> = Success(serializeAllowMockLocation(HyperTrack.allowMockLocation))
+
     fun getDeviceId(): WrapperResult<Serialized> = Success(serializeDeviceId(HyperTrack.deviceID))
 
     fun getDynamicPublishableKey(): WrapperResult<Serialized> = Success(serializeDynamicPublishableKey(HyperTrack.dynamicPublishableKey))
@@ -134,6 +138,12 @@ internal object HyperTrackSdkWrapper {
         Success(
             serializeWorkerHandle(HyperTrack.workerHandle),
         )
+
+    fun setAllowMockLocation(args: Serialized): WrapperResult<Unit> =
+        deserializeAllowMockLocation(args)
+            .mapSuccess { allowMockLocation ->
+                HyperTrack.allowMockLocation = allowMockLocation
+            }
 
     fun setDynamicPublishableKey(args: Serialized): WrapperResult<Unit> =
         deserializeDynamicPublishableKey(args)

@@ -1,4 +1,4 @@
-# do not create a shorcut for `publlish` command to avoid accidental publishing
+# do not create a shorcut for `publish` command to avoid accidental publishing
 alias b := build
 alias cncfq := copy-native-code-from-quickstart
 alias cnm := _clear-node-modules

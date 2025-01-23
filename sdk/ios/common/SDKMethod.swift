@@ -1,5 +1,6 @@
 enum SDKMethod: String {
     case addGeotag
+    case getAllowMockLocation
     case getDeviceID
     case getDynamicPublishableKey
     case getErrors
@@ -11,6 +12,7 @@ enum SDKMethod: String {
     case getOrders
     case getWorkerHandle
     case locate
+    case setAllowMockLocation
     case setDynamicPublishableKey
     case setIsAvailable
     case setIsTracking

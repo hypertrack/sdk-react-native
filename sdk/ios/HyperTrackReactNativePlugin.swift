@@ -77,6 +77,18 @@ class HyperTrackReactNativePlugin: RCTEventEmitter {
         )
     }
 
+    @objc func getAllowMockLocation(
+        _ resolve: RCTPromiseResolveBlock,
+        rejecter reject: RCTPromiseRejectBlock
+    ) {
+        sendAsPromise(
+            hypertrack_sdk_react_native.getAllowMockLocation(),
+            method: .getAllowMockLocation,
+            resolve,
+            reject
+        )
+    }
+
     @objc func getDeviceId(
         _ resolve: RCTPromiseResolveBlock,
         rejecter reject: RCTPromiseRejectBlock
@@ -210,6 +222,21 @@ class HyperTrackReactNativePlugin: RCTEventEmitter {
         sendAsPromise(
             .success(.void),
             method: .locate,
+            resolve,
+            reject
+        )
+    }
+
+    @objc func setAllowMockLocation(
+        _ args: NSDictionary,
+        resolver resolve: RCTPromiseResolveBlock,
+        rejecter reject: RCTPromiseRejectBlock
+    ) {
+        sendAsPromise(
+            hypertrack_sdk_react_native.setAllowMockLocation(
+                args as! [String: Any]
+            ),
+            method: .setAllowMockLocation,
             resolve,
             reject
         )

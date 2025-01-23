@@ -8,6 +8,7 @@ package com.reactnativehypertracksdk.common
  */
 internal enum class SdkMethod {
     addGeotag,
+    getAllowMockLocation,
     getDeviceID,
     getDynamicPublishableKey,
     getErrors,
@@ -19,6 +20,7 @@ internal enum class SdkMethod {
     getOrders,
     getWorkerHandle,
     locate,
+    setAllowMockLocation,
     setDynamicPublishableKey,
     setIsAvailable,
     setIsTracking,
