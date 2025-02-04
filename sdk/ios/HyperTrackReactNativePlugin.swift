@@ -185,6 +185,21 @@ class HyperTrackReactNativePlugin: RCTEventEmitter {
         )
     }
 
+    @objc func getOrderIsInsideGeofence(
+        _ args: NSDictionary,
+        resolver resolve: RCTPromiseResolveBlock,
+        rejecter reject: RCTPromiseRejectBlock
+    ) {
+        sendAsPromise(
+            hypertrack_sdk_react_native.getOrderIsInsideGeofence(
+                args as! [String: Any]
+            ),
+            method: .getOrderIsInsideGeofence,
+            resolve,
+            reject
+        )
+    }
+
     @objc func getOrders(
         _ resolve: RCTPromiseResolveBlock,
         rejecter reject: RCTPromiseRejectBlock

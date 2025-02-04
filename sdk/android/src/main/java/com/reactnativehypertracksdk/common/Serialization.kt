@@ -89,6 +89,14 @@ internal object Serialization {
                 .getOrThrow()
         }
 
+    fun deserializeOrderHandle(map: Serialized): WrapperResult<String> =
+        parse(map) {
+            it.assertValue<String>(key = KEY_TYPE, value = TYPE_ORDER_HANDLE)
+            it
+                .get<String>(KEY_VALUE)
+                .getOrThrow()
+        }
+
     fun deserializeWorkerHandle(map: Serialized): WrapperResult<String> =
         parse(map) {
             it.assertValue<String>(key = KEY_TYPE, value = TYPE_WORKER_HANDLE)
@@ -139,11 +147,39 @@ internal object Serialization {
             serializeError(it)
         }
 
+    fun serializeFailure(failure: List<Serialized>): Serialized =
+        mapOf(
+            KEY_TYPE to TYPE_RESULT_FAILURE,
+            KEY_VALUE to failure,
+        )
+
+    fun serializeFailure(failure: Serialized): Serialized =
+        mapOf(
+            KEY_TYPE to TYPE_RESULT_FAILURE,
+            KEY_VALUE to failure,
+        )
+
     fun serializeIsAvailable(isAvailable: Boolean): Serialized =
         mapOf(
             KEY_TYPE to TYPE_IS_AVAILABLE,
             KEY_VALUE to isAvailable,
         )
+
+    fun serializeIsInsideGeofence(isInsideGeofence: Result<Boolean, HyperTrack.LocationError>): Serialized =
+        when (isInsideGeofence) {
+            is Result.Failure -> {
+                serializeFailure(serializeLocationError(isInsideGeofence.failure))
+            }
+
+            is Result.Success -> {
+                serializeSuccess(
+                    mapOf(
+                        KEY_TYPE to TYPE_IS_INSIDE_GEOFENCE,
+                        KEY_VALUE to isInsideGeofence.success,
+                    ),
+                )
+            }
+        }
 
     fun serializeIsTracking(isTracking: Boolean): Serialized =
         mapOf(
@@ -173,7 +209,8 @@ internal object Serialization {
             }
         }
 
-    fun serializeLocationErrorFailure(locationError: HyperTrack.LocationError): Serialized = serializeFailure(serializeLocationError(locationError))
+    fun serializeLocationErrorFailure(locationError: HyperTrack.LocationError): Serialized =
+        serializeFailure(serializeLocationError(locationError))
 
     fun serializeLocationSuccess(location: HyperTrack.Location): Serialized = serializeSuccess(serializeLocation(location))
 
@@ -204,9 +241,15 @@ internal object Serialization {
                     mapOf(
                         KEY_ORDER_HANDLE to order.orderHandle,
                         KEY_ORDER_INDEX to index,
-                        KEY_ORDER_IS_INSIDE_GEOFENCE to serializeIsInsideGeofence(order.isInsideGeofence),
+                        // beware not to call isInsideGeofence here, it's a computed property
                     )
                 },
+        )
+
+    fun serializeSuccess(success: Serialized): Serialized =
+        mapOf(
+            KEY_TYPE to TYPE_RESULT_SUCCESS,
+            KEY_VALUE to success,
         )
 
     fun serializeWorkerHandle(workerHandle: String): Serialized =
@@ -238,14 +281,6 @@ internal object Serialization {
             }.getOrThrow()
         }
 
-    private fun deserializeOrderHandle(map: Serialized): WrapperResult<String> =
-        parse(map) {
-            it.assertValue<String>(key = KEY_TYPE, value = TYPE_ORDER_HANDLE)
-            it
-                .get<String>(KEY_VALUE)
-                .getOrThrow()
-        }
-
     private fun deserializeOrderStatus(map: Serialized): WrapperResult<HyperTrack.OrderStatus> =
         parse(map) {
             when (it.get<String>(KEY_TYPE).getOrThrow()) {
@@ -257,22 +292,6 @@ internal object Serialization {
                     )
 
                 else -> throw Error("Unknown order status: $map")
-            }
-        }
-
-    private fun serializeIsInsideGeofence(isInsideGeofence: Result<Boolean, HyperTrack.LocationError>): Serialized =
-        when (isInsideGeofence) {
-            is Result.Failure -> {
-                serializeFailure(serializeLocationError(isInsideGeofence.failure))
-            }
-
-            is Result.Success -> {
-                serializeSuccess(
-                    mapOf(
-                        KEY_TYPE to TYPE_IS_INSIDE_GEOFENCE,
-                        KEY_VALUE to isInsideGeofence.success,
-                    ),
-                )
             }
         }
 
@@ -294,24 +313,6 @@ internal object Serialization {
                     KEY_LOCATION to serializeLocation(locationWithDeviation.location),
                     KEY_DEVIATION to locationWithDeviation.deviation,
                 ),
-        )
-
-    private fun serializeFailure(failure: List<Serialized>): Serialized =
-        mapOf(
-            KEY_TYPE to TYPE_RESULT_FAILURE,
-            KEY_VALUE to failure,
-        )
-
-    private fun serializeFailure(failure: Serialized): Serialized =
-        mapOf(
-            KEY_TYPE to TYPE_RESULT_FAILURE,
-            KEY_VALUE to failure,
-        )
-
-    private fun serializeSuccess(success: Serialized): Serialized =
-        mapOf(
-            KEY_TYPE to TYPE_RESULT_SUCCESS,
-            KEY_VALUE to success,
         )
 
     private fun serializeLocationError(locationError: HyperTrack.LocationError): Serialized =
@@ -449,7 +450,6 @@ internal object Serialization {
     private const val KEY_GEOTAG_EXPECTED_LOCATION = "expectedLocation"
     private const val KEY_GEOTAG_ORDER_HANDLE = "orderHandle"
     private const val KEY_GEOTAG_ORDER_STATUS = "orderStatus"
-    private const val KEY_ORDER_IS_INSIDE_GEOFENCE = "isInsideGeofence"
     private const val KEY_LOCATION = "location"
     private const val KEY_ORDER_HANDLE = "orderHandle"
     private const val KEY_ORDER_INDEX = "orderIndex"

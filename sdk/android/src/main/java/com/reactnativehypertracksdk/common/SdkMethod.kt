@@ -17,6 +17,7 @@ internal enum class SdkMethod {
     getLocation,
     getMetadata,
     getName,
+    getOrderIsInsideGeofence,
     getOrders,
     getWorkerHandle,
     locate,

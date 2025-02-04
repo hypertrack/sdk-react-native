@@ -10,12 +10,14 @@ import com.reactnativehypertracksdk.common.Serialization.deserializeIsAvailable
 import com.reactnativehypertracksdk.common.Serialization.deserializeIsTracking
 import com.reactnativehypertracksdk.common.Serialization.deserializeMetadata
 import com.reactnativehypertracksdk.common.Serialization.deserializeName
+import com.reactnativehypertracksdk.common.Serialization.deserializeOrderHandle
 import com.reactnativehypertracksdk.common.Serialization.deserializeWorkerHandle
 import com.reactnativehypertracksdk.common.Serialization.serializeAllowMockLocation
 import com.reactnativehypertracksdk.common.Serialization.serializeDeviceId
 import com.reactnativehypertracksdk.common.Serialization.serializeDynamicPublishableKey
 import com.reactnativehypertracksdk.common.Serialization.serializeErrors
 import com.reactnativehypertracksdk.common.Serialization.serializeIsAvailable
+import com.reactnativehypertracksdk.common.Serialization.serializeIsInsideGeofence
 import com.reactnativehypertracksdk.common.Serialization.serializeIsTracking
 import com.reactnativehypertracksdk.common.Serialization.serializeLocationErrorFailure
 import com.reactnativehypertracksdk.common.Serialization.serializeLocationResult
@@ -133,6 +135,20 @@ internal object HyperTrackSdkWrapper {
         Success(
             serializeOrders(HyperTrack.orders.values),
         )
+
+    fun getOrderIsInsideGeofence(args: Serialized): WrapperResult<Serialized> =
+        deserializeOrderHandle(args)
+            .mapSuccess { orderHandle ->
+                HyperTrack
+                    .orders
+                    .values
+                    .firstOrNull { it.orderHandle == orderHandle }
+                    .let { order ->
+                        order?.isInsideGeofence ?: Result.Success(false)
+                    }.let {
+                        serializeIsInsideGeofence(it)
+                    }
+            }
 
     fun getWorkerHandle(): WrapperResult<Serialized> =
         Success(

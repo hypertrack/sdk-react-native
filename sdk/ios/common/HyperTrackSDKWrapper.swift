@@ -92,6 +92,16 @@ func getName() -> Result<SuccessResult, FailureResult> {
     .success(.dict(serializeName(HyperTrack.name)))
 }
 
+func getOrderIsInsideGeofence(_ args: [String: Any]) -> Result<SuccessResult, FailureResult> {
+    deserializeOrderHandle(args).flatMap { orderHandle in
+        if let order = HyperTrack.orders.first(where: { $0.orderHandle == orderHandle }) {
+            return .success(.dict(serializeIsInsideGeofence(order.isInsideGeofence)))
+        } else {
+            return .success(.dict(serializeIsInsideGeofence(.success(false))))
+        }
+    }
+}
+
 func getOrders() -> Result<SuccessResult, FailureResult> {
     .success(.dict(serializeOrders(Array(HyperTrack.orders))))
 }

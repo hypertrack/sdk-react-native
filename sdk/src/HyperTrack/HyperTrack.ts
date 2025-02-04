@@ -219,9 +219,11 @@ export default class HyperTrack {
    * @param {boolean} true if mock location is allowed
    */
   static async getAllowMockLocation(): Promise<boolean> {
-    return HyperTrackSdk.getAllowMockLocation().then((allowMockLocation: AllowMockLocation) => {
-      return this.deserializeAllowMockLocation(allowMockLocation);
-    });
+    return HyperTrackSdk.getAllowMockLocation().then(
+      (allowMockLocation: AllowMockLocation) => {
+        return this.deserializeAllowMockLocation(allowMockLocation);
+      }
+    );
   }
 
   /**
@@ -311,7 +313,7 @@ export default class HyperTrack {
   }
 
   /**
-   * Gets the active orders for the worker. The orders are sorted with the ordering in 
+   * Gets the active orders for the worker. The orders are sorted with the ordering in
    * which the worker should complete them.
    *
    * @returns {Map<string, Order>} Map of orders
@@ -372,13 +374,13 @@ export default class HyperTrack {
   }
 
   /**
-   * Allows mocking location data. 
-   * 
+   * Allows mocking location data.
+   *
    * Check the [Test with mock locations](https://hypertrack.com/docs/mock-location) guide for more information.
-   * 
+   *
    * To avoid issues related to race conditions in your code use this API **only if** modifying the compiled `HyperTrackAllowMockLocation` AndroidManifest.xml/Info.plist value is insufficient for your needs.
    * Example: if for some reason you aren't able to recompile with `HyperTrackAllowMockLocation` set to `YES`/`true` for your prod app QA mock location tests and need to set up the value in runtime.
-   * 
+   *
    * @param true if mock location is allowed
    */
   static async setAllowMockLocation(allow: boolean): Promise<void> {
@@ -386,7 +388,7 @@ export default class HyperTrack {
       type: 'allowMockLocation',
       value: allow,
     } as AllowMockLocation);
-  } 
+  }
 
   static setDynamicPublishableKey(dynamicPublishableKey: string) {
     HyperTrackSdk.setDynamicPublishableKey({
@@ -593,9 +595,13 @@ export default class HyperTrack {
   }
 
   /** @ignore */
-  private static deserializeAllowMockLocation(allowMockLocation: AllowMockLocation): boolean {
+  private static deserializeAllowMockLocation(
+    allowMockLocation: AllowMockLocation
+  ): boolean {
     if (allowMockLocation.type !== 'allowMockLocation') {
-      throw new Error(`Invalid allowMockLocation: ${JSON.stringify(allowMockLocation)}`);
+      throw new Error(
+        `Invalid allowMockLocation: ${JSON.stringify(allowMockLocation)}`
+      );
     }
     return allowMockLocation.value;
   }
@@ -632,13 +638,15 @@ export default class HyperTrack {
 
   /** @ignore */
   private static deserializeIsInsideGeofence(
-    isInsideGeofence: Result<IsInsideGeofence, LocationErrorInternal>,
+    isInsideGeofence: Result<IsInsideGeofence, LocationErrorInternal>
   ): Result<boolean, LocationError> {
     switch (isInsideGeofence.type) {
       case 'success':
         let successValue = isInsideGeofence.value;
         if (successValue.type !== 'isInsideGeofence') {
-          throw new Error(`Invalid isInsideGeofence: ${JSON.stringify(successValue)}`);
+          throw new Error(
+            `Invalid isInsideGeofence: ${JSON.stringify(successValue)}`
+          );
         }
         return {
           type: 'success',
@@ -756,16 +764,27 @@ export default class HyperTrack {
       .map(([_, value]: [string, OrderInternal]) => {
         return value;
       })
-      .sort(
-        (first: OrderInternal, second: OrderInternal) =>
-          first.index - second.index
-      )
+      .sort((first: OrderInternal, second: OrderInternal) => {
+        if (first.index === undefined || second.index === undefined) {
+          throw new Error(
+            `Invalid order index: ${JSON.stringify(first)} ${JSON.stringify(
+              second
+            )}`
+          );
+        }
+        return first.index - second.index;
+      })
       .forEach((orderInternal: OrderInternal) => {
         result.set(orderInternal.orderHandle, {
           orderHandle: orderInternal.orderHandle,
-          isInsideGeofence: this.deserializeIsInsideGeofence(
-            orderInternal.isInsideGeofence
-          ),
+          isInsideGeofence: async () => {
+            const isInsideGeofence =
+              await HyperTrackSdk.getOrderIsInsideGeofence({
+                type: 'orderHandle',
+                value: orderInternal.orderHandle,
+              });
+            return this.deserializeIsInsideGeofence(isInsideGeofence);
+          },
         } as Order);
       });
     return result;
