@@ -136,7 +136,10 @@ class HyperTrackReactNativePlugin(
     }
 
     @ReactMethod
-    fun getOrderIsInsideGeofence(args: ReadableMap, promise: Promise) {
+    fun getOrderIsInsideGeofence(
+        args: ReadableMap,
+        promise: Promise,
+    ) {
         HyperTrackSdkWrapper.getOrderIsInsideGeofence(args.toHashMap()).toPromise(promise)
     }
 
