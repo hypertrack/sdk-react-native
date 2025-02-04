@@ -2,6 +2,8 @@
 alias b := build
 alias cncfq := copy-native-code-from-quickstart
 alias cnm := _clear-node-modules
+alias cnfi := copy-native-code-from-ionic
+alias cjfi := copy-js-code-from-ionic
 alias d := docs
 alias f := format
 alias gd := get-dependencies
@@ -45,9 +47,21 @@ _clear-node-modules:
     rm -rf plugin_android_location_services_google_19_0_1/node_modules
     rm -rf plugin_android_push_service_firebase/node_modules
 
+copy-native-code-from-ionic:
+    cp -rf ../sdk-ionic-capacitor/android/src/main/java/com/hypertrack/sdk/capacitor/common sdk/android/src/main/java/com/reactnativehypertracksdk/
+    cp -rf ../sdk-ionic-capacitor/ios/Plugin/common sdk/ios
+
 copy-native-code-from-quickstart:
     cp -rf ../quickstart-react-native/node_modules/hypertrack-sdk-react-native/android/src/main/java/com/reactnativehypertracksdk sdk/android/src/main/java/com
 
+copy-js-code-from-ionic:
+    # cp -rf ../sdk-react-native/sdk/src/HyperTrack/data_types src
+    # cp -f ../sdk-react-native/sdk/src/HyperTrack/HyperTrack.ts src/HyperTrack.ts
+    # cp -f ../sdk-react-native/sdk/src/index.tsx src/index.ts
+    cp -rf ../sdk-ionic-capacitor/src/data_types sdk/src/HyperTrack
+    cp -f ../sdk-ionic-capacitor/src/HyperTrack.ts sdk/src/HyperTrack/HyperTrack.ts
+    cp -f ../sdk-ionic-capacitor/src/index.ts sdk/src/index.tsx
+    
 docs: format
     yarn --cwd sdk docs
 
