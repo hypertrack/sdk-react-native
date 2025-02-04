@@ -55,9 +55,6 @@ copy-native-code-from-quickstart:
     cp -rf ../quickstart-react-native/node_modules/hypertrack-sdk-react-native/android/src/main/java/com/reactnativehypertracksdk sdk/android/src/main/java/com
 
 copy-js-code-from-ionic:
-    # cp -rf ../sdk-react-native/sdk/src/HyperTrack/data_types src
-    # cp -f ../sdk-react-native/sdk/src/HyperTrack/HyperTrack.ts src/HyperTrack.ts
-    # cp -f ../sdk-react-native/sdk/src/index.tsx src/index.ts
     cp -rf ../sdk-ionic-capacitor/src/data_types sdk/src/HyperTrack
     cp -f ../sdk-ionic-capacitor/src/HyperTrack.ts sdk/src/HyperTrack/HyperTrack.ts
     cp -f ../sdk-ionic-capacitor/src/index.ts sdk/src/index.tsx
