@@ -451,5 +451,5 @@ internal object Serialization {
     private const val KEY_GEOTAG_ORDER_STATUS = "orderStatus"
     private const val KEY_LOCATION = "location"
     private const val KEY_ORDER_HANDLE = "orderHandle"
-    private const val KEY_ORDER_INDEX = "orderIndex"
+    private const val KEY_ORDER_INDEX = "index"
 }

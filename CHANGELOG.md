@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Wrong order of Orders in `HyperTrack.getOrders()` on iOS
+- Error on `HyperTrack.getOrders()`/`HyperTrack.subscribeToOrders()` on Android when assigning multiple orders to the worker
 
 ## [13.8.0] - 2025-01-21
 
