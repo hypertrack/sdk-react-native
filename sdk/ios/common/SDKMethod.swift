@@ -9,6 +9,7 @@ enum SDKMethod: String {
     case getLocation
     case getMetadata
     case getName
+    case getOrderIsInsideGeofence
     case getOrders
     case getWorkerHandle
     case locate

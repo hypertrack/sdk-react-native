@@ -399,10 +399,11 @@ func serializeName(_ name: String) -> [String: Any] {
 func serializeOrders(_ orders: [HyperTrack.Order]) -> [String: Any] {
     return [
         keyType: "orders",
-        keyValue: orders.map { order in
+        keyValue: orders.enumerated().map { (index, order) in
             [
+                "index": index,
                 "orderHandle": order.orderHandle,
-                "isInsideGeofence": serializeIsInsideGeofence(order.isInsideGeofence),
+                // beware not to call order.isInsideGeofence here, it is a computed property
             ]
         },
     ]
