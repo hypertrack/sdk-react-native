@@ -1,7 +1,7 @@
 # do not create a shorcut for `publish` command to avoid accidental publishing
 alias b := build
+alias c := clean
 alias cncfq := copy-native-code-from-quickstart
-alias cnm := _clear-node-modules
 alias cnfi := copy-native-code-from-ionic
 alias cjfi := copy-js-code-from-ionic
 alias d := docs
