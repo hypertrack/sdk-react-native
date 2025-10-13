@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [14.0.4] - 2025-10-13
 
+### Removed
+
+- `RCT-Folly` dependency (to ensure React Native `0.80+` compatibility)
+
 ### Changed
 
 - Updated HyperTrack SDK iOS to [5.11.4](https://github.com/hypertrack/sdk-ios/releases/tag/5.11.4)
