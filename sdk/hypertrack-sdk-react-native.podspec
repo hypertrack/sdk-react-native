@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
   s.source_files = "ios/**/*.{h,m,mm,swift}"
 
   s.dependency "React-Core"
-  s.dependency 'HyperTrack', '5.11.2'
+  s.dependency 'HyperTrack', '5.11.4'
 
   # Don't install the dependencies when we run `pod install` in the old architecture.
   if ENV['RCT_NEW_ARCH_ENABLED'] == '1' then
@@ -28,7 +28,6 @@ Pod::Spec.new do |s|
     }
 
     s.dependency "React-Codegen"
-    s.dependency "RCT-Folly"
     s.dependency "RCTRequired"
     s.dependency "RCTTypeSafety"
     s.dependency "ReactCommon/turbomodule/core"

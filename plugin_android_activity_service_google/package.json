@@ -1,6 +1,6 @@
 {
   "name": "hypertrack-sdk-react-native-plugin-android-activity-service-google",
-  "version": "14.0.3",
+  "version": "14.0.4",
   "description": "A wrapper around `Activity Service Google` plugin for HyperTrack SDK Android that is used with `hypertrack-sdk-react-native`",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
