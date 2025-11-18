@@ -68,7 +68,9 @@ class HyperTrackReactNativePlugin(
                 )
             }
 
-            else -> Unit
+            else -> {
+                Unit
+            }
         }
         // Keep: Required for RN built in Event Emitter Calls.
     }

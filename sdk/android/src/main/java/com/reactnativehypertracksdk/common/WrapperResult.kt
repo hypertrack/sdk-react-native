@@ -26,6 +26,7 @@ internal sealed class WrapperResult<SuccessType> {
     fun getOrThrow(): SuccessType =
         when (this) {
             is Success -> this.success
+
             is Failure -> throw Exception(
                 "Result unwrapping failed: ${this.failure}",
                 this.failure,

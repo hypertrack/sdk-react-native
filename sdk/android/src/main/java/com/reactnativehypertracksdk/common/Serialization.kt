@@ -283,14 +283,23 @@ internal object Serialization {
     private fun deserializeOrderStatus(map: Serialized): WrapperResult<HyperTrack.OrderStatus> =
         parse(map) {
             when (it.get<String>(KEY_TYPE).getOrThrow()) {
-                TYPE_GEOTAG_ORDER_STATUS_CLOCK_IN -> HyperTrack.OrderStatus.ClockIn
-                TYPE_GEOTAG_ORDER_STATUS_CLOCK_OUT -> HyperTrack.OrderStatus.ClockOut
-                TYPE_GEOTAG_ORDER_STATUS_CUSTOM ->
+                TYPE_GEOTAG_ORDER_STATUS_CLOCK_IN -> {
+                    HyperTrack.OrderStatus.ClockIn
+                }
+
+                TYPE_GEOTAG_ORDER_STATUS_CLOCK_OUT -> {
+                    HyperTrack.OrderStatus.ClockOut
+                }
+
+                TYPE_GEOTAG_ORDER_STATUS_CUSTOM -> {
                     HyperTrack.OrderStatus.Custom(
                         it.get<String>(KEY_VALUE).getOrThrow(),
                     )
+                }
 
-                else -> throw Error("Unknown order status: $map")
+                else -> {
+                    throw Error("Unknown order status: $map")
+                }
             }
         }
 
