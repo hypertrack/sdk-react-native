@@ -1,5 +1,6 @@
 # do not create a shorcut for `publish` command to avoid accidental publishing
 alias b := build
+alias ba := build-archive
 alias c := clean
 alias cncfq := copy-native-code-from-quickstart
 alias cnfi := copy-native-code-from-ionic
@@ -37,6 +38,13 @@ build: get-dependencies docs format
     yarn --cwd plugin_android_location_services_google prepare
     yarn --cwd plugin_android_location_services_google_19_0_1 prepare
     yarn --cwd plugin_android_push_service_firebase prepare
+
+[working-directory: 'sdk']
+build-archive:
+    #!/usr/bin/env sh
+    set -euo pipefail
+    VERSION=$(just version)
+    yarn pack --filename ../hypertrack-sdk-react-native-$VERSION.tgz
 
 clean: _clear-node-modules
 

@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [14.0.5] - 2025-11-10
 
-### Changed
+### Fixed
 
 - Fixed HyperTrack SDK iOS version to [5.12.0](https://github.com/hypertrack/sdk-ios/releases/tag/5.12.0)
 
