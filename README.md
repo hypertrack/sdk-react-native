@@ -13,3 +13,7 @@ npm install hypertrack-sdk-react-native \
 Follow the [React Native integration guide](https://hypertrack.com/docs/install-sdk-react-native) to configure the native SDKs and choose Android service plugins. See the [React Native quickstart](https://github.com/hypertrack/quickstart-react-native) for a working app.
 
 For changes by version, see the [changelog](CHANGELOG.md) and [GitHub Releases](https://github.com/hypertrack/sdk-react-native/releases).
+
+## API reference
+
+[API reference](https://hypertrack.github.io/mobile/sdk-react-native/latest/)
