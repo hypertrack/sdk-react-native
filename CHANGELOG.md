@@ -5,6 +5,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [14.3.0] - 2026-11-21
+
+### Added
+
+- On iOS, workers who allow notifications can receive a reminder to reopen your app if they swipe it away while tracking.
+
+  Set `HyperTrackAppTerminationNotification` to `YES` in your iOS app’s `Info.plist` to enable it. To customize the reminder, set `HyperTrackAppTerminationNotificationTitle` and `HyperTrackAppTerminationNotificationBody`.
+
+  If you use Expo Prebuild, set the same keys under `expo.ios.infoPlist` in `app.json`, using `true` to enable the reminder. [Expo configuration](https://docs.expo.dev/versions/latest/config/app/#infoplist)
+
+### Fixed
+
+- On Android, `getMetadata()` now returns mixed and nested arrays without throwing an error.
+- On Android, `subscribeToOrders` now delivers the current orders even if you subscribed to other HyperTrack updates first.
+- Fixed an out-of-memory crash that could occur when a device had a large amount of saved tracking data.
+- Fixed two issues after upgrading the SDK. Tracking could stay on after your app stopped it, and a worker’s availability could be incorrect.
+- Fixed events appearing out of order in a worker’s tracking history.
+- On Android, fixed a case where location updates stopped after Location Services were turned back on, including after toggling airplane mode.
+- On iOS, fixed a false report of missing background location permission when a worker opened the app with “While Using the App” permission.
+- On iOS, fixed a case where the SDK reported reduced accuracy as the reason tracking stopped when Location Services were turned off.
+
+### Security
+
+- The SDK now rejects compromised eMudhra certificates when connecting to HyperTrack. [Security advisory](https://rustsec.org/advisories/RUSTSEC-2026-0381.html)
+
 ## [14.2.0] - 2026-09-05
 
 ### Changed
@@ -1078,3 +1103,4 @@ Initial release.
 [14.0.6]: https://github.com/hypertrack/sdk-react-native/releases/tag/14.0.6
 [14.1.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/14.1.0
 [14.2.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/14.2.0
+[14.3.0]: https://github.com/hypertrack/sdk-react-native/releases/tag/14.3.0
